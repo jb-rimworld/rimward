@@ -70,7 +70,16 @@ namespace RimWard
                 yield return g;
             }
             Building_Bed bed = this.parent as Building_Bed;
-            if (bed == null || !bed.Medical) yield break;
+            if (bed == null) yield break;
+
+            // Hearth & Harbor protocol (N20): one combined "Use: Colonist / Guest / Patient" selector replaces the toggles below.
+            if (BedSelector.HidesOwnToggles(bed))
+            {
+                Gizmo selector = BedSelector.MakeGizmo(bed);
+                if (selector != null) yield return selector;
+                yield break;
+            }
+            if (!bed.Medical) yield break;
 
             Texture2D icon = ContentFinder<Texture2D>.Get("UI/RimWard/Icon", false);
             yield return new Command_Toggle

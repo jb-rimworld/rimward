@@ -100,6 +100,31 @@ wounds by what they *are*, not by their name tag.
 
 ---
 
+## Works with Hearth & Harbor
+
+Optional and soft (reflection only, no dependency in either direction). RimWorld 1.7 only: the 1.6 assembly is final and has none of this.
+Both features are switches under *RimWard settings > Hearth & Harbor* and do nothing when Hearth & Harbor is not loaded.
+
+**One compact bed button.** Instead of Hospital Bed, Surgery Bed and (from Hearth & Harbor) Guest Bed toggles piling up, a colony bed shows
+a single button, *Use: Colonist / Guest / Patient / Surgery patient*, with a menu. Impossible entries are greyed out with the reason
+(Patient and Surgery need the vanilla Medical switch; Guest is not available on medical beds). Prisoner and slave beds keep vanilla's buttons.
+Medical stays vanilla's own switch. Several selected beds are changed together.
+
+Protocol (both sides check, so exactly one set of buttons is ever shown):
+- `RimWard.BedSelector.Draws(Building_Bed)` is true when RimWard draws the selector for that bed. Hearth & Harbor then hides its own "Guest bed" toggle
+  (`CompHH_GuestBed.OtherDrawsSelector`).
+- RimWard only takes over when Hearth & Harbor speaks the protocol: static `Hearth.Guests.CompHH_GuestBed.BedSelectorVersion` >= 1, instance
+  `SelectorAvailable` / `SelectorBlockedReason`, plus the existing `IsGuestBed` and `SetGuestBed(bool, bool)`. With an older Hearth & Harbor both mods keep their own buttons.
+- If Hearth & Harbor (or a shared foundation) ever draws the selector itself, it sets static `CompHH_GuestBed.DrawsBedSelector = true`; RimWard then only hides
+  its toggles and the other side drives the bed through `RimWard.BedApi` (`Apply(bed, BedUse)`, `IsHospital/SetHospital`, `IsSurgery/SetSurgery`).
+
+**Patients use guest leisure.** RimWard exposes `RimWard.PatientApi` (version `InteropVersion` = 1):
+`IsPatient(Pawn)`, `IsWalkingPatient(Pawn)` (up and about: awake, can walk, not bleeding, nothing urgent to tend, no operation waiting; they may be in a bed right now),
+`NeedsBedRest(Pawn)` and `Stage(Pawn)` = `Acute | Recovering | Observation | Discharged | None`. The patient duty gets a leisure node after "go to bed" (1.7 patch
+`1.7/Patches/PatientLeisureDuty.xml`): a walking patient asks Hearth & Harbor's spa joy givers for something to do (hot tub, sauna, massage), at most once every ~2500 ticks.
+Hearth & Harbor applies its own house rules on top (no sauna after fresh surgery, spa switched off, ...). Patients are not guests of the inn and are never billed by it;
+RimWard stays the owner of the stay.
+
 ## Credits & license
 
 RimWard is a GPL-3.0 fork built on the foundation of **Adamas's *Hospital*** and the fixes from

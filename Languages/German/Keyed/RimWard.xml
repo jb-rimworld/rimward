@@ -107,4 +107,21 @@
     <RimWard.RoyalRoomNeeded>Verlangt ein Qualitätszimmer</RimWard.RoyalRoomNeeded>
     <RimWard.ThoughtTurnedAway>Kranke abgewiesen</RimWard.ThoughtTurnedAway>
     <RimWard.ThoughtTurnedAwayDesc>Jemand kam gebrochen und flehend zu uns, und wir haben die Tür zugeschlagen. Wir sind nicht, wer wir vorgeben zu sein.</RimWard.ThoughtTurnedAwayDesc>
+    <!-- Hearth &amp; Harbor integration -->
+    <RimWard.Bed.UseLabel>Nutzung: {0}</RimWard.Bed.UseLabel>
+    <RimWard.Bed.UseDesc>Wer in diesem Bett schläft. Mit Hearth &amp; Harbor ersetzt dieser eine Knopf die Schalter Krankenhaus-, OP- und Gästebett. Medizinisch bleibt der Vanilla-Schalter.</RimWard.Bed.UseDesc>
+    <RimWard.Bed.Use.Colonist>Kolonist</RimWard.Bed.Use.Colonist>
+    <RimWard.Bed.Use.Guest>Gast</RimWard.Bed.Use.Guest>
+    <RimWard.Bed.Use.Patient>Patient</RimWard.Bed.Use.Patient>
+    <RimWard.Bed.Use.Surgery>OP-Patient</RimWard.Bed.Use.Surgery>
+    <RimWard.Bed.GuestOff>Gästebetten sind nicht verfügbar (Gästehaus-Modul von Hearth &amp; Harbor ist aus).</RimWard.Bed.GuestOff>
+    <RimWard.Bed.GuestNotMedical>medizinische Betten können keine Gästebetten sein</RimWard.Bed.GuestNotMedical>
+    <RimWard.Bed.NeedsMedical>zuerst das Bett auf Medizinisch stellen</RimWard.Bed.NeedsMedical>
+    <RimWard.Bed.NoPodSurgery>Medizin-Kapseln haben keine OP-Nutzung</RimWard.Bed.NoPodSurgery>
+    <RimWard.Set.Hearth>Hearth &amp; Harbor</RimWard.Set.Hearth>
+    <RimWard.Set.HearthNote>Wirkt nur, wenn Hearth &amp; Harbor geladen ist.</RimWard.Set.HearthNote>
+    <RimWard.Set.CombinedBed>Ein gemeinsamer Betten-Knopf</RimWard.Set.CombinedBed>
+    <RimWard.Set.CombinedBedTip>Zeigt einen einzigen Knopf "Nutzung: Kolonist / Gast / Patient" statt getrennter Schalter für Krankenhaus-, OP- und Gästebett. Braucht eine Hearth-&amp;-Harbor-Version mit dem Auswahl-Protokoll.</RimWard.Set.CombinedBedTip>
+    <RimWard.Set.Leisure>Patienten nutzen Gäste-Freizeit</RimWard.Set.Leisure>
+    <RimWard.Set.LeisureTip>Patienten, die auf den Beinen sind (keine Blutung, keine OP wartet), dürfen Freizeitorte von Hearth &amp; Harbor wie das Spa besuchen, während sie genesen.</RimWard.Set.LeisureTip>
 </LanguageData>

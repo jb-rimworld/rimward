@@ -40,6 +40,9 @@ You decide who gets a bed, who gets a bill, and who gets a polite "have you cons
 - Replaces the Hospital mod and its patches (Hospital Fix And Tweak and friends). Please disable those. RimWard is the whole hospital now and will refuse to share the building.
 - Hospital Beds Gen 2 by the same author is the recommended companion: its healing beds are medical beds, so RimWard uses them automatically, and faster healing means faster turnover. Optional, but they get along nicely.
 
+== WORKS WITH HEARTH &amp; HARBOR ==
+Optional, nothing is required, RimWorld 1.7. With Hearth &amp; Harbor the bed buttons become one: "Use: Colonist / Guest / Patient / Surgery patient". Patients who are up and about (not bleeding, no operation waiting) may wander into its spa while they recover. Both are switches in the RimWard settings. Without Hearth &amp; Harbor nothing changes.
+
 == CREDITS ==
 Built on Adamas's Hospital and assssssqwww's Hospital Fix And Tweak. Enormous thanks to both. Also built with Harmony (Andreas Pardeike) and Prepatcher (Zetrith).
 

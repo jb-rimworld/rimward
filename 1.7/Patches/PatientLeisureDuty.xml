@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+    <!-- RimWorld 1.7 only (the 1.6 assembly has no JobGiver_PatientLeisure).
+         Hearth & Harbor integration: after "go to bed", a patient who is up and about may use leisure places.
+         The node does nothing at all without Hearth & Harbor or with the setting off. -->
+    <Operation Class="PatchOperationAdd">
+        <xpath>/Defs/DutyDef[defName="RimWard_Patient"]/thinkNode/subNodes</xpath>
+        <value>
+            <li Class="RimWard.JobGiver_PatientLeisure" />
+        </value>
+    </Operation>
+</Patch>

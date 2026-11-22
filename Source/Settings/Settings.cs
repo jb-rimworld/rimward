@@ -55,6 +55,10 @@ namespace RimWard
         public bool ZombieContractsEnabled = false;       // opt-in, per the user
         public bool NoFaultDeathCanProfit = true;          // the black-comedy lever
 
+        // Hearth & Harbor (soft integration; no effect without that mod)
+        public bool CombinedBedButton = true;
+        public bool PatientLeisure = true;
+
         private Vector2 scrollPos;
 
         public float PaymentMultiplier
@@ -108,11 +112,13 @@ namespace RimWard
             Scribe_Values.Look(ref this.SoftCompatEnabled, "SoftCompatEnabled", true);
             Scribe_Values.Look(ref this.ZombieContractsEnabled, "ZombieContractsEnabled", false);
             Scribe_Values.Look(ref this.NoFaultDeathCanProfit, "NoFaultDeathCanProfit", true);
+            Scribe_Values.Look(ref this.CombinedBedButton, "CombinedBedButton", true);
+            Scribe_Values.Look(ref this.PatientLeisure, "PatientLeisure", true);
         }
 
         public void DoWindowContents(Rect inRect)
         {
-            Rect view = new Rect(0f, 0f, inRect.width - 24f, 1320f);
+            Rect view = new Rect(0f, 0f, inRect.width - 24f, 1450f);
             Widgets.BeginScrollView(inRect, ref this.scrollPos, view);
             Listing_Standard l = new Listing_Standard { maxOneColumn = true };
             l.Begin(view);
@@ -167,6 +173,11 @@ namespace RimWard
             l.CheckboxLabeled("RimWard.Set.IdeoGuilty".Translate(), ref this.IdeologyGuilty);
             l.CheckboxLabeled("RimWard.Set.SoftCompat".Translate(), ref this.SoftCompatEnabled, "RimWard.Set.SoftCompatTip".Translate());
             l.CheckboxLabeled("RimWard.Set.Zombie".Translate(), ref this.ZombieContractsEnabled, "RimWard.Set.ZombieTip".Translate());
+
+            Header(l, "RimWard.Set.Hearth".Translate());
+            l.Label("RimWard.Set.HearthNote".Translate());
+            l.CheckboxLabeled("RimWard.Set.CombinedBed".Translate(), ref this.CombinedBedButton, "RimWard.Set.CombinedBedTip".Translate());
+            l.CheckboxLabeled("RimWard.Set.Leisure".Translate(), ref this.PatientLeisure, "RimWard.Set.LeisureTip".Translate());
 
             l.End();
             Widgets.EndScrollView();

@@ -1,3 +1,5 @@
 Source/**/obj/
 Source/**/bin/
 .DS_Store
+Source/obj17/
+1.7/Assemblies/*.deps.json
