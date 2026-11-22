@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <!-- Diagnose / Behandlung -->
+    <BedsFilled>Belegte Betten: {0}/{1}</BedsFilled>
+    <DiagnosisWounds>Wunden</DiagnosisWounds>
+    <CureWounds>Wunden versorgen</CureWounds>
+    <CureDisease>Medizin verabreichen</CureDisease>
+    <DiagnosisSurgeryOnPart>Problem mit {0}</DiagnosisSurgeryOnPart>
+    <DiagnosisSurgeryNoPart>braucht eine Operation</DiagnosisSurgeryNoPart>
+    <DiagnosisArtificialBodyPart>möchte ein(e) {0}</DiagnosisArtificialBodyPart>
+    <Dismiss>Entlassen</Dismiss>
+    <Disallow>Operation ablehnen</Disallow>
+    <RefusedOperations>Abgelehnte Operationen:</RefusedOperations>
+    <DefaultMedicineSettings>Standardmedizin</DefaultMedicineSettings>
+
+    <!-- Einstellungen / Richtlinien -->
+    <HospitalMapSettings>Krankenhaus-Richtlinien...</HospitalMapSettings>
+    <HospitalSettings>Krankenhaus-Richtlinien</HospitalSettings>
+    <AcceptPatients>Patienten aufnehmen</AcceptPatients>
+    <AcceptPatientsTooltip>Deaktivieren, um keine Patienten mehr zu empfangen.</AcceptPatientsTooltip>
+    <AcceptSurgery>Operationen annehmen</AcceptSurgery>
+    <AcceptSurgeryTooltip>Deaktivieren, wenn du keine OP-Patienten möchtest.</AcceptSurgeryTooltip>
+    <AcceptDanger>Patienten auch bei Gefahr</AcceptDanger>
+    <AcceptDangerTooltip>Aktivieren, um die Sicherheitsprüfung der Karte zu übergehen.</AcceptDangerTooltip>
+    <SilverMultiplier>Silber-Multiplikator</SilverMultiplier>
+    <SilverMultiplierTooltip>Skaliert die Rechnung des Patienten. (empfohlen: 100%)</SilverMultiplierTooltip>
+    <ShowMessageAtArrival>Nachricht statt Brief anzeigen</ShowMessageAtArrival>
+    <ShowMessageAtArrivalTooltip>Zeigt bei neuer Ankunft eine Nachricht statt eines Briefs.</ShowMessageAtArrivalTooltip>
+    <MassCasualties>Massenanfall-Ereignisse aktivieren</MassCasualties>
+    <MassCasualtiesTooltip>Ein Massenanfall überschwemmt dein Krankenhaus sporadisch mit Patienten.</MassCasualtiesTooltip>
+
+    <!-- Bett-Befehle -->
+    <CommandBedSetAsHospitalLabel>Krankenhausbett</CommandBedSetAsHospitalLabel>
+    <CommandBedSetAsHospitalDesc>Ob dieses Bett für Patienten ist.</CommandBedSetAsHospitalDesc>
+    <CommandBedSetAsSurgeryLabel>OP-Bett</CommandBedSetAsSurgeryLabel>
+    <CommandBedSetAsSurgeryDesc>Ob dieses Bett für OP-Patienten ist.</CommandBedSetAsSurgeryDesc>
+
+    <!-- Massenanfall-Flavor -->
+    <MCE_Pandemic>Eine Pandemie</MCE_Pandemic>
+    <MCE_Raid>Ein großer Überfall</MCE_Raid>
+    <MCE_Crash>Ein großer Transportkapsel-Absturz</MCE_Crash>
+    <MCE_Fire>Ein großer Gebäudebrand</MCE_Fire>
+
+    <!-- Laufzeit-Nachrichten -->
+    <RimWard.NoGoodwillLost>(kein Ansehen verloren)</RimWard.NoGoodwillLost>
+    <RimWard.NoFaction>keine Fraktion</RimWard.NoFaction>
+    <RimWard.AmbientDiagnosis>vor Ort verletzt</RimWard.AmbientDiagnosis>
+
+    <!-- Triage-Angebote -->
+    <RimWard.Offer.Label>Patient sucht Behandlung</RimWard.Offer.Label>
+    <RimWard.Offer.Text>{0} ({1}) bittet um Behandlung.\n\nDiagnose: {2}\nGeschätzte Bezahlung: {3} Silber\n\nNimmst du diesen Patienten an?</RimWard.Offer.Text>
+    <RimWard.Offer.Accept>Patient annehmen</RimWard.Offer.Accept>
+    <RimWard.Offer.Decline>Abweisen</RimWard.Offer.Decline>
+    <RimWard.Alert.Count>{0} offene(s) Patienten-Angebot(e)</RimWard.Alert.Count>
+    <RimWard.Alert.Explanation>Patienten warten auf deine Entscheidung. Klicke ihren Angebots-Brief, um sie anzunehmen oder abzuweisen.</RimWard.Alert.Explanation>
+
+    <!-- Aufnahme-Einstellungen -->
+    <RimWard.Set.IntakeMode>Aufnahme-Modus</RimWard.Set.IntakeMode>
+    <RimWard.Set.TriageHours>Entscheidungszeit</RimWard.Set.TriageHours>
+    <RimWard.Set.Ambient>Verletzte Verbündete auf der Karte behandeln (Aufträge)</RimWard.Set.Ambient>
+    <RimWard.Set.AmbientTip>Wenn Besucher/Händler/Verbündete auf deiner Karte verletzt werden, bekommst du ein Angebot, sie gegen Bezahlung zu behandeln.</RimWard.Set.AmbientTip>
+
+    <!-- Einstellungsfenster -->
+    <RimWard.Set.General>Allgemein</RimWard.Set.General>
+    <RimWard.Set.Difficulty>Schwierigkeit</RimWard.Set.Difficulty>
+    <RimWard.Set.DifficultyDial>Schwierigkeits-Regler</RimWard.Set.DifficultyDial>
+    <RimWard.Set.DifficultyDialTip>Skaliert Krankheits- und Wundenschwere sowie die Komplexität der Fälle.</RimWard.Set.DifficultyDialTip>
+    <RimWard.Set.Economy>Wirtschaft &amp; Bezahlung</RimWard.Set.Economy>
+    <RimWard.Set.PaymentPreset>Bezahl-Skala</RimWard.Set.PaymentPreset>
+    <RimWard.Set.CustomMult>Eigener Multiplikator</RimWard.Set.CustomMult>
+    <RimWard.Set.EffMult>Effektiver Auszahlungs-Multiplikator: {0}</RimWard.Set.EffMult>
+    <RimWard.Set.BillCap>Maximale Auszahlung pro Patient</RimWard.Set.BillCap>
+    <RimWard.Set.Surgery>Operationen</RimWard.Set.Surgery>
+    <RimWard.Set.AutoRetry>Fehlgeschlagene OPs automatisch wiederholen</RimWard.Set.AutoRetry>
+    <RimWard.Set.AutoRetryTip>Eine verpfuschte OP wird erneut versucht, statt den Patienten ungeheilt zu lassen.</RimWard.Set.AutoRetryTip>
+    <RimWard.Set.MaxRetries>Max. OP-Wiederholungen</RimWard.Set.MaxRetries>
+    <RimWard.Set.ReimburseMed>Medizin bei Fehlschlag erstatten</RimWard.Set.ReimburseMed>
+    <RimWard.Set.ReimburseProsth>Prothesen bei Fehlschlag erstatten</RimWard.Set.ReimburseProsth>
+    <RimWard.Set.Death>Todesstrafe (Fairness)</RimWard.Set.Death>
+    <RimWard.Set.DeathPenalty>Ansehensverlust bei Patiententod</RimWard.Set.DeathPenalty>
+    <RimWard.Set.DeathAmount>Verlorenes Ansehen (wenn selbst schuld)</RimWard.Set.DeathAmount>
+    <RimWard.Set.NoFaultSurgery>Keine Strafe bei OP-Tod</RimWard.Set.NoFaultSurgery>
+    <RimWard.Set.NoFaultSurgeryTip>Ein Tod auf dem OP-Tisch ist klinisches Risiko, nicht deine Schuld.</RimWard.Set.NoFaultSurgeryTip>
+    <RimWard.Set.NoFaultLeaving>Keine Strafe bei Tod während des Verlassens</RimWard.Set.NoFaultLeaving>
+    <RimWard.Set.NoFaultUnwinnable>Keine Strafe, wenn bei Ankunft schon verloren</RimWard.Set.NoFaultUnwinnable>
+    <RimWard.Set.NoFaultProfit>Schuldlose Tode dürfen trotzdem Gewinn bringen</RimWard.Set.NoFaultProfit>
+    <RimWard.Set.NoFaultProfitTip>"Die Operation war ein Erfolg; der Patient leider nicht." Erlaubt ein netto-positives Ergebnis auch bei schuldlosem Tod.</RimWard.Set.NoFaultProfitTip>
+    <RimWard.Set.Rooms>Zimmer &amp; Qualität</RimWard.Set.Rooms>
+    <RimWard.Set.SingleMult>Bezahl-Multiplikator Einzelzimmer</RimWard.Set.SingleMult>
+    <RimWard.Set.TwoBedMult>Bezahl-Multiplikator Zweibettzimmer</RimWard.Set.TwoBedMult>
+    <RimWard.Set.BarracksMult>Bezahl-Multiplikator Schlafsaal</RimWard.Set.BarracksMult>
+    <RimWard.Set.Chief>Chefarzt-Bonus</RimWard.Set.Chief>
+    <RimWard.Set.ChiefTip>Von einem hochqualifizierten Arzt behandelte Patienten zahlen mehr — wie ein Privatzimmer.</RimWard.Set.ChiefTip>
+    <RimWard.Set.ChiefSkill>Chefarzt: Mindest-Medizin-Skill</RimWard.Set.ChiefSkill>
+    <RimWard.Set.ChiefMult>Chefarzt-Bezahl-Multiplikator</RimWard.Set.ChiefMult>
+    <RimWard.Set.MedPref>Fraktions-Medizin-Vorliebe</RimWard.Set.MedPref>
+    <RimWard.Set.Features>Funktionen</RimWard.Set.Features>
+    <RimWard.Set.Renown>Krankenhaus-Renommee &amp; Stufen</RimWard.Set.Renown>
+    <RimWard.Set.RoyalRoom>Royale Patienten verlangen ein Qualitätszimmer</RimWard.Set.RoyalRoom>
+    <RimWard.Set.IdeoGuilty>Ideology: Schuld beim Abweisen von Patienten</RimWard.Set.IdeoGuilty>
+    <RimWard.Set.SoftCompat>Sanfte Kompatibilität mit Verletzungs-/Medizin-Mods</RimWard.Set.SoftCompat>
+    <RimWard.Set.SoftCompatTip>Rechnet Heilung durch Psycasts und andere Mods an; auf jede Art geheilte Patienten dürfen gehen.</RimWard.Set.SoftCompatTip>
+    <RimWard.Set.Zombie>Zombiebiss-Patienten (optional)</RimWard.Set.Zombie>
+    <RimWard.Set.ZombieTip>Benötigt Zombieland. Frisch gebissene Patienten, die du heilen musst, bevor sie sich verwandeln.</RimWard.Set.ZombieTip>
+
+    <!-- Royalty / Ideology -->
+    <RimWard.RoyalRoomNeeded>Verlangt ein Qualitätszimmer</RimWard.RoyalRoomNeeded>
+    <RimWard.ThoughtTurnedAway>Kranke abgewiesen</RimWard.ThoughtTurnedAway>
+    <RimWard.ThoughtTurnedAwayDesc>Jemand kam gebrochen und flehend zu uns, und wir haben die Tür zugeschlagen. Wir sind nicht, wer wir vorgeben zu sein.</RimWard.ThoughtTurnedAwayDesc>
+</LanguageData>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <LetterDef>
+        <defName>RimWard_PatientOffer</defName>
+        <letterClass>RimWard.ChoiceLetter_PatientOffer</letterClass>
+        <color>(0.4, 0.7, 1.0)</color>
+        <bounce>true</bounce>
+        <flashInterval>0</flashInterval>
+    </LetterDef>
+</Defs>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <MainButtonDef>
+    <defName>RimWard_Patients</defName>
+    <label>RimWard</label>
+    <description>Manage your hospital: patients, intake and policies.</description>
+    <tabWindowClass>RimWard.MainTab.MainTabWindow_Hospital</tabWindowClass>
+    <order>54</order>
+  </MainButtonDef>
+</Defs>

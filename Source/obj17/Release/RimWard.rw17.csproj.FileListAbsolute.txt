@@ -1,0 +1,8 @@
+/Users/julius/Documents/Coding/22_RimWorld/RimWard/1.7/Assemblies/RimWard.deps.json
+/Users/julius/Documents/Coding/22_RimWorld/RimWard/1.7/Assemblies/RimWard.dll
+/Users/julius/Documents/Coding/22_RimWorld/RimWard/Source/obj17/Release/RimWard.rw17.csproj.AssemblyReference.cache
+/Users/julius/Documents/Coding/22_RimWorld/RimWard/Source/obj17/Release/RimWard.rw17.GeneratedMSBuildEditorConfig.editorconfig
+/Users/julius/Documents/Coding/22_RimWorld/RimWard/Source/obj17/Release/RimWard.rw17.csproj.CoreCompileInputs.cache
+/Users/julius/Documents/Coding/22_RimWorld/RimWard/Source/obj17/Release/RimWard.dll
+/Users/julius/Documents/Coding/22_RimWorld/RimWard/Source/obj17/Release/refint/RimWard.dll
+/Users/julius/Documents/Coding/22_RimWorld/RimWard/Source/obj17/Release/ref/RimWard.dll
