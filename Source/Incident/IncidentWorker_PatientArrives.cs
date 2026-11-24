@@ -20,7 +20,7 @@ namespace RimWard
 
             List<Faction> factions = Find.FactionManager.AllFactions.Where(f =>
                 !f.IsPlayer && !f.defeated && !f.def.hidden && f.AllyOrNeutralTo(Faction.OfPlayer)
-                && f.def.humanlikeFaction && !f.def.defName.ToUpper().Contains("VREA")).ToList();
+                && f.def.humanlikeFaction && !f.def.defName.ToUpper().Contains("VREA") && !(HospitalMod.Settings?.FactionBlocked(f.def) ?? false)).ToList();
 
             // never send a patient whose people are at war with someone actively fighting on this map
             IReadOnlyList<Faction> hostiles = Threats.ActiveHostileFactions(map);
@@ -34,9 +34,10 @@ namespace RimWard
             // Build the core case (apply the ailment) so the offer / letter can show a real diagnosis.
             HospitalMapComponent comp = HospitalMapComponent.For(map);
             IncidentHelper.SetUpNewPatient(pawn);
-            PatientType type = (PatientType)Rand.Range(1, comp.AcceptSurgery ? 4 : 3);
+            bool surgery = comp.AcceptSurgery && HospitalMod.Settings.SurgeryCasesOn;
+            PatientType type = (PatientType)Rand.Range(1, surgery ? 4 : 3);
             PatientData data = new PatientData(Find.TickManager.TicksGame, pawn.MarketValue, pawn.needs.mood.CurLevel, type);
-            PatientUtility.DamagePawn(pawn, data, comp);
+            if (!CriticalCase.TryMake(pawn, data, comp)) PatientUtility.DamagePawn(pawn, data, comp);
 
             // Difficulty layer: budget-driven complications (extra ailments, frailty, addiction, royal, dependency, organ failure).
             if (HospitalMod.Settings.ComplicationsEnabled) PatientComplexityGenerator.ApplyComplexity(pawn, data, comp);

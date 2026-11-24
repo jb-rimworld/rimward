@@ -7,7 +7,7 @@ using Verse;
 
 namespace RimWard
 {
-    public enum InvoiceLineKind { Admission, Tend, Food, Surgery, Materials, ReimburseMedicine, ReimburseParts, Legacy }
+    public enum InvoiceLineKind { Admission, Tend, Food, Surgery, Materials, ReimburseMedicine, ReimburseParts, Legacy, CriticalCase }
 
     /// <summary>Why a stay ends (or, for <see cref="Estimate"/>, that it has not ended yet).</summary>
     public enum DischargeReason { Estimate, Cured, Dismissed, TreatmentImpossible, MaxStay, DiedNoFault }

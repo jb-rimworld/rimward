@@ -71,6 +71,7 @@ namespace RimWard
         {
             HospitalMapComponent component = HospitalMapComponent.For(map);
             if (component == null) return "RimWard.Block.NoHospital".Translate();
+            if (HospitalMod.Settings == null || !HospitalMod.Settings.IntakeOn) return "RimWard.Block.IntakeOff".Translate();
             HospitalPolicy pol = component.Policy;
             if (!pol.open) return "RimWard.Block.Closed".Translate();
             if (pol.OpenHourCount == 0) return "RimWard.Block.NoHours".Translate();

@@ -20,19 +20,25 @@ namespace RimWard
         RoyalDemands,    // titled patients want a private room (Royalty)
         IdeologyGuilt,   // turning the sick away hurts "Guilty" ideoligions (Ideology)
         HearthHarbor,    // one bed button and patient leisure (Hearth & Harbor loaded)
-        CombatExtended   // CE self-tend blocked for patients (CE loaded)
+        CombatExtended,  // CE self-tend blocked for patients (CE loaded)
+        SurgeryCases,    // new patients may come for an operation
+        BillingExtras,   // partial pay, reimbursements, invoice letters
+        CriticalCases    // Luciferium critical cases (Luciferium Overhaul loaded, off by default)
     }
 
     public static class RimWardAreas
     {
-        /// <summary>THE one function that says whether a feature area is on. Global settings plus, where it applies, the current save's policy.</summary>
+        /// <summary>THE one function that says whether a feature area is on: the framework section switch of the current save
+        /// (template outside a game) plus, where it applies, the save's hospital policy.</summary>
         public static bool IsOn(FeatureArea area, Map map = null)
         {
             Settings s = HospitalMod.Settings;
             if (s == null) return false;
             switch (area)
             {
-                case FeatureArea.Intake: return HospitalMapComponent.For(map ?? Find.CurrentMap)?.Policy.open ?? HospitalGameComponent.Get?.Policy.open ?? false;
+                case FeatureArea.Intake:
+                    if (!s.IntakeOn) return false;
+                    return HospitalMapComponent.For(map ?? Find.CurrentMap)?.Policy.open ?? HospitalGameComponent.Get?.Policy.open ?? false;
                 case FeatureArea.MassCasualties:
                     {
                         if (!s.MassCasualtiesEnabled) return false;
@@ -43,12 +49,15 @@ namespace RimWard
                 case FeatureArea.Complications: return s.ComplicationsEnabled;
                 case FeatureArea.Money: return s.ChargePatients;
                 case FeatureArea.Malpractice: return s.DeathPenaltyEnabled;
-                case FeatureArea.SurgeryRetry: return s.AutoRetryEnabled;
+                case FeatureArea.SurgeryRetry: return s.SurgeryCasesOn && s.AutoRetryEnabled;
                 case FeatureArea.Renown: return s.RenownEnabled;
-                case FeatureArea.RoyalDemands: return s.RoyalRoomDemand && ModsConfig.RoyaltyActive;
-                case FeatureArea.IdeologyGuilt: return s.IdeologyGuilty && ModsConfig.IdeologyActive;
+                case FeatureArea.RoyalDemands: return s.RoyalRoomDemand;
+                case FeatureArea.IdeologyGuilt: return s.IdeologyGuilty;
                 case FeatureArea.HearthHarbor: return HearthBridge.HearthLoaded && (s.CombinedBedButton || s.PatientLeisure);
-                case FeatureArea.CombatExtended: return HarmonyLib.AccessTools.TypeByName("CombatExtended.AI.CompTend") != null;
+                case FeatureArea.CombatExtended: return HospitalMod.K != null && HospitalMod.K.On(Sections.CombatExtended);
+                case FeatureArea.SurgeryCases: return s.SurgeryCasesOn;
+                case FeatureArea.BillingExtras: return s.BillingExtrasOn;
+                case FeatureArea.CriticalCases: return s.CriticalCasesOn;
             }
             return false;
         }

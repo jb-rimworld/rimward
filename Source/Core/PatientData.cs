@@ -39,6 +39,9 @@ namespace RimWard
         public int DangerHoldSinceTick = -1;
         public bool PaidOnDischarge;
 
+        // Luciferium critical case (needs Luciferium Overhaul, area off by default)
+        public bool CriticalCase;
+
         /// <summary>Adds a charge and keeps <see cref="Bill"/> equal to the sum of all lines.</summary>
         public void AddLine(InvoiceLineKind kind, string detail, float amount)
         {
@@ -99,6 +102,7 @@ namespace RimWard
             Scribe_Values.Look(ref this.ImpossibleLetterSent, "ImpossibleLetterSent", false);
             Scribe_Values.Look(ref this.DangerHoldSinceTick, "DangerHoldSinceTick", -1);
             Scribe_Values.Look(ref this.PaidOnDischarge, "PaidOnDischarge", false);
+            Scribe_Values.Look(ref this.CriticalCase, "CriticalCase", false);
             if (Scribe.mode == LoadSaveMode.PostLoadInit) this.EnsureLines(true);
         }
     }

@@ -1,58 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-	<name>RimWard - Anesthesia Not Included</name>
+	<name>RimWard - Hospital for Profit (Anesthesia Not Included)</name>
 	<author>juliusberger00</author>
 	<packageId>juliusberger.rimward</packageId>
+	<modVersion>2.0.0</modVersion>
 	<supportedVersions>
 		<li>1.6</li>
 		<li>1.7</li>
 	</supportedVersions>
-	<description>A hospital overhaul for RimWorld.
+	<description>A hospital mod rebuilt so it just works. Lay down medical beds, open the hospital, and strangers arrive by drop pod to be patched up. Then they pay you for it.
 
-The Rim is full of people about to die in interesting ways. RimWard turns that supply of misfortune into a business: hang out a sign, lay down some beds, and strangers will limp and get drop-podded to your door to have the holes in them fixed. Then they pay you for it.
+- Patients come with wounds, diseases or an operation your colony can actually do. Triage your way: they just arrive, or a letter asks first.
+- One itemised invoice: the Bill column, the offer letter and the silver you get are the same calculation (treatments, meals, operations and materials, times payment scale, room, chief physician and renown).
+- Nobody gets stuck: dismissed patients leave, impossible operations end with a letter, a maximum stay, cured patients wait for real danger only.
+- Fair malpractice: goodwill is lost only for deaths that are your fault.
+- Hospital policies (open, opening hours, refused operations, food, medicine) belong to the save and come along after a gravship landing.
+- Settings in the JB Framework window: switch whole areas off (intake, surgery cases, mass casualties, complications, billing extras, malpractice, renown, DLC parts), presets Clinic / Charity / Meat shop, blacklists for diseases, operations and factions, per save with a template for new games.
+- Optional links: Hospital Beds Gen 2 (its beds count), Hearth &amp; Harbor (one bed button, patients may use the spa), Luciferium Overhaul (opt-in luciferium critical cases, off by default), Combat Extended, all DLCs. None are required.
+- English and German. Multiplayer: not supported.
 
-You decide who gets a bed, who gets a bill, and who gets a polite "have you considered dying somewhere else?" Run a saintly charity ward or a for-profit organ-adjacent meat shop. That is between you and your ideoligion.
+Built and tested on RimWorld 1.7. The 1.6 build is best effort and untested (1.6 keeps the version of 24 November 2026 and needs no framework).
 
-== GETTING STARTED ==
-- Build medical beds and set them to Patient (all medical beds are patient beds by default). Optionally place a "patients land here" marker (Architect, Misc) to choose where the drop pods go.
-- New colonies start with the hospital open (setting). In an existing save, open the hospital tab, press "Hospital Policies...", tick "Accept patients" and set the opening hours (four a day by default).
-- Policies belong to the save and apply to every map, including the new one after a gravship landing. A map can have its own.
-- Mass casualty events are an opt-in checkbox in the same dialog.
-
-== FEATURES (RimWorld 1.7; the 1.6 version is frozen) ==
-- Triage your way: Firehose (patients just show up), Prompt (a letter for every case with diagnosis, estimated payment and what an operation uses from your stock) or Hybrid (letters only for surgery cases and titled nobles). Offers expire after 1 to 24 hours (default 6). Declining is free.
-- One invoice: the Bill column, the offer letter and the silver you get are the same calculation. Admission, every tend with medicine, every meal fed, every operation and its materials, times payment scale, room, chief physician, medicine preference, noble demand and renown, capped by a setting. Hover the bill for the itemised version. Large payouts come as a letter with the full invoice.
-- Every operation on a patient is billed, vanilla or modded. A failed one charges no fee; the medicine and parts it used up are reimbursed (settings). Botched cures are retried up to 3 times.
-- Nobody gets stuck: dismissed patients leave and pay their share (default 50%). An operation that cannot be done sends a letter after 24 hours and discharges after another 24, no penalty. Maximum stay 15 days (0 = off). Cured patients wait for active danger at most 24 hours; dormant mech clusters and weather never hold anyone. Arrested or recruited patients keep their new status. All of it is a setting.
-- Fair malpractice: goodwill is only lost when a death is your fault. Surgery deaths, deaths right after a botch, after dismissal or within an hour of arrival are not.
-- Room-quality pay: private room 135%, two-bed room 110%, ward 85%, hallway less. Chief physician (Medicine 12+) adds 25%. Four renown tiers, +5% each.
-- Difficult clientele: nobles (Royalty) pay 40% more for a private room and 25% less for a shared one. Tribals dislike glitterworld medicine, modern factions dislike herbs. Patients may bring a second illness, a chronic condition or a harmless addiction, never anything that kills them or sends them berserk. They keep their faction's own xenotype; hemogen and deathrest xenotypes stay home unless you allow them.
-- Mass casualty events (opt-in per save): a pandemic, raid, crash or fire sends at most as many patients as you have free patient beds.
-- Contracts: injured visitors and allies on your map offer to pay for treatment.
-- English and German.
-
-== COMPATIBILITY ==
-- RimWorld 1.6 and 1.7. Requires Harmony. On 1.6 Prepatcher is also listed as a dependency; on 1.7 you only need Harmony.
-- Royalty, Ideology, Biotech and Odyssey (policies survive a gravship landing) are used if present. None are required.
-- Combat Extended: CE's self-tend tactic is off for patients.
-- Body parts are found by definition and tag, so alien races and non-English games get the right part.
-- Wounds, diseases and operations come from the game's health system, so injury and medicine mods should work. Not tested against every one of them.
-- If one patch breaks after an update, only that feature is off and the log says which.
-- Multiplayer: not supported.
-- Replaces the Hospital mod and its patches (Hospital Fix And Tweak and friends). Please disable those.
-- Hospital Beds Gen 2 by the same author is the recommended companion: its beds are medical beds, so RimWard uses them automatically.
-
-== WORKS WITH HEARTH &amp; HARBOR ==
-Optional, nothing is required, RimWorld 1.7. With Hearth &amp; Harbor the bed buttons become one: "Use: Colonist / Guest / Patient / Surgery patient". Patients who are up and about (not bleeding, no operation waiting) may wander into its spa while they recover. Both are switches in the RimWard settings. Without Hearth &amp; Harbor nothing changes.
-
-== CREDITS ==
-Built on Adamas's Hospital and assssssqwww's Hospital Fix And Tweak. Ideas (not code) also from Adamas's later Hospital updates and mgrTDziedzic's Hospital (Fork). Enormous thanks to all of them. Also built with Harmony (Andreas Pardeike) and Prepatcher (Zetrith).
-
-== KEYWORDS ==
-medical tourism, healthcare, clinic, silver income, economy, management, balance, QoL, emergency room, nursing
-
-== TRANSPARENCY ==
-This mod was built with the help of Claude Code, which did the typing while I did the blaming. RimWard is a fork, so it is and stays GPL-3.0 (see LICENSE, full source in the Source folder). Copyright for the code taken over from Hospital stays with Adamas and assssssqwww, copyright for my changes stays with Julius Berger. Use it, change it, share it under the GPL, and anesthesia remains not included. Credit and a mention are welcome, but beyond what the GPL requires, not needed.</description>
+Requires Harmony and, on 1.7, JB Framework. Replaces Hospital and Hospital Fix And Tweak: please disable those. GPL-3.0, a fork of Adamas's Hospital and assssssqwww's Hospital Fix And Tweak; full source on GitHub (jb-rimworld/rimward). Built with the help of Claude Code.</description>
 	<modDependenciesByVersion>
 		<v1.7>
 			<li>
@@ -60,6 +29,11 @@ This mod was built with the help of Claude Code, which did the typing while I di
 				<displayName>Harmony</displayName>
 				<steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
 				<downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
+			</li>
+			<li>
+				<packageId>juliusberger.jbframework</packageId>
+				<displayName>JB Framework</displayName>
+				<steamWorkshopUrl>steam://url/CommunityFilePage/JBFRAMEWORK_WORKSHOP_ID</steamWorkshopUrl>
 			</li>
 		</v1.7>
 	</modDependenciesByVersion>
@@ -78,6 +52,7 @@ This mod was built with the help of Claude Code, which did the typing while I di
 	</modDependencies>
 	<loadAfter>
 		<li>brrainz.harmony</li>
+		<li>juliusberger.jbframework</li>
 		<li>zetrith.prepatcher</li>
 		<li>CETeam.CombatExtended</li>
 		<li>OskarPotocki.VanillaFactionsExpanded.Core</li>
@@ -87,6 +62,8 @@ This mod was built with the help of Claude Code, which did the typing while I di
 		<li>wenders.moreinjuries.organbridge</li>
 		<li>brrainz.zombieland</li>
 		<li>juliusberger.hospitalbedsgen2</li>
+		<li>juliusberger00.hearthharbor</li>
+		<li>juliusberger00.luciferiumoverhaul</li>
 	</loadAfter>
 	<incompatibleWith>
 		<li>Adamas.Hospital</li>

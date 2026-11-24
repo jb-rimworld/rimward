@@ -14,6 +14,7 @@ namespace RimWard.Patches
     /// The vanilla-side guard (CanSelfTendNow_Patch on JobDriver_TendPatient, which CE's TendSelf also uses) stays as the second line.
     /// </summary>
     [HarmonyPatch]
+    [JBFramework.KitCompat(HospitalMod.CombatExtendedId)]
     public static class CombatExtended_SelfTend_Patch
     {
         private static MethodInfo target;
@@ -34,7 +35,7 @@ namespace RimWard.Patches
         {
             Pawn pawn = null;
             try { pawn = selPawnGetter?.Invoke(__instance, null) as Pawn; } catch (Exception) { }
-            if (pawn != null && pawn.IsPatient(out _, false))
+            if (pawn != null && RimWardAreas.IsOn(FeatureArea.CombatExtended) && pawn.IsPatient(out _, false))
             {
                 __result = null;
                 return false;

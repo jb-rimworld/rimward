@@ -23,7 +23,6 @@
     <AcceptDanger>Allow patients during danger</AcceptDanger>
     <AcceptDangerTooltip>Check this to override the check whether the map is safe for patients to arrive.</AcceptDangerTooltip>
     <ShowMessageAtArrival>Show message instead of letter</ShowMessageAtArrival>
-    <ShowMessageAtArrivalTooltip>Shows a message instead of a letter when a new patient arrives.</ShowMessageAtArrivalTooltip>
     <MassCasualties>Enable mass casualty events</MassCasualties>
     <MassCasualtiesTooltip>A mass casualty event will sporadically overwhelm your hospital with patients.</MassCasualtiesTooltip>
 
@@ -53,49 +52,8 @@
     <RimWard.Alert.Explanation>Patients are waiting for your decision. Click their offer letter to accept or turn them away.</RimWard.Alert.Explanation>
 
     <!-- intake settings -->
-    <RimWard.Set.IntakeMode>Intake mode</RimWard.Set.IntakeMode>
-    <RimWard.Set.TriageHours>Decision time</RimWard.Set.TriageHours>
-    <RimWard.Set.Ambient>Treat injured allies on the map (contracts)</RimWard.Set.Ambient>
-    <RimWard.Set.AmbientTip>When visitors/traders/allies get hurt on your map, you get an offer to treat them for pay.</RimWard.Set.AmbientTip>
 
     <!-- settings window -->
-    <RimWard.Set.General>General</RimWard.Set.General>
-    <RimWard.Set.Difficulty>Difficulty</RimWard.Set.Difficulty>
-    <RimWard.Set.DifficultyDial>Master difficulty</RimWard.Set.DifficultyDial>
-    <RimWard.Set.DifficultyDialTip>Scales disease and wound severity and overall case toughness.</RimWard.Set.DifficultyDialTip>
-    <RimWard.Set.Economy>Economy &amp; Payment</RimWard.Set.Economy>
-    <RimWard.Set.PaymentPreset>Payment scale</RimWard.Set.PaymentPreset>
-    <RimWard.Set.CustomMult>Custom multiplier</RimWard.Set.CustomMult>
-    <RimWard.Set.EffMult>Effective payout multiplier: {0}</RimWard.Set.EffMult>
-    <RimWard.Set.BillCap>Maximum payout per patient</RimWard.Set.BillCap>
-    <RimWard.Set.Surgery>Surgery</RimWard.Set.Surgery>
-    <RimWard.Set.AutoRetry>Auto-retry failed surgeries</RimWard.Set.AutoRetry>
-    <RimWard.Set.AutoRetryTip>A botched operation is re-attempted instead of leaving the patient uncured.</RimWard.Set.AutoRetryTip>
-    <RimWard.Set.MaxRetries>Max surgery retries</RimWard.Set.MaxRetries>
-    <RimWard.Set.ReimburseMed>Reimburse medicine on failure</RimWard.Set.ReimburseMed>
-    <RimWard.Set.ReimburseProsth>Reimburse prosthetics on failure</RimWard.Set.ReimburseProsth>
-    <RimWard.Set.Death>Death penalty (fairness)</RimWard.Set.Death>
-    <RimWard.Set.DeathPenalty>Lose goodwill on patient death</RimWard.Set.DeathPenalty>
-    <RimWard.Set.DeathAmount>Goodwill lost (when at fault)</RimWard.Set.DeathAmount>
-    <RimWard.Set.NoFaultSurgery>No penalty for surgery deaths</RimWard.Set.NoFaultSurgery>
-    <RimWard.Set.NoFaultSurgeryTip>A patient dying on the operating table is clinical risk, not your fault.</RimWard.Set.NoFaultSurgeryTip>
-    <RimWard.Set.NoFaultLeaving>No penalty for deaths while leaving</RimWard.Set.NoFaultLeaving>
-    <RimWard.Set.NoFaultUnwinnable>No penalty if doomed on arrival</RimWard.Set.NoFaultUnwinnable>
-    <RimWard.Set.NoFaultProfit>No-fault deaths can still profit</RimWard.Set.NoFaultProfit>
-    <RimWard.Set.NoFaultProfitTip>"The operation was a success; the patient was not." Allows a net-positive outcome even on a no-fault death.</RimWard.Set.NoFaultProfitTip>
-    <RimWard.Set.Rooms>Rooms &amp; quality</RimWard.Set.Rooms>
-    <RimWard.Set.SingleMult>Single-room pay multiplier</RimWard.Set.SingleMult>
-    <RimWard.Set.TwoBedMult>Two-bed room pay multiplier</RimWard.Set.TwoBedMult>
-    <RimWard.Set.BarracksMult>Barracks pay multiplier</RimWard.Set.BarracksMult>
-    <RimWard.Set.Chief>Chief-physician bonus</RimWard.Set.Chief>
-    <RimWard.Set.ChiefTip>Patients treated by a high-skill doctor pay more, like a private suite.</RimWard.Set.ChiefTip>
-    <RimWard.Set.ChiefSkill>Chief-physician minimum Medicine skill</RimWard.Set.ChiefSkill>
-    <RimWard.Set.ChiefMult>Chief-physician pay multiplier</RimWard.Set.ChiefMult>
-    <RimWard.Set.MedPref>Faction medicine preference</RimWard.Set.MedPref>
-    <RimWard.Set.Features>Features</RimWard.Set.Features>
-    <RimWard.Set.Renown>Hospital renown &amp; tiers</RimWard.Set.Renown>
-    <RimWard.Set.RoyalRoom>Royal patients demand a quality room</RimWard.Set.RoyalRoom>
-    <RimWard.Set.IdeoGuilty>Ideology: guilt for turning patients away</RimWard.Set.IdeoGuilty>
 
     <!-- royalty / ideology -->
     <RimWard.RoyalRoomNeeded>Demands a quality room</RimWard.RoyalRoomNeeded>
@@ -112,12 +70,6 @@
     <RimWard.Bed.GuestNotMedical>medical beds cannot be guest beds</RimWard.Bed.GuestNotMedical>
     <RimWard.Bed.NeedsMedical>set the bed to Medical first</RimWard.Bed.NeedsMedical>
     <RimWard.Bed.NoPodSurgery>medical pods have no surgery use</RimWard.Bed.NoPodSurgery>
-    <RimWard.Set.Hearth>Hearth &amp; Harbor</RimWard.Set.Hearth>
-    <RimWard.Set.HearthNote>Only does something when Hearth &amp; Harbor is loaded.</RimWard.Set.HearthNote>
-    <RimWard.Set.CombinedBed>One combined bed button</RimWard.Set.CombinedBed>
-    <RimWard.Set.CombinedBedTip>Show a single "Use: Colonist / Guest / Patient" button instead of separate Hospital, Surgery and Guest bed toggles. Needs a Hearth &amp; Harbor version with the selector protocol.</RimWard.Set.CombinedBedTip>
-    <RimWard.Set.Leisure>Patients may use guest leisure</RimWard.Set.Leisure>
-    <RimWard.Set.LeisureTip>Patients who are up and about (not bleeding, no operation waiting) may visit Hearth &amp; Harbor leisure places such as the spa while they wait to recover.</RimWard.Set.LeisureTip>
 
     <!-- 2.0: invoice, caretaker, policies, overview -->
     <RimWard.Enum.PaymentPreset.AlmostNothing>Almost nothing (10%)</RimWard.Enum.PaymentPreset.AlmostNothing>
@@ -228,30 +180,50 @@ Without an answer the patient is discharged in {3}.</RimWard.Impossible.Text>
     <RimWard.Policy.OwnMap>This map has its own policies</RimWard.Policy.OwnMap>
     <RimWard.Policy.OwnMapTip>Off: this map uses the policies of the whole save (all maps, and every new map after a gravship landing). On: changes here apply to this map only.</RimWard.Policy.OwnMapTip>
     <RimWard.Policy.NoneRefused>none</RimWard.Policy.NoneRefused>
-    <RimWard.Set.OpenInNew>Open the hospital in new colonies</RimWard.Set.OpenInNew>
-    <RimWard.Set.OpenInNewTip>A new colony starts with the hospital open. Nobody comes until there is a medical bed set to Patient. Existing saves keep what they had.</RimWard.Set.OpenInNewTip>
-    <RimWard.Set.SpecialNeeds>Special-needs xenotypes as patients</RimWard.Set.SpecialNeeds>
-    <RimWard.Set.SpecialNeedsTip>Off: patients who live on hemogen or need a deathrest casket are not sent. Their faction's own xenotype is always kept.</RimWard.Set.SpecialNeedsTip>
-    <RimWard.Set.MCEMaster>Mass casualty events can happen</RimWard.Set.MCEMaster>
-    <RimWard.Set.MCEMasterTip>Master switch. Each save still has to switch them on in the Hospital policies.</RimWard.Set.MCEMasterTip>
-    <RimWard.Set.Complications>Complications on arrival</RimWard.Set.Complications>
-    <RimWard.Set.ComplicationsTip>Extra ailments (a second illness, a chronic condition, a harmless addiction, a noble's room demand). Never one that kills or causes a berserk rage.</RimWard.Set.ComplicationsTip>
-    <RimWard.Set.Charge>Patients pay</RimWard.Set.Charge>
-    <RimWard.Set.ChargeTip>Off: a charity ward. Nobody pays, goodwill still counts.</RimWard.Set.ChargeTip>
-    <RimWard.Set.EarlyPay>Share paid when leaving early</RimWard.Set.EarlyPay>
-    <RimWard.Set.EarlyPayTip>Share of the bill so far that a patient pays when sent home early, when treatment is impossible, or after a death that is not your fault.</RimWard.Set.EarlyPayTip>
-    <RimWard.Set.InvoiceLetter>Invoice letter from</RimWard.Set.InvoiceLetter>
-    <RimWard.Set.InvoiceLetterTip>Discharges that pay at least this much silver send a letter with the itemised invoice. Smaller ones send a message.</RimWard.Set.InvoiceLetterTip>
-    <RimWard.Set.ReimburseMedTip>After a failed operation the patient's people pay for the medicine it used up. There is no fee for the operation itself.</RimWard.Set.ReimburseMedTip>
-    <RimWard.Set.ReimburseProsthTip>After a failed operation the patient's people pay for the parts it used up (prosthetics, organs).</RimWard.Set.ReimburseProsthTip>
-    <RimWard.Set.Caretaker>Nobody gets stuck</RimWard.Set.Caretaker>
-    <RimWard.Set.MaxStay>Maximum stay</RimWard.Set.MaxStay>
-    <RimWard.Set.MaxStayTip>After this many days a patient is discharged with the full bill so far. 0 = no limit.</RimWard.Set.MaxStayTip>
-    <RimWard.Set.Impossible>Impossible treatment: letter after</RimWard.Set.Impossible>
-    <RimWard.Set.ImpossibleTip>A pending operation that cannot be done (part gone, nobody skilled enough, missing ingredient, refused) sends a letter after this time and discharges the patient after the same time again. No penalty.</RimWard.Set.ImpossibleTip>
-    <RimWard.Set.DangerHold>Cured patients wait for danger at most</RimWard.Set.DangerHold>
-    <RimWard.Set.DangerHoldTip>Only active threats count (raiders, manhunters). Dormant mech clusters and weather never hold anyone.</RimWard.Set.DangerHoldTip>
     <RimWard.Set.Off>off</RimWard.Set.Off>
-    <RimWard.Unit.Hours>{0} h</RimWard.Unit.Hours>
-    <RimWard.Unit.Days>{0} d</RimWard.Unit.Days>
+
+    <!-- 2.0: settings pages, intake switch, critical cases -->
+    <RimWard.Block.IntakeOff>Patient intake is switched off (Mod settings, RimWard)</RimWard.Block.IntakeOff>
+    <RimWard.Critical.Diagnosis>Critical: {0}</RimWard.Critical.Diagnosis>
+    <RimWard.Invoice.Line.CriticalCase>Critical case fee: {0}</RimWard.Invoice.Line.CriticalCase>
+    <RimWard.Yes>yes</RimWard.Yes>
+    <RimWard.No>no</RimWard.No>
+    <RimWard.Page.Policies.Intro>Hospital policies belong to the colony (the save) and apply to every map, also after a gravship landing. A map may keep its own.</RimWard.Page.Policies.Intro>
+    <RimWard.Page.Policies.NoGame>Open or start a game to see and change this colony's hospital policies. A new colony starts open when "Open the hospital in new colonies" is on.</RimWard.Page.Policies.NoGame>
+    <RimWard.Page.Policies.IsOpen>Accepting patients: {0}</RimWard.Page.Policies.IsOpen>
+    <RimWard.Page.Policies.Hours>Opening hours: {0} a day ({1})</RimWard.Page.Policies.Hours>
+    <RimWard.Page.Policies.Surgery>Accepts surgery cases: {0}</RimWard.Page.Policies.Surgery>
+    <RimWard.Page.Policies.Mce>Mass casualty events: {0}</RimWard.Page.Policies.Mce>
+    <RimWard.Page.Policies.Refused>Refused operations: {0}</RimWard.Page.Policies.Refused>
+    <RimWard.Page.Policies.OwnMap>This map has its own policies.</RimWard.Page.Policies.OwnMap>
+    <RimWard.Page.Policies.ArrivalsPossible>Patients can arrive right now.</RimWard.Page.Policies.ArrivalsPossible>
+    <RimWard.Page.Policies.ArrivalsBlocked>No arrivals right now: {0}.</RimWard.Page.Policies.ArrivalsBlocked>
+    <RimWard.Page.Policies.Button>Open hospital policies...</RimWard.Page.Policies.Button>
+    <RimWard.Page.Pricing.Intro>What a patient pays: every charge on the bill, times the factors below, capped at the maximum payout. The Bill column, the offer letter and the silver you get use this same calculation.</RimWard.Page.Pricing.Intro>
+    <RimWard.Page.Pricing.Lines>What is charged</RimWard.Page.Pricing.Lines>
+    <RimWard.Page.Pricing.LinesText>Admission, every treatment with medicine, every meal a doctor feeds, every operation (a work fee) and the medicine and parts it uses from your stock. A failed operation charges no fee.</RimWard.Page.Pricing.LinesText>
+    <RimWard.Page.Pricing.Factors>Factors right now</RimWard.Page.Pricing.Factors>
+    <RimWard.Page.Pricing.Scale>Payment scale</RimWard.Page.Pricing.Scale>
+    <RimWard.Page.Pricing.Charity>charity: nobody pays</RimWard.Page.Pricing.Charity>
+    <RimWard.Page.Pricing.Single>Private room</RimWard.Page.Pricing.Single>
+    <RimWard.Page.Pricing.TwoBed>Two-bed room</RimWard.Page.Pricing.TwoBed>
+    <RimWard.Page.Pricing.Ward>Ward (three or more beds)</RimWard.Page.Pricing.Ward>
+    <RimWard.Page.Pricing.Hallway>Hallway or outdoors</RimWard.Page.Pricing.Hallway>
+    <RimWard.Page.Pricing.Chief>Chief physician (Medicine {0}+)</RimWard.Page.Pricing.Chief>
+    <RimWard.Page.Pricing.Renown>Renown</RimWard.Page.Pricing.Renown>
+    <RimWard.Page.Pricing.RenownValue>{0} in this colony</RimWard.Page.Pricing.RenownValue>
+    <RimWard.Page.Pricing.Noble>Noble in a private / shared room</RimWard.Page.Pricing.Noble>
+    <RimWard.Page.Pricing.Cap>Maximum payout per patient</RimWard.Page.Pricing.Cap>
+    <RimWard.Page.Pricing.Example>Example</RimWard.Page.Pricing.Example>
+    <RimWard.Page.Pricing.ExampleText>A patient whose bill is {0}, who rested in a private room and was treated by your chief physician, pays {1}.</RimWard.Page.Pricing.ExampleText>
+    <RimWard.Page.Pricing.Early>Leaving early</RimWard.Page.Pricing.Early>
+    <RimWard.Page.Pricing.EarlyText>Dismissed, treatment impossible or a death that is not your fault: {0} of the bill so far. Maximum stay pays in full.</RimWard.Page.Pricing.EarlyText>
+    <RimWard.Page.Pricing.EarlyOff>Billing extras are off: a patient who leaves uncured pays nothing.</RimWard.Page.Pricing.EarlyOff>
+    <RimWard.Page.Black.Intro>Never send patients with these diseases, for these operations, or from these factions. The lists are the same for every save.</RimWard.Page.Black.Intro>
+    <RimWard.Page.Black.Diseases>Diseases</RimWard.Page.Black.Diseases>
+    <RimWard.Page.Black.Surgeries>Operations</RimWard.Page.Black.Surgeries>
+    <RimWard.Page.Black.Factions>Factions</RimWard.Page.Black.Factions>
+    <RimWard.Page.Black.None>nothing blocked</RimWard.Page.Black.None>
+    <RimWard.Page.Black.NotLoaded>(not in this game)</RimWard.Page.Black.NotLoaded>
+    <RimWard.Page.Black.Add>Add...</RimWard.Page.Black.Add>
 </LanguageData>

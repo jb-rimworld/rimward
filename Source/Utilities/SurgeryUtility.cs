@@ -84,6 +84,7 @@ namespace RimWard.Utilities
         {
             if (recipe == null || !recipe.AvailableNow || recipe.isViolation) return false;
             if (hospital != null && !hospital.IsSurgeryRecipeAllowed(recipe)) return false;
+            if (HospitalMod.Settings?.SurgeryBlocked(recipe) ?? false) return false;
             string lower = recipe.defName.ToLowerInvariant();
             foreach (string w in SkipWords) if (lower.Contains(w)) return false;
             // Mod prefixes that need special pawns: VRE Android (VREA_), Genetic Rim (GR_).

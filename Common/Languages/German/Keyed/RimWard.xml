@@ -23,7 +23,6 @@
     <AcceptDanger>Patienten auch bei Gefahr</AcceptDanger>
     <AcceptDangerTooltip>Aktivieren, um die Sicherheitsprüfung der Karte zu übergehen.</AcceptDangerTooltip>
     <ShowMessageAtArrival>Nachricht statt Brief anzeigen</ShowMessageAtArrival>
-    <ShowMessageAtArrivalTooltip>Zeigt bei neuer Ankunft eine Nachricht statt eines Briefs.</ShowMessageAtArrivalTooltip>
     <MassCasualties>Massenanfall-Ereignisse aktivieren</MassCasualties>
     <MassCasualtiesTooltip>Ein Massenanfall überschwemmt dein Krankenhaus sporadisch mit Patienten.</MassCasualtiesTooltip>
 
@@ -53,49 +52,8 @@
     <RimWard.Alert.Explanation>Patienten warten auf deine Entscheidung. Klicke ihren Angebots-Brief, um sie anzunehmen oder abzuweisen.</RimWard.Alert.Explanation>
 
     <!-- Aufnahme-Einstellungen -->
-    <RimWard.Set.IntakeMode>Aufnahme-Modus</RimWard.Set.IntakeMode>
-    <RimWard.Set.TriageHours>Entscheidungszeit</RimWard.Set.TriageHours>
-    <RimWard.Set.Ambient>Verletzte Verbündete auf der Karte behandeln (Aufträge)</RimWard.Set.Ambient>
-    <RimWard.Set.AmbientTip>Wenn Besucher/Händler/Verbündete auf deiner Karte verletzt werden, bekommst du ein Angebot, sie gegen Bezahlung zu behandeln.</RimWard.Set.AmbientTip>
 
     <!-- Einstellungsfenster -->
-    <RimWard.Set.General>Allgemein</RimWard.Set.General>
-    <RimWard.Set.Difficulty>Schwierigkeit</RimWard.Set.Difficulty>
-    <RimWard.Set.DifficultyDial>Schwierigkeits-Regler</RimWard.Set.DifficultyDial>
-    <RimWard.Set.DifficultyDialTip>Skaliert Krankheits- und Wundenschwere sowie die Komplexität der Fälle.</RimWard.Set.DifficultyDialTip>
-    <RimWard.Set.Economy>Wirtschaft &amp; Bezahlung</RimWard.Set.Economy>
-    <RimWard.Set.PaymentPreset>Bezahl-Skala</RimWard.Set.PaymentPreset>
-    <RimWard.Set.CustomMult>Eigener Multiplikator</RimWard.Set.CustomMult>
-    <RimWard.Set.EffMult>Effektiver Auszahlungs-Multiplikator: {0}</RimWard.Set.EffMult>
-    <RimWard.Set.BillCap>Maximale Auszahlung pro Patient</RimWard.Set.BillCap>
-    <RimWard.Set.Surgery>Operationen</RimWard.Set.Surgery>
-    <RimWard.Set.AutoRetry>Fehlgeschlagene OPs automatisch wiederholen</RimWard.Set.AutoRetry>
-    <RimWard.Set.AutoRetryTip>Eine verpfuschte OP wird erneut versucht, statt den Patienten ungeheilt zu lassen.</RimWard.Set.AutoRetryTip>
-    <RimWard.Set.MaxRetries>Max. OP-Wiederholungen</RimWard.Set.MaxRetries>
-    <RimWard.Set.ReimburseMed>Medizin bei Fehlschlag erstatten</RimWard.Set.ReimburseMed>
-    <RimWard.Set.ReimburseProsth>Prothesen bei Fehlschlag erstatten</RimWard.Set.ReimburseProsth>
-    <RimWard.Set.Death>Todesstrafe (Fairness)</RimWard.Set.Death>
-    <RimWard.Set.DeathPenalty>Ansehensverlust bei Patiententod</RimWard.Set.DeathPenalty>
-    <RimWard.Set.DeathAmount>Verlorenes Ansehen (wenn selbst schuld)</RimWard.Set.DeathAmount>
-    <RimWard.Set.NoFaultSurgery>Keine Strafe bei OP-Tod</RimWard.Set.NoFaultSurgery>
-    <RimWard.Set.NoFaultSurgeryTip>Ein Tod auf dem OP-Tisch ist klinisches Risiko, nicht deine Schuld.</RimWard.Set.NoFaultSurgeryTip>
-    <RimWard.Set.NoFaultLeaving>Keine Strafe bei Tod während des Verlassens</RimWard.Set.NoFaultLeaving>
-    <RimWard.Set.NoFaultUnwinnable>Keine Strafe, wenn bei Ankunft schon verloren</RimWard.Set.NoFaultUnwinnable>
-    <RimWard.Set.NoFaultProfit>Schuldlose Tode dürfen trotzdem Gewinn bringen</RimWard.Set.NoFaultProfit>
-    <RimWard.Set.NoFaultProfitTip>"Die Operation war ein Erfolg; der Patient leider nicht." Erlaubt ein netto-positives Ergebnis auch bei schuldlosem Tod.</RimWard.Set.NoFaultProfitTip>
-    <RimWard.Set.Rooms>Zimmer &amp; Qualität</RimWard.Set.Rooms>
-    <RimWard.Set.SingleMult>Bezahl-Multiplikator Einzelzimmer</RimWard.Set.SingleMult>
-    <RimWard.Set.TwoBedMult>Bezahl-Multiplikator Zweibettzimmer</RimWard.Set.TwoBedMult>
-    <RimWard.Set.BarracksMult>Bezahl-Multiplikator Schlafsaal</RimWard.Set.BarracksMult>
-    <RimWard.Set.Chief>Chefarzt-Bonus</RimWard.Set.Chief>
-    <RimWard.Set.ChiefTip>Von einem hochqualifizierten Arzt behandelte Patienten zahlen mehr — wie ein Privatzimmer.</RimWard.Set.ChiefTip>
-    <RimWard.Set.ChiefSkill>Chefarzt: Mindest-Medizin-Skill</RimWard.Set.ChiefSkill>
-    <RimWard.Set.ChiefMult>Chefarzt-Bezahl-Multiplikator</RimWard.Set.ChiefMult>
-    <RimWard.Set.MedPref>Fraktions-Medizin-Vorliebe</RimWard.Set.MedPref>
-    <RimWard.Set.Features>Funktionen</RimWard.Set.Features>
-    <RimWard.Set.Renown>Krankenhaus-Renommee &amp; Stufen</RimWard.Set.Renown>
-    <RimWard.Set.RoyalRoom>Royale Patienten verlangen ein Qualitätszimmer</RimWard.Set.RoyalRoom>
-    <RimWard.Set.IdeoGuilty>Ideology: Schuld beim Abweisen von Patienten</RimWard.Set.IdeoGuilty>
 
     <!-- Royalty / Ideology -->
     <RimWard.RoyalRoomNeeded>Verlangt ein Qualitätszimmer</RimWard.RoyalRoomNeeded>
@@ -112,12 +70,6 @@
     <RimWard.Bed.GuestNotMedical>medizinische Betten können keine Gästebetten sein</RimWard.Bed.GuestNotMedical>
     <RimWard.Bed.NeedsMedical>zuerst das Bett auf Medizinisch stellen</RimWard.Bed.NeedsMedical>
     <RimWard.Bed.NoPodSurgery>Medizin-Kapseln haben keine OP-Nutzung</RimWard.Bed.NoPodSurgery>
-    <RimWard.Set.Hearth>Hearth &amp; Harbor</RimWard.Set.Hearth>
-    <RimWard.Set.HearthNote>Wirkt nur, wenn Hearth &amp; Harbor geladen ist.</RimWard.Set.HearthNote>
-    <RimWard.Set.CombinedBed>Ein gemeinsamer Betten-Knopf</RimWard.Set.CombinedBed>
-    <RimWard.Set.CombinedBedTip>Zeigt einen einzigen Knopf "Nutzung: Kolonist / Gast / Patient" statt getrennter Schalter für Krankenhaus-, OP- und Gästebett. Braucht eine Hearth-&amp;-Harbor-Version mit dem Auswahl-Protokoll.</RimWard.Set.CombinedBedTip>
-    <RimWard.Set.Leisure>Patienten nutzen Gäste-Freizeit</RimWard.Set.Leisure>
-    <RimWard.Set.LeisureTip>Patienten, die auf den Beinen sind (keine Blutung, keine OP wartet), dürfen Freizeitorte von Hearth &amp; Harbor wie das Spa besuchen, während sie genesen.</RimWard.Set.LeisureTip>
 
     <!-- 2.0: invoice, caretaker, policies, overview -->
     <RimWard.Enum.PaymentPreset.AlmostNothing>Fast nichts (10 %)</RimWard.Enum.PaymentPreset.AlmostNothing>
@@ -228,30 +180,50 @@ Ohne Antwort wird der Patient in {3} entlassen.</RimWard.Impossible.Text>
     <RimWard.Policy.OwnMap>Diese Karte hat eigene Richtlinien</RimWard.Policy.OwnMap>
     <RimWard.Policy.OwnMapTip>Aus: diese Karte nutzt die Richtlinien des ganzen Spielstands (alle Karten, auch jede neue Karte nach einer Gravschiff-Landung). An: Änderungen hier gelten nur für diese Karte.</RimWard.Policy.OwnMapTip>
     <RimWard.Policy.NoneRefused>keine</RimWard.Policy.NoneRefused>
-    <RimWard.Set.OpenInNew>Krankenhaus in neuen Kolonien öffnen</RimWard.Set.OpenInNew>
-    <RimWard.Set.OpenInNewTip>Eine neue Kolonie startet mit geöffnetem Krankenhaus. Es kommt niemand, solange kein medizinisches Bett auf Patient steht. Bestehende Spielstände behalten ihre Einstellung.</RimWard.Set.OpenInNewTip>
-    <RimWard.Set.SpecialNeeds>Xenotypen mit Sonderbedarf als Patienten</RimWard.Set.SpecialNeeds>
-    <RimWard.Set.SpecialNeedsTip>Aus: Patienten, die von Hämogen leben oder einen Todesruhe-Sarg brauchen, werden nicht geschickt. Der eigene Xenotyp ihrer Fraktion bleibt immer erhalten.</RimWard.Set.SpecialNeedsTip>
-    <RimWard.Set.MCEMaster>Massenanfälle können vorkommen</RimWard.Set.MCEMaster>
-    <RimWard.Set.MCEMasterTip>Hauptschalter. Jeder Spielstand muss sie zusätzlich in den Krankenhaus-Richtlinien einschalten.</RimWard.Set.MCEMasterTip>
-    <RimWard.Set.Complications>Komplikationen bei Ankunft</RimWard.Set.Complications>
-    <RimWard.Set.ComplicationsTip>Zusätzliche Leiden (eine zweite Krankheit, ein chronisches Leiden, eine harmlose Sucht, Raumanspruch des Adels). Nie eines, das tötet oder Berserker-Wut auslöst.</RimWard.Set.ComplicationsTip>
-    <RimWard.Set.Charge>Patienten bezahlen</RimWard.Set.Charge>
-    <RimWard.Set.ChargeTip>Aus: Wohltätigkeitsstation. Niemand zahlt, Ansehen zählt weiter.</RimWard.Set.ChargeTip>
-    <RimWard.Set.EarlyPay>Anteil bei vorzeitigem Abgang</RimWard.Set.EarlyPay>
-    <RimWard.Set.EarlyPayTip>Anteil der bisherigen Rechnung, den ein Patient zahlt, wenn er vorzeitig entlassen wird, die Behandlung unmöglich ist oder nach einem Tod ohne deine Schuld.</RimWard.Set.EarlyPayTip>
-    <RimWard.Set.InvoiceLetter>Rechnungsbrief ab</RimWard.Set.InvoiceLetter>
-    <RimWard.Set.InvoiceLetterTip>Entlassungen, die mindestens so viel Silber zahlen, schicken einen Brief mit der Einzelrechnung. Kleinere eine Nachricht.</RimWard.Set.InvoiceLetterTip>
-    <RimWard.Set.ReimburseMedTip>Nach einer misslungenen Operation bezahlen die Leute des Patienten die verbrauchte Medizin. Für die Operation selbst gibt es kein Honorar.</RimWard.Set.ReimburseMedTip>
-    <RimWard.Set.ReimburseProsthTip>Nach einer misslungenen Operation bezahlen die Leute des Patienten die verbrauchten Teile (Prothesen, Organe).</RimWard.Set.ReimburseProsthTip>
-    <RimWard.Set.Caretaker>Niemand bleibt hängen</RimWard.Set.Caretaker>
-    <RimWard.Set.MaxStay>Höchste Aufenthaltsdauer</RimWard.Set.MaxStay>
-    <RimWard.Set.MaxStayTip>Nach so vielen Tagen wird ein Patient mit der vollen bisherigen Rechnung entlassen. 0 = keine Grenze.</RimWard.Set.MaxStayTip>
-    <RimWard.Set.Impossible>Unmögliche Behandlung: Brief nach</RimWard.Set.Impossible>
-    <RimWard.Set.ImpossibleTip>Eine offene Operation, die nicht durchführbar ist (Körperteil weg, niemand gut genug, Zutat fehlt, abgelehnt), schickt nach dieser Zeit einen Brief und entlässt den Patienten nach derselben Zeit noch einmal. Keine Strafe.</RimWard.Set.ImpossibleTip>
-    <RimWard.Set.DangerHold>Geheilte warten höchstens auf das Ende der Gefahr</RimWard.Set.DangerHold>
-    <RimWard.Set.DangerHoldTip>Nur aktive Gefahr zählt (Angreifer, Jagdtiere). Ruhende Mechanoiden-Cluster und Wetter halten niemanden fest.</RimWard.Set.DangerHoldTip>
     <RimWard.Set.Off>aus</RimWard.Set.Off>
-    <RimWard.Unit.Hours>{0} Std.</RimWard.Unit.Hours>
-    <RimWard.Unit.Days>{0} T</RimWard.Unit.Days>
+
+    <!-- 2.0: settings pages, intake switch, critical cases -->
+    <RimWard.Block.IntakeOff>Die Patientenaufnahme ist ausgeschaltet (Mod-Einstellungen, RimWard)</RimWard.Block.IntakeOff>
+    <RimWard.Critical.Diagnosis>Kritisch: {0}</RimWard.Critical.Diagnosis>
+    <RimWard.Invoice.Line.CriticalCase>Zuschlag kritischer Fall: {0}</RimWard.Invoice.Line.CriticalCase>
+    <RimWard.Yes>ja</RimWard.Yes>
+    <RimWard.No>nein</RimWard.No>
+    <RimWard.Page.Policies.Intro>Die Krankenhausregeln gehören zur Kolonie (zum Spielstand) und gelten auf jeder Karte, auch nach einer Gravschiff-Landung. Eine Karte kann eigene behalten.</RimWard.Page.Policies.Intro>
+    <RimWard.Page.Policies.NoGame>Öffne oder starte ein Spiel, um die Krankenhausregeln dieser Kolonie zu sehen und zu ändern. Eine neue Kolonie startet geöffnet, wenn „Krankenhaus in neuen Kolonien öffnen“ an ist.</RimWard.Page.Policies.NoGame>
+    <RimWard.Page.Policies.IsOpen>Nimmt Patienten auf: {0}</RimWard.Page.Policies.IsOpen>
+    <RimWard.Page.Policies.Hours>Öffnungszeiten: {0} pro Tag ({1})</RimWard.Page.Policies.Hours>
+    <RimWard.Page.Policies.Surgery>Nimmt Operationsfälle an: {0}</RimWard.Page.Policies.Surgery>
+    <RimWard.Page.Policies.Mce>Massenanfälle von Verletzten: {0}</RimWard.Page.Policies.Mce>
+    <RimWard.Page.Policies.Refused>Abgelehnte Operationen: {0}</RimWard.Page.Policies.Refused>
+    <RimWard.Page.Policies.OwnMap>Diese Karte hat eigene Regeln.</RimWard.Page.Policies.OwnMap>
+    <RimWard.Page.Policies.ArrivalsPossible>Patienten können gerade ankommen.</RimWard.Page.Policies.ArrivalsPossible>
+    <RimWard.Page.Policies.ArrivalsBlocked>Gerade keine Ankünfte: {0}.</RimWard.Page.Policies.ArrivalsBlocked>
+    <RimWard.Page.Policies.Button>Krankenhausregeln öffnen …</RimWard.Page.Policies.Button>
+    <RimWard.Page.Pricing.Intro>Was ein Patient zahlt: jeder Posten der Rechnung mal die Faktoren unten, höchstens der Maximalbetrag. Spalte „Rechnung“, Angebotsbrief und das Silber, das du bekommst, nutzen genau diese Rechnung.</RimWard.Page.Pricing.Intro>
+    <RimWard.Page.Pricing.Lines>Was berechnet wird</RimWard.Page.Pricing.Lines>
+    <RimWard.Page.Pricing.LinesText>Aufnahme, jede Behandlung mit Medizin, jede Mahlzeit, die ein Arzt füttert, jede Operation (Arbeitsgebühr) und die Medizin und Teile, die sie aus deinem Lager verbraucht. Eine misslungene Operation kostet keine Gebühr.</RimWard.Page.Pricing.LinesText>
+    <RimWard.Page.Pricing.Factors>Faktoren im Moment</RimWard.Page.Pricing.Factors>
+    <RimWard.Page.Pricing.Scale>Bezahlstufe</RimWard.Page.Pricing.Scale>
+    <RimWard.Page.Pricing.Charity>Wohltätigkeit: niemand zahlt</RimWard.Page.Pricing.Charity>
+    <RimWard.Page.Pricing.Single>Einzelzimmer</RimWard.Page.Pricing.Single>
+    <RimWard.Page.Pricing.TwoBed>Zweibettzimmer</RimWard.Page.Pricing.TwoBed>
+    <RimWard.Page.Pricing.Ward>Saal (drei oder mehr Betten)</RimWard.Page.Pricing.Ward>
+    <RimWard.Page.Pricing.Hallway>Flur oder draußen</RimWard.Page.Pricing.Hallway>
+    <RimWard.Page.Pricing.Chief>Chefarzt (Medizin {0}+)</RimWard.Page.Pricing.Chief>
+    <RimWard.Page.Pricing.Renown>Ruf</RimWard.Page.Pricing.Renown>
+    <RimWard.Page.Pricing.RenownValue>{0} in dieser Kolonie</RimWard.Page.Pricing.RenownValue>
+    <RimWard.Page.Pricing.Noble>Adlige im Einzel- / Mehrbettzimmer</RimWard.Page.Pricing.Noble>
+    <RimWard.Page.Pricing.Cap>Höchstbetrag pro Patient</RimWard.Page.Pricing.Cap>
+    <RimWard.Page.Pricing.Example>Beispiel</RimWard.Page.Pricing.Example>
+    <RimWard.Page.Pricing.ExampleText>Ein Patient mit einer Rechnung von {0}, der im Einzelzimmer lag und von deinem Chefarzt behandelt wurde, zahlt {1}.</RimWard.Page.Pricing.ExampleText>
+    <RimWard.Page.Pricing.Early>Vorzeitig gehen</RimWard.Page.Pricing.Early>
+    <RimWard.Page.Pricing.EarlyText>Entlassen, Behandlung unmöglich oder ein Tod ohne deine Schuld: {0} der bisherigen Rechnung. Die Höchstaufenthaltsdauer zahlt voll.</RimWard.Page.Pricing.EarlyText>
+    <RimWard.Page.Pricing.EarlyOff>Abrechnungs-Extras sind aus: Wer ungeheilt geht, zahlt nichts.</RimWard.Page.Pricing.EarlyOff>
+    <RimWard.Page.Black.Intro>Schickt nie Patienten mit diesen Krankheiten, für diese Operationen oder aus diesen Fraktionen. Die Listen gelten für jeden Spielstand.</RimWard.Page.Black.Intro>
+    <RimWard.Page.Black.Diseases>Krankheiten</RimWard.Page.Black.Diseases>
+    <RimWard.Page.Black.Surgeries>Operationen</RimWard.Page.Black.Surgeries>
+    <RimWard.Page.Black.Factions>Fraktionen</RimWard.Page.Black.Factions>
+    <RimWard.Page.Black.None>nichts gesperrt</RimWard.Page.Black.None>
+    <RimWard.Page.Black.NotLoaded>(nicht in diesem Spiel)</RimWard.Page.Black.NotLoaded>
+    <RimWard.Page.Black.Add>Hinzufügen …</RimWard.Page.Black.Add>
 </LanguageData>

@@ -40,7 +40,7 @@ namespace RimWard
             parms.pawnCount = UnityEngine.Mathf.Clamp(parms.pawnCount, 1, free);
             List<Faction> factions = Find.FactionManager.AllFactions.Where(f =>
                 !f.IsPlayer && !f.defeated && !f.def.hidden && !f.HostileTo(Faction.OfPlayer)
-                && f.def.humanlikeFaction && !f.def.defName.ToUpper().Contains("VREA")).ToList();
+                && f.def.humanlikeFaction && !f.def.defName.ToUpper().Contains("VREA") && !(HospitalMod.Settings?.FactionBlocked(f.def) ?? false)).ToList();
             if (factions.Count == 0) return false;
             parms.faction = factions.RandomElement();
 

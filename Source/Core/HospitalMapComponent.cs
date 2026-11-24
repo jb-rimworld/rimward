@@ -240,6 +240,7 @@ namespace RimWard
 
         public static bool CureAchieved(Pawn pawn, PatientData data)
         {
+            if (data.CriticalCase) return CriticalCase.Done(pawn);
             RecipeDef r = data.CureRecipe;
             if (r == null) return false;
             if (r.removesHediff != null) return pawn.health.hediffSet.GetFirstHediffOfDef(r.removesHediff) == null;

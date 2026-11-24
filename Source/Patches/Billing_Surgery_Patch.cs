@@ -101,6 +101,7 @@ namespace RimWard.Patches
             }
             data.AddLine(InvoiceLineKind.Surgery, recipe.label, SurgeryFee(recipe));
             data.AddLine(InvoiceLineKind.Materials, recipe.label, medicine + parts);
+            if (data.CriticalCase && recipe == CriticalCase.Recipe) data.AddLine(InvoiceLineKind.CriticalCase, recipe.label, CriticalCase.Fee());
         }
 
         /// <summary>Work fee of an operation (formula from Hospital Fix And Tweak: work, required Medicine skill, risk), 0..400 silver.</summary>
