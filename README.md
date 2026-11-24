@@ -31,7 +31,7 @@ RimWard fixes that and adds the paperwork.
 ## Features (RimWorld 1.7; the 1.6 build is frozen at the November 2026 state)
 
 **Triage, your way.** Three intake modes. *Firehose*: patients just arrive. *Prompt*: every case is a letter with name, faction,
-diagnosis, the estimated payment and, for an operation, what it uses from your stock. *Hybrid*: letters only for surgery cases
+diagnosis, the estimated payment and, for an operation, what it uses from your stock. *Hybrid* (the default): letters only for surgery cases
 and titled nobles. Unanswered offers expire (1 to 24 hours, default 6). Declining is free. Accepting with no free patient bed is
 refused and the offer stays open.
 
@@ -40,7 +40,8 @@ refused and the offer stays open.
 tier, a chief physician, the faction's medicine preference, a noble's room demand and your renown, capped at the maximum payout.
 Hover a row for the itemised bill. Large payouts arrive as a letter with the full invoice (threshold is a setting).
 
-**Every operation is billed, failures are not.** Any recipe on a patient, vanilla or modded, is billed when it completes.
+**Every treatment is billed, failures are not.** Any recipe on a patient, vanilla or modded, is billed when it completes,
+except what the patient's faction counts as a violation (harvesting an organ): that costs goodwill as on any guest and pays nothing.
 A failed operation charges no fee; the medicine and parts it used up are reimbursed (two settings). A botched cure is retried
 up to 3 times (setting), and the patient cannot walk out between the botch and the retry.
 
@@ -87,7 +88,7 @@ patient beds. No triage letter.
 
 ## Compatibility & requirements
 
-- **Requires:** Harmony (and Prepatcher on RimWorld 1.6 only; it does not run on 1.7 and is not needed there).
+- **Requires:** Harmony, and on RimWorld 1.7 JB Framework (same author). The frozen 1.6 version needs Prepatcher instead.
 - **Replaces:** the *Hospital* mod and its patches. Please disable those.
 - **Multiplayer:** not supported.
 - **Combat Extended:** CE's "tend yourself" tactic is switched off for patients (soft patch, only when CE is loaded).

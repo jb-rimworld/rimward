@@ -34,6 +34,9 @@ namespace RimWard.Tests
             HospitalMapComponent comp = RwT.Comp(map);
 
             // ---- (1) defaults bring patients
+            List<Pawn> hostile = map.mapPawns.AllPawnsSpawned.Where(x => x.Faction != null && x.Faction.HostileTo(Faction.OfPlayer)).ToList();
+            if (hostile.Count > 0)
+                t.Note("hostiles on the map: " + string.Join(", ", hostile.Take(8).Select(x => x.LabelShort + " (" + (x.GetLord()?.LordJob?.GetType().Name ?? "no lord") + "/" + (x.GetLord()?.CurLordToil?.GetType().Name ?? "-") + ", active " + Threats.IsActiveThreat(x) + ")")));
             HospitalPolicy fresh = HospitalPolicy.NewDefault(true);
             t.Check(fresh.OpenHourCount == 24, "a new hospital is open all day (" + fresh.OpenHourCount + " hours)");
             float one = IncidentScheduler.ExpectedAttemptsPerDay(1), two = IncidentScheduler.ExpectedAttemptsPerDay(2), twenty = IncidentScheduler.ExpectedAttemptsPerDay(20);
@@ -211,6 +214,26 @@ namespace RimWard.Tests
                 t.Check(ticked >= 1, "the other patient still ticks (" + ticked + ")");
                 t.Check(errors <= 1, "logged once, not every 250 ticks (" + errors + " errors)");
                 comp.ForgetPatient(x1); comp.ForgetPatient(x2); RwT.Discard(x1); RwT.Discard(x2);
+            }
+
+            // ---- found by the no-DLC run: insects guarding a hive do not block arrivals (they only defend); attacking insects do
+            Faction insects = Find.FactionManager.OfInsects;
+            PawnKindDef spider = DefDatabase<PawnKindDef>.GetNamedSilentFail("Megascarab");
+            if (insects != null && spider != null)
+            {
+                Pawn bug = PawnGenerator.GeneratePawn(spider, insects);
+                IntVec3 far = CellFinder.RandomClosewalkCellNear(map.Center, map, 20);
+                GenSpawn.Spawn(bug, far, map);
+                map.fogGrid.Unfog(far);
+                Lord hive = LordMaker.MakeNewLord(insects, new LordJob_DefendAndExpandHive(), map, new List<Pawn> { bug });
+                Threats.ClearCache();
+                t.Check(!Threats.IsActiveThreat(bug), "an insect guarding its hive is no active threat (" + hive.CurLordToil?.GetType().Name + ")");
+                hive.RemovePawn(bug);
+                LordMaker.MakeNewLord(insects, new LordJob_AssaultColony(insects), map, new List<Pawn> { bug });
+                Threats.ClearCache();
+                t.Check(Threats.IsActiveThreat(bug), "an attacking insect is");
+                bug.Destroy(DestroyMode.Vanish);
+                Threats.ClearCache();
             }
 
             // ---- (10) the welcome pitch follows the game language

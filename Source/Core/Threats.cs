@@ -66,6 +66,8 @@ namespace RimWard
             if (dormant != null && !dormant.Awake) return false;
             LordJob job = p.GetLord()?.LordJob;
             if (job is LordJob_MechanoidsDefend || job is LordJob_SleepThenMechanoidsDefend || job is LordJob_DefendBase) return false;
+            // insects guarding their hive (vanilla hive, Odyssey threat clusters) stay home until someone comes close: only an attack counts
+            if ((job is LordJob_DefendAndExpandHive || job is LordJob_StructureThreatCluster) && !(p.GetLord()?.CurLordToil is LordToil_AssaultColony)) return false;
             return true;
         }
 
