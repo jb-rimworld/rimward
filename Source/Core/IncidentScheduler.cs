@@ -10,6 +10,9 @@ namespace RimWard
     {
         private bool MCEtriggered;
 
+        /// <summary>True while an in-game test suite drives arrivals itself (set only by the JB_TESTS suites).</summary>
+        internal static bool PausedForTests;
+
         public IncidentScheduler(Map map) : base(map)
         {
         }
@@ -23,7 +26,7 @@ namespace RimWard
         public override void MapComponentTick()
         {
             base.MapComponentTick();
-            if (GenTicks.TicksGame % 42 != 0) return;
+            if (GenTicks.TicksGame % 42 != 0 || PausedForTests) return;
 
             int free = HospitalMapComponent.For(this.map).FreeMedicalBeds();
             float chance = (GenDate.DaysPassed % 2 == 0) ? 0.008f : 0.004f;

@@ -53,7 +53,10 @@ namespace RimWard
                 case PawnLostCondition.Killed:
                     break; // handled by the Kill patch (fault classification)
                 default:
-                    // vanished, left, taken over by another lord: the stay ends quietly (no pay, no message)
+                    // Gone from the map but alive (aboard a gravship or transport pod, carried off): keep the entry. The caretaker moves it to
+                    // the map the patient turns up on and lords them again, or drops it once they are gone for good (world pawn, caravan).
+                    if (!pawn.Dead && !pawn.Discarded && (!pawn.Spawned || pawn.Map != this.lord?.Map)) break;
+                    // still here but taken over by another lord (or left): the stay ends quietly (no pay, no message)
                     if (hospital.GetPatientData(pawn, out PatientData d) && !d.Dismissed) hospital.RemoveFromPatientList(pawn, true);
                     break;
             }

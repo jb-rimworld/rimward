@@ -24,7 +24,8 @@ namespace RimWard
             HospitalMapComponent component = HospitalMapComponent.For(base.Map);
             foreach (Pawn pawn in this.lord.ownedPawns.ToArray())
             {
-                component.PatientLeaves(pawn);
+                // only patients on this lord's map leave here (one who went along on a gravship is handled on the new map)
+                if (pawn.MapHeld == base.Map) component?.PatientLeaves(pawn);
             }
             base.Cleanup();
         }

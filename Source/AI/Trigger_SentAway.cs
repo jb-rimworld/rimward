@@ -19,7 +19,9 @@ namespace RimWard
             {
                 return false;
             }
-            return lord.ownedPawns.Any(SentAway);
+            // a patient who now stands on another map (gravship, transport pod) is not this lord's to send away: the caretaker of that map
+            // takes the entry over and lords them there
+            return lord.ownedPawns.Any(p => p?.Map == lord.Map && SentAway(p));
         }
 
         private static bool SentAway(Pawn pawn)
