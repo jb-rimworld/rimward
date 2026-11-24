@@ -799,7 +799,9 @@ namespace RimWard.Tests
             Map map = t.Map;
             RwT.SetUp(t, 1, 0);
             HospitalMapComponent comp = RwT.Comp(map);
-            bool hh = HearthBridge.HearthLoaded, hbg = KitDetect.IsActive(HospitalMod.HospitalBedsId);
+            bool hh = HearthBridge.HearthLoaded;
+            // jbmod renames local extra mods to <packageId>.slotN, which KitDetect does not match: look the mod up by prefix (FW request 12)
+            bool hbg = LoadedModManager.RunningModsListForReading.Any(m => m.PackageId.StartsWith(HospitalMod.HospitalBedsId, StringComparison.OrdinalIgnoreCase));
             t.Note("Hearth & Harbor " + (hh ? "loaded" : "absent") + ", Hospital Beds Gen 2 " + (hbg ? "loaded" : "absent"));
             t.Check(RwT.K.On(Sections.Hearth) == hh, "the Hearth & Harbor bridge area exists exactly when H&H is loaded");
             Building_Bed bed = RwT.Spawned.OfType<Building_Bed>().FirstOrDefault();
@@ -818,7 +820,7 @@ namespace RimWard.Tests
             }
             if (hbg)
             {
-                ThingDef hb = DefDatabase<ThingDef>.AllDefsListForReading.FirstOrDefault(d => d.IsBed && d.modContentPack != null && KitDetect.Same(d.modContentPack.PackageId, HospitalMod.HospitalBedsId)
+                ThingDef hb = DefDatabase<ThingDef>.AllDefsListForReading.FirstOrDefault(d => d.IsBed && d.modContentPack != null && d.modContentPack.PackageId.StartsWith(HospitalMod.HospitalBedsId, StringComparison.OrdinalIgnoreCase)
                     && d.building.bed_humanlike && d.Size.x == 1);
                 t.Check(hb != null, "a single Hospital Beds Gen 2 bed def exists (" + hb?.defName + ")");
                 if (hb != null && TestCells.TryFindFreeRect(map, 3, 4, out CellRect r))

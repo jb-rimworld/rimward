@@ -15,7 +15,8 @@ namespace RimWard
         public long silverEarned;
 
         private HospitalPolicy policy;
-        private bool loadedFromSave;
+        // FW-REQUEST (10): set while loading, never saved; the "tmp" prefix tells the save/load test harness it is rebuilt after a load
+        private bool tmpLoadedFromSave;
         /// <summary>True once the old per-map policy fields of a pre-2.0 save were moved into <see cref="Policy"/>.</summary>
         public bool policyMigrated;
         public List<Invoice> recentInvoices = new List<Invoice>();
@@ -39,7 +40,7 @@ namespace RimWard
             {
                 if (this.policy == null)
                 {
-                    bool open = !this.loadedFromSave && HospitalMod.Settings != null && HospitalMod.Settings.OpenInNewColonies;
+                    bool open = !this.tmpLoadedFromSave && HospitalMod.Settings != null && HospitalMod.Settings.OpenInNewColonies;
                     this.policy = HospitalPolicy.NewDefault(open);
                 }
                 return this.policy;
@@ -47,7 +48,7 @@ namespace RimWard
             set => this.policy = value;
         }
 
-        public bool LoadedFromSave => this.loadedFromSave;
+        public bool LoadedFromSave => this.tmpLoadedFromSave;
 
         // ---- renown (plain accessors for the overview page)
         public static readonly float[] TierThresholds = { 0f, 50f, 200f, 600f };
@@ -92,7 +93,7 @@ namespace RimWard
         public override void ExposeData()
         {
             base.ExposeData();
-            if (Scribe.mode == LoadSaveMode.LoadingVars) this.loadedFromSave = true;
+            if (Scribe.mode == LoadSaveMode.LoadingVars) this.tmpLoadedFromSave = true;
             Scribe_Values.Look(ref this.renown, "renown", 0f);
             Scribe_Values.Look(ref this.patientsTreated, "patientsTreated", 0);
             Scribe_Values.Look(ref this.patientsDied, "patientsDied", 0);

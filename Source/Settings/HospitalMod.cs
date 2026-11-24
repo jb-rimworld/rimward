@@ -56,7 +56,7 @@ namespace RimWard
             RegisterSettings(r);
             RegisterPresets(r);
             RegisterCompat(r);
-            r.Page("policies", "Hospital policies (this colony)", SettingsPages.DrawPolicies).WithOrder(5).InSection(Sections.Intake);
+            r.Page("policies", "Hospital policies", SettingsPages.DrawPolicies).WithOrder(5).InSection(Sections.Intake);
             r.Page("pricing", "Pricing explained", SettingsPages.DrawPricing).WithOrder(30);
             r.Page("blacklists", "Blacklists", SettingsPages.DrawBlacklists).WithOrder(40);
         }
