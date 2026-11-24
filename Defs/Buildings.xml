@@ -5,8 +5,9 @@
         <label>patients land here</label>
         <description>Designates a spot where incoming patients will be dropped.</description>
         <graphicData>
-            <texPath>Things/Building/Misc/PartySpot</texPath>
+            <texPath>Things/RimWard/PatientLandingSpot</texPath>
             <graphicClass>Graphic_Single</graphicClass>
+            <drawSize>(1,1)</drawSize>
         </graphicData>
         <altitudeLayer>FloorEmplacement</altitudeLayer>
         <statBases>
