@@ -9,7 +9,7 @@ from hhart.style import *
 from hhart.registry import render_png, add_grain
 
 ROOT = Path(__file__).resolve().parents[2]
-TEX = ROOT / "Textures"
+TEX = ROOT / "Common" / "Textures"
 OUTD = Path(__file__).resolve().parent / "out"
 CROSS = P["red_l"]
 MED = P["teal"]
