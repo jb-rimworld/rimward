@@ -50,7 +50,7 @@ namespace RimWard
             int tick = Find.TickManager?.TicksGame ?? 0;
             recent.Insert(0, tick + ": " + fix + ": " + (pawn?.LabelShort ?? "?"));
             while (recent.Count > RecentCount) recent.RemoveAt(recent.Count - 1);
-            // counted here (diagnosis page); not KitMod.CaretakerFixed, which logs every repair as a warning
+            // FW-REQUEST: counted here (diagnosis page); KitMod.CaretakerFixed would log every routine repair as a warning (request 4)
             if (Prefs.DevMode) Verse.Log.Message("[RimWard] caretaker " + fix + " " + (pawn?.LabelShort ?? "?"));
         }
 

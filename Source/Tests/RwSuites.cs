@@ -273,7 +273,8 @@ namespace RimWard.Tests
             HediffDef anest = DefDatabase<HediffDef>.GetNamed("Anesthetic");
             p.health.AddHediff(anest);
             yield return 5;
-            if (bed != null && doc.carryTracker.TryStartCarry(p)) RestUtility.TuckIntoBed(bed, doc, p, true);
+            if (bed != null) p.jobs.Notify_TuckedIntoBed(bed);   // what RestUtility.TuckIntoBed does at the end of a rescue
+            yield return 2;
             if (p.needs?.food != null) p.needs.food.CurLevel = 0.1f;
             Thing meal = RwT.Place(ThingDefOf.MealSimple, 2, map);
             int foods = RwT.LinesOf(d, InvoiceLineKind.Food);
@@ -285,7 +286,15 @@ namespace RimWard.Tests
             t.Note("patient in bed: " + p.InBed() + ", should be fed: " + FeedPatientUtility.ShouldBeFed(p));
             Job feed = JobMaker.MakeJob(JobDefOf.FeedPatient, meal, p); feed.count = 1;
             doc.jobs.StartJob(feed, JobCondition.InterruptForced);
-            for (int i = 0; i < 30 && RwT.LinesOf(d, InvoiceLineKind.Food) == foods; i++) yield return 100;
+            for (int i = 0; i < 40 && RwT.LinesOf(d, InvoiceLineKind.Food) == foods; i++)
+            {
+                yield return 100;
+                if (doc.CurJobDef != JobDefOf.FeedPatient && RwT.LinesOf(d, InvoiceLineKind.Food) == foods && !meal.Destroyed)
+                {   // the doctor may have been pulled away (a need, another job): hand the feeding back
+                    Job again = JobMaker.MakeJob(JobDefOf.FeedPatient, meal, p); again.count = 1;
+                    doc.jobs.StartJob(again, JobCondition.InterruptForced);
+                }
+            }
             t.Check(RwT.LinesOf(d, InvoiceLineKind.Food) == foods + 1, "a completed feeding adds one Food line");
             Hediff an = p.health.hediffSet.GetFirstHediffOfDef(anest); if (an != null) p.health.RemoveHediff(an);
 
@@ -387,7 +396,7 @@ namespace RimWard.Tests
             Map map = t.Map;
             Pawn doc = RwT.SetUp(t, 2, 2);
             HospitalMapComponent comp = RwT.Comp(map);
-            foreach (Pawn c in map.mapPawns.FreeColonistsSpawned) c.workSettings?.SetPriority(WorkTypeDefOf.Doctor, 1);
+            foreach (Pawn c in map.mapPawns.FreeColonistsSpawned) if (!c.WorkTypeIsDisabled(WorkTypeDefOf.Doctor)) c.workSettings?.SetPriority(WorkTypeDefOf.Doctor, 1);
             Pawn p = RwT.NewPatient(map, PatientType.Wounds, out PatientData d, true, false);
             p.health.RemoveAllHediffs();
             t.Check(BillingSuite.MakeArmCase(p, d, out Bill_Medical bill, out Thing arm), "a bionic arm operation as the patient's case");
@@ -482,7 +491,7 @@ namespace RimWard.Tests
             Pawn p = RwT.NewPatient(map, PatientType.Wounds, out PatientData d, true, false);
             t.Check(BillingSuite.MakeArmCase(p, d, out _, out _), "a bionic arm case");
             var prio = new Dictionary<Pawn, int>();
-            foreach (Pawn c in map.mapPawns.FreeColonistsSpawned) { prio[c] = c.workSettings?.GetPriority(WorkTypeDefOf.Doctor) ?? 0; c.workSettings?.SetPriority(WorkTypeDefOf.Doctor, 0); }
+            foreach (Pawn c in map.mapPawns.FreeColonistsSpawned.Where(c => !c.WorkTypeIsDisabled(WorkTypeDefOf.Doctor))) { prio[c] = c.workSettings?.GetPriority(WorkTypeDefOf.Doctor) ?? 0; c.workSettings?.SetPriority(WorkTypeDefOf.Doctor, 0); }
             yield return 260;
             string why = Caretaker.ImpossibleReason(comp, p, d);
             t.Check(why == "RimWard.Why.Impossible.NoSurgeon".Translate(), "with no doctor the treatment is impossible: " + why);
@@ -921,8 +930,8 @@ namespace RimWard.Tests
                 Pawn dis = RwT.NewPatient(map, PatientType.Disease, out PatientData dd, true, false);
                 comp.DismissPatient(dis);
                 Pawn gone = RwT.NewPatient(map, PatientType.Wounds, out PatientData dg, true, false);
-                gone.GetLord()?.RemovePawn(gone); gone.DeSpawn(); gone.Discard(true);
-                t.Check(comp.Patients.ContainsKey(gone), "a patient entry whose pawn was discarded exists before saving");
+                gone.GetLord()?.RemovePawn(gone); IncidentHelper.DiscardGenerated(gone);
+                t.Check(comp.Patients.ContainsKey(gone) && gone.Discarded, "a patient entry whose pawn was discarded exists before saving");
                 yield return 1;
                 var side = new Dictionary<string, string>
                 {

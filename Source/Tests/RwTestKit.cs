@@ -164,6 +164,7 @@ namespace RimWard.Tests
             => Verse.Log.Messages.Where(m => (m.type == LogMessageType.Error || (warningsToo && m.type == LogMessageType.Warning)) && (m.text ?? "").Contains(fragment))
                 .Select(m => m.text).ToList();
 
+        // FW-REQUEST: the harness keeps its save and log helpers internal (request 7); these are small copies for RimWard's suites.
         /// <summary>Saves the running game as <paramref name="name"/> without the test runner component (as the kit does).</summary>
         internal static bool Save(string name)
         {

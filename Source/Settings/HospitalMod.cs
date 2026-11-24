@@ -123,6 +123,8 @@ namespace RimWard
                 "Only active threats count (raiders, manhunters). Dormant mech clusters and weather never hold anyone.")
                 .InGroup("Nobody gets stuck").WithStep(1f).Legacy("MaxDangerHoldHours");
             // ---- General: payment
+            // FW-REQUEST: RequiresOn cannot point at a Bool setting (payment rows when patients pay, chief rows with the bonus, retries with
+            // auto-retry); those rows are registered without a dependency for now. See handoff/FW_requests/RimWard.md 1.
             r.Bool(core, Keys.ChargePatients, true, "Patients pay", "Off: a charity ward. Nobody pays, goodwill still counts.")
                 .InGroup("Payment").Legacy("ChargePatients");
             r.Enum(core, Keys.Payment, PaymentPreset.BreakEven, "Payment scale",
