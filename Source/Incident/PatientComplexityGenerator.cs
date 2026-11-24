@@ -72,7 +72,8 @@ namespace RimWard
 
         private static bool ApplyFrailty(Pawn pawn)
         {
-            string[] chronic = { "Frail", "BadBack", "Carcinoma", "Asthma" };
+            // No carcinoma: without a body part it cannot be excised and grows until it kills the patient on our ward.
+            string[] chronic = { "Frail", "BadBack", "Asthma" };
             foreach (string name in chronic.InRandomOrder())
             {
                 HediffDef def = DefDatabase<HediffDef>.GetNamedSilentFail(name);
@@ -89,8 +90,9 @@ namespace RimWard
 
         private static bool ApplyAddiction(Pawn pawn)
         {
-            // Vanilla: a pre-existing addiction to a random maintainable chemical (withdrawal context).
-            List<ChemicalDef> chems = DefDatabase<ChemicalDef>.AllDefsListForReading.Where(c => c.addictionHediff != null).ToList();
+            // A pre-existing addiction (withdrawal context), but only to chemicals whose addiction can neither kill
+            // nor drive the patient berserk (no luciferium: the mod must not create deaths it then blames on you).
+            List<ChemicalDef> chems = DefDatabase<ChemicalDef>.AllDefsListForReading.Where(c => IsSafeAddiction(c?.addictionHediff)).ToList();
             if (chems.Count == 0) return false;
             ChemicalDef chem = chems.RandomElement();
             if (pawn.health.hediffSet.GetFirstHediffOfDef(chem.addictionHediff) != null) return false;
@@ -101,6 +103,38 @@ namespace RimWard
                 return true;
             }
             catch { return false; }
+        }
+
+        /// <summary>True for a hediff that can be given to a patient without risking death or a mental state: no lethal severity,
+        /// no stage that is life threatening, has a death chance, gives an aggressive state or a drug binge, or forces mental breaks.</summary>
+        public static bool IsSafeAddiction(HediffDef def)
+        {
+            if (def == null) return false;
+            if (!typeof(Hediff_Addiction).IsAssignableFrom(def.hediffClass)) return false;
+            if (def.lethalSeverity > 0f) return false;
+            return HasNoDangerousStage(def);
+        }
+
+        public static bool HasNoDangerousStage(HediffDef def)
+        {
+            if (def?.stages == null) return true;
+            foreach (HediffStage st in def.stages)
+            {
+                if (st == null) continue;
+                if (st.lifeThreatening || st.deathMtbDays > 0f) return false;
+                if (st.mentalStateGivers != null)
+                {
+                    // aggressive states (berserk) and drug binges (overdose) are out; food binges and wandering are harmless
+                    foreach (MentalStateGiver g in st.mentalStateGivers)
+                    {
+                        MentalStateDef ms = g?.mentalState;
+                        if (ms == null) continue;
+                        if (ms.IsAggro || ms.defName.StartsWith("Binging_Drug", StringComparison.Ordinal)) return false;
+                    }
+                }
+                if (st.mentalBreakMtbDays > 0f) return false;
+            }
+            return true;
         }
     }
 }

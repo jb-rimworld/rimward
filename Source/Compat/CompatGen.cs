@@ -9,36 +9,24 @@ namespace RimWard
     // Every method is defensive: if anything is missing or throws, it cleanly does nothing.
     public static class CompatGen
     {
-        // === Xenotype variety (Biotech): 80% baseliner, 20% random (incl. custom xenotypes) ===
-        public static void ApplyXenotypeVariety(Pawn p)
+        // === Xenotypes (Biotech) ===
+        // The faction's own xenotype is kept (vanilla generates it; genes, skin and hair stay). RimWard only refuses
+        // patients it cannot serve: xenotypes that live on hemogen or need a deathrest casket. Checked by gene class,
+        // so modded xenotypes built from those genes are caught too. "Special needs patients" (setting) lets them in.
+        public static bool IsUnservableXenotype(Pawn p)
         {
-            if (!ModsConfig.BiotechActive || p?.genes == null) return;
+            if (!ModsConfig.BiotechActive || p?.genes == null) return false;
+            if (HospitalMod.Settings != null && HospitalMod.Settings.AllowSpecialNeedsXenotypes) return false;
             try
             {
-                XenotypeDef target = Rand.Chance(0.8f) ? XenotypeDefOf.Baseliner : PickRandomXenotype();
-                if (target == null) return;
-                ClearGenes(p);
-                p.genes.SetXenotype(target);
-                // If the new genes broke patient eligibility (e.g. no bleeding, power need), revert to baseliner.
-                if (IncidentHelper.IsWeirdPawn(p))
+                foreach (Gene g in p.genes.GenesListForReading)
                 {
-                    ClearGenes(p);
-                    p.genes.SetXenotype(XenotypeDefOf.Baseliner);
+                    if (g == null || !g.Active) continue;
+                    if (g is Gene_Hemogen || g is Gene_Deathrest) return true;
                 }
             }
             catch { }
-        }
-
-        private static void ClearGenes(Pawn p)
-        {
-            foreach (Gene g in p.genes.GenesListForReading.ToList()) p.genes.RemoveGene(g);
-        }
-
-        private static XenotypeDef PickRandomXenotype()
-        {
-            var pool = DefDatabase<XenotypeDef>.AllDefsListForReading
-                .Where(x => x != null && x != XenotypeDefOf.Baseliner).ToList();
-            return pool.Count > 0 ? pool.RandomElement() : null;
+            return false;
         }
 
         // === Royal patient (Royalty): flag a private-room demand WITHOUT granting a real title (which would
@@ -60,7 +48,7 @@ namespace RimWard
         public static bool CanAddDependency(Pawn p)
         {
             ChemicalDef gj = DefDatabase<ChemicalDef>.GetNamedSilentFail("GoJuice");
-            return p?.RaceProps != null && p.RaceProps.Humanlike && gj?.addictionHediff != null
+            return p?.RaceProps != null && p.RaceProps.Humanlike && PatientComplexityGenerator.IsSafeAddiction(gj?.addictionHediff)
                 && p.health.hediffSet.GetFirstHediffOfDef(gj.addictionHediff) == null;
         }
 

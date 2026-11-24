@@ -14,7 +14,7 @@ namespace RimWard
         public override void PostPostMake()
         {
             base.PostPostMake();
-            this.hospitalInt = !this.parent.def.defName.Contains("Pod");
+            this.hospitalInt = !BedKinds.IsMedPod(this.parent.def);
         }
 
         public bool Hospital
@@ -90,7 +90,7 @@ namespace RimWard
                 isActive = () => this.Hospital,
                 toggleAction = () => this.Hospital = !this.Hospital
             };
-            if (!this.parent.def.defName.Contains("Pod"))
+            if (!BedKinds.IsMedPod(this.parent.def))
             {
                 yield return new Command_Toggle
                 {

@@ -54,7 +54,7 @@ namespace RimWard
         /// <summary>Null when the bed may be set to this use, otherwise the reason (shown greyed out).</summary>
         public static string BlockedReason(Building_Bed bed, BedUse use)
         {
-            bool isPod = bed.def.defName.Contains("Pod");
+            bool isPod = BedKinds.IsMedPod(bed.def);
             switch (use)
             {
                 case BedUse.Colonist:
@@ -80,7 +80,7 @@ namespace RimWard
             List<BedUse> list = new List<BedUse> { BedUse.Colonist };
             if (HearthBridge.GuestAvailable(bed)) list.Add(BedUse.Guest);
             list.Add(BedUse.Patient);
-            if (!bed.def.defName.Contains("Pod")) list.Add(BedUse.Surgery);
+            if (!BedKinds.IsMedPod(bed.def)) list.Add(BedUse.Surgery);
             return list;
         }
 

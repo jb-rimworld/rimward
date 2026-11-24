@@ -21,8 +21,9 @@ namespace RimWard.Utilities
                 && !def.defName.ToLower().Contains("scaria")
                 && !def.defName.ToLower().Contains("mechanites") // folded in from Hospital: Disease Patch
                 && !def.defName.ToLower().Contains("rot")        // folded in from Hospital: Disease Patch
-                && !def.defName.Contains("GR")
-                && !def.defName.Contains("VDE")).ToList();
+                && !def.defName.StartsWith("GR_")
+                && !def.defName.StartsWith("VDE")
+                && NoAggroStage(def)).ToList();
             if (list.Count == 0) return true;
 
             Hediff hediff = null;
@@ -76,13 +77,27 @@ namespace RimWard.Utilities
                 && !def.defName.ToLower().Contains("mechanites")
                 && !def.defName.ToLower().Contains("rot")
                 && !def.defName.ToLower().Contains("animal")
-                && !def.defName.Contains("GR") && !def.defName.Contains("VDE")).ToList();
+                && !def.defName.StartsWith("GR_") && !def.defName.StartsWith("VDE")
+                && NoAggroStage(def)).ToList();
             if (pool.Count == 0) return;
             HediffDef chosen = pool.RandomElement();
             if (chosen.lethalSeverity <= 0f || pawn.health.hediffSet.GetFirstHediffOfDef(chosen) != null) return;
             Hediff h = HediffMaker.MakeHediff(chosen, pawn);
             h.Severity = Rand.Range(chosen.lethalSeverity / 30f, chosen.lethalSeverity / 15f) * HospitalMod.Settings.Difficulty;
             if (!pawn.health.WouldDieAfterAddingHediff(h)) pawn.health.AddHediff(h);
+        }
+
+        /// <summary>No stage of this hediff drives the patient into an aggressive mental state (berserk on the ward).</summary>
+        public static bool NoAggroStage(HediffDef def)
+        {
+            if (def?.stages == null) return true;
+            foreach (HediffStage st in def.stages)
+            {
+                if (st?.mentalStateGivers == null) continue;
+                foreach (MentalStateGiver g in st.mentalStateGivers)
+                    if (g?.mentalState != null && g.mentalState.IsAggro) return false;
+            }
+            return true;
         }
 
         public static void AddPlague(Pawn pawn, PatientData patientData)
