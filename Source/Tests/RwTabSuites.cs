@@ -8,6 +8,7 @@ using System.Linq;
 using JBFramework;
 using JBFramework.Testing;
 using RimWard.MainTab;
+using RimWard.Utilities;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -201,6 +202,8 @@ namespace RimWard.Tests
             {
                 // ---- 1. fresh colony: no patient bed at all
                 t.Check(HospitalOverview.PatientBeds(map).Count() == 0, "fresh colony: no patient bed yet");
+                int treated0 = gc.patientsTreated, died0 = gc.patientsDied;
+                gc.patientsTreated = 0; gc.patientsDied = 0;   // earlier suites in the same game may have sent patients home
                 t.Check(OverviewPage.StartCardDue(), "fresh colony: the start card is due");
                 List<ReadinessItem> ready = HospitalOverview.Readiness(map);
                 t.Note("checklist: " + string.Join(" | ", ready.Select(i => (i.ok ? "ok " : "NO ") + i.key + (i.detail != null ? " (" + i.detail + ")" : "") + (i.fixLabel != null ? " [" + i.fixLabel + "]" : "") + (i.pointer != null ? " -> " + i.pointer : ""))));
@@ -297,7 +300,9 @@ namespace RimWard.Tests
                 RwT.K.Set(Keys.IntakeMode, (float)(int)IntakeMode.Prompt);
                 IncidentDef inc = DefDatabase<IncidentDef>.GetNamed("RimWard_PatientArrives");
                 Threats.ClearCache();
+                comp.Policy.acceptDanger = true;   // the random test map may hold a dormant hive or other danger
                 for (int i = 0; i < 5 && comp.pendingOffers.Count == 0; i++) inc.Worker.TryExecute(new IncidentParms { target = map });
+                comp.Policy.acceptDanger = false;
                 RwT.K.Set(Keys.IntakeMode, (float)(int)IntakeMode.Firehose);
                 t.Check(comp.pendingOffers.Count > 0, "a pending offer for the inbox (" + comp.pendingOffers.Count + "; " + (IncidentHelper.ArrivalBlockReason(map) ?? "no block") + ")");
                 made = TabT.EveryState(t, map, out Pawn cured);
@@ -356,7 +361,23 @@ namespace RimWard.Tests
                 t.Check(!OverviewPage.StartCardDue(), "the start card is gone once answered");
                 gc.startCardDone = false; gc.patientsTreated++;
                 t.Check(!OverviewPage.StartCardDue(), "and never shows for a hospital that already sent a patient home");
-                gc.patientsTreated--;
+                gc.patientsTreated = treated0; gc.patientsDied = died0;
+                // an operation whose part in stock is forbidden says so (doctors never fetch forbidden things)
+                comp.Policy.refusedOperations.Clear();
+                ThingDef legDef = ThingDefOf.WoodLog;   // a peg leg is made of wood on the spot
+                if (DefDatabase<RecipeDef>.GetNamedSilentFail("InstallPegLeg") != null)
+                {
+                    foreach (Thing x in map.listerThings.ThingsOfDef(legDef).ToList()) x.SetForbidden(true, false);
+                    Pawn fp = RwT.NewPatient(map, PatientType.Wounds, out PatientData fd, true, false); made.Add(fp);
+                    bool okCase = TabT.MakeCase(fp, fd, "InstallPegLeg", "WoodLog");
+                    RwT.Place(ThingDefOf.WoodLog, 60, map);
+                    foreach (Thing x in map.listerThings.ThingsOfDef(legDef).ToList()) x.SetForbidden(true, false);
+                    string why = comp.WhyStillHere(fp);
+                    t.Check(okCase && comp.StatusOf(fp, out _) == PatientStatus.TreatmentImpossible && why.Contains(legDef.label), "a peg leg case whose wood is all forbidden reads as impossible and names it: " + why);
+                    t.Check(SurgeryUtility.OnlyForbiddenIngredient(fd.CureRecipe, map) == legDef, "and new surgery cases skip it");
+                    foreach (Thing x in map.listerThings.ThingsOfDef(legDef).ToList()) x.SetForbidden(false, false);
+                    t.Check(comp.StatusOf(fp, out _) == PatientStatus.WaitingForSurgery, "allowed again, the case waits for its operation");
+                }
                 // the alert opens the inbox
                 MainTabWindow_Hospital.OpenOn("inbox");
                 foreach (int y in TabT.CheckPage(t, "inbox", "alert", null)) yield return y;
@@ -398,7 +419,9 @@ namespace RimWard.Tests
                 RwT.K.Set(Keys.IntakeMode, (float)(int)IntakeMode.Prompt);
                 IncidentDef inc = DefDatabase<IncidentDef>.GetNamed("RimWard_PatientArrives");
                 Threats.ClearCache();
+                comp.Policy.acceptDanger = true;   // the random test map may hold a dormant hive or other danger
                 for (int i = 0; i < 5 && comp.pendingOffers.Count == 0; i++) inc.Worker.TryExecute(new IncidentParms { target = map });
+                comp.Policy.acceptDanger = false;
                 RwT.K.Set(Keys.IntakeMode, (float)(int)IntakeMode.Firehose);
                 t.Check(comp.pendingOffers.Count > 0, "a pending offer before saving (" + (IncidentHelper.ArrivalBlockReason(map) ?? "no block") + ")");
                 List<Pawn> made = TabT.EveryState(t, map, out _);
@@ -415,6 +438,7 @@ namespace RimWard.Tests
                     ["offers"] = comp.pendingOffers.Count.ToString(),
                     ["income"] = gc.IncomeThisQuadrum(lon).ToString(),
                     ["invoices"] = gc.recentInvoices.Count.ToString(),
+                    ["invoiceSum"] = gc.recentInvoices.Sum(i => i.TotalSilver).ToString(),
                     ["statuses"] = string.Join(",", comp.Patients.Keys.Select(p => comp.StatusOf(p, out _)).Distinct().OrderBy(s => s).Select(s => s.ToString())),
                 };
                 t.Note("before save: " + string.Join(", ", side.Select(kv => kv.Key + "=" + kv.Value)));
@@ -427,8 +451,10 @@ namespace RimWard.Tests
             if (want == null) yield break;
             int red0 = 0;
             t.Check(comp.pendingOffers.Count.ToString() == want["offers"], "the offer came back (" + comp.pendingOffers.Count + ")");
-            t.Check(gc.IncomeThisQuadrum(lon).ToString() == want["income"], "income this quadrum came back (" + gc.IncomeThisQuadrum(lon) + ", was " + want["income"] + ")");
-            t.Check(gc.recentInvoices.Count.ToString() == want["invoices"], "the last discharges came back");
+            // a cured patient may leave (and pay) in the first ticks after the load: count what was paid since
+            int paidSince = gc.recentInvoices.Sum(i => i.TotalSilver) - int.Parse(want["invoiceSum"]);
+            t.Check(gc.IncomeThisQuadrum(lon) == int.Parse(want["income"]) + paidSince, "income this quadrum came back (" + gc.IncomeThisQuadrum(lon) + " = " + want["income"] + " saved + " + paidSince + " paid after the load)");
+            t.Check(gc.recentInvoices.Count >= int.Parse(want["invoices"]), "the last discharges came back (" + gc.recentInvoices.Count + ", saved " + want["invoices"] + ")");
             t.Check(gc.startCardDone, "the start card stays answered");
             t.Note("after load: patients " + comp.Patients.Count + " (was " + want["patients"] + "), statuses " + string.Join(",", comp.Patients.Keys.Select(p => comp.StatusOf(p, out _)).Distinct().OrderBy(s => s)));
             t.Check(comp.Patients.Count > 0 && comp.Patients.Count <= int.Parse(want["patients"]), "the patients came back (an arriving one may have been dropped)");
@@ -484,6 +510,15 @@ namespace RimWard.Tests
                     t.Note("day " + d + ": " + comp.Patients.Count + " patients now, " + admitted.Count + " admitted so far, sent home " + (gc.patientsTreated - treated0)
                         + ", died " + (gc.patientsDied - died0) + ", silver " + (gc.silverEarned - silver0) + ", arrivals: " + (IncidentHelper.ArrivalBlockReason(map) ?? "possible"));
                     Place(map);
+                    foreach (var kv in comp.Patients.ToList())
+                    {
+                        Pawn p = kv.Key; PatientData pd = kv.Value;
+                        if (p == null || pd == null) continue;
+                        t.Note("  " + p.LabelShort + ": " + pd.Type + " " + pd.Diagnosis + " / " + pd.Cure + ", " + comp.WhyStillHere(p) + ", health " + p.health.summaryHealth.SummaryHealthPercent.ToStringPercent()
+                            + ", inBed " + p.InBed() + ", needsTend " + p.health.HasHediffsNeedingTend(false) + ", seekRest " + RimWorld.HealthAIUtility.ShouldSeekMedicalRest(p)
+                            + ", bills " + p.health.surgeryBills.Count + ", lord " + (p.GetLord()?.CurLordToil?.GetType().Name ?? "-") + ", job " + (p.CurJobDef?.defName ?? "-")
+                            + ", hediffs " + string.Join(";", p.health.hediffSet.hediffs.Where(h => h.Visible).Select(h => h.def.defName + (h.TendableNow() ? "*" : ""))));
+                    }
                 }
             }
             List<Invoice> paid = gc.recentInvoices.Take(Mathf.Max(0, gc.recentInvoices.Count - inv0 + 10)).Where(i => i.tick >= start).ToList();
@@ -507,6 +542,42 @@ namespace RimWard.Tests
             int med = map.listerThings.ThingsInGroup(ThingRequestGroup.Medicine).Sum(x => x.stackCount);
             if (med < 15) RwT.Place(ThingDefOf.MedicineIndustrial, 15, map);
             if (map.listerThings.ThingsOfDef(ThingDefOf.MealSimple).Sum(x => x.stackCount) < 10) RwT.Place(ThingDefOf.MealSimple, 20, map);
+        }
+    }
+}
+#endif
+#if JB_TESTS
+namespace RimWard.Tests
+{
+    /// <summary>rw.woodcase (explicit, diagnosis): a peg leg case (wood ingredient) with wood in stock is operated within a day.</summary>
+    sealed class WoodCaseSuite : JBFramework.Testing.KitTestSuite
+    {
+        public override string Name => "rw.woodcase";
+        public override int MaxTicks => 70000;
+        public override bool ExplicitOnly => true;
+        public override System.Collections.Generic.IEnumerable<int> Run(JBFramework.Testing.TestContext t)
+        {
+            Verse.Map map = t.Map;
+            var wood = map.listerThings.ThingsOfDef(RimWorld.ThingDefOf.WoodLog);
+            int forb = 0, free = 0;
+            foreach (var w in wood) { if (w.IsForbidden(RimWorld.Faction.OfPlayer)) forb += w.stackCount; else free += w.stackCount; }
+            t.Note("quicktest wood: " + free + " allowed, " + forb + " forbidden");
+            RwT.SetUp(t, 2, 2);
+            RwT.Place(RimWorld.ThingDefOf.WoodLog, 60, map);
+            HospitalMapComponent comp = RwT.Comp(map);
+            Verse.Pawn p = RwT.NewPatient(map, PatientType.Wounds, out PatientData d, true, false);
+            bool ok = TabT.MakeCase(p, d, "InstallPegLeg", "WoodLog");
+            t.Check(ok, "peg leg case set up (" + d.CureRecipe?.defName + ")");
+            int start = RwT.Now;
+            for (int i = 0; i < 24 && comp.Patients.ContainsKey(p) && d.HasPendingSurgeryBill; i++)
+            {
+                yield return 2500;
+                var bill = Caretaker.CureBill(p, d);
+                t.Note("h" + i + ": " + comp.WhyStillHere(p) + ", inBed " + p.InBed() + ", bill " + (bill != null) + (bill != null ? " suspended " + bill.suspended + " completable " + bill.CompletableEver + " deadline " + bill.ShouldDoNow() : "")
+                    + ", doctors: " + string.Join("; ", map.mapPawns.FreeColonistsSpawned.Select(c => c.LabelShort + "=" + (c.CurJobDef?.defName ?? "-") + "/" + c.workSettings.GetPriority(RimWorld.WorkTypeDefOf.Doctor))));
+            }
+            t.Check(!d.HasPendingSurgeryBill || !comp.Patients.ContainsKey(p), "the peg leg was installed within a day (" + (RwT.Now - start) + " ticks)");
+            RwT.CleanUp(map);
         }
     }
 }

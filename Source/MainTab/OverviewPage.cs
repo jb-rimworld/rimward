@@ -201,7 +201,7 @@ namespace RimWard.MainTab
             List<ReadinessItem> items = ReadinessCached(map);
             int bad = items.Count(i => !i.ok);
             y += RwUI.Section(0f, y, w, "RimWard.Ready.Head".Translate());
-            string summary = bad == 0 ? "RimWard.Ready.AllGood".Translate() : "RimWard.Ready.Missing".Translate(bad);
+            string summary = bad == 0 ? "RimWard.Ready.AllGood".Translate() : bad == 1 ? "RimWard.Ready.MissingOne".Translate() : "RimWard.Ready.Missing".Translate(bad);
             if (bad == 0)
             {
                 // all done: one line, the list on demand

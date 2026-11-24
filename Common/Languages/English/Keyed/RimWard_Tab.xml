@@ -61,6 +61,8 @@
     <RimWard.Ready.Missing>{0} things are still missing. Each line says what to do; most have a button that does it.</RimWard.Ready.Missing>
     <RimWard.Ready.ShowAll>Show the checklist</RimWard.Ready.ShowAll>
     <RimWard.Ready.Hide>Hide the checklist</RimWard.Ready.Hide>
+    <RimWard.Ready.SurgeryCount>{0} surgery beds</RimWard.Ready.SurgeryCount>
+    <RimWard.Ready.MissingOne>One thing is still missing. The line says what to do; most lines have a button that does it.</RimWard.Ready.MissingOne>
     <RimWard.Ready.ShowMe>Show me</RimWard.Ready.ShowMe>
     <RimWard.Ready.IntakeOff>the "Patient intake" area is switched off in the mod settings</RimWard.Ready.IntakeOff>
     <RimWard.Ready.Closed>the hospital is closed</RimWard.Ready.Closed>

@@ -61,6 +61,8 @@
     <RimWard.Ready.Missing>Es fehlen noch {0} Dinge. Jede Zeile sagt, was zu tun ist; meist erledigt es ein Knopf.</RimWard.Ready.Missing>
     <RimWard.Ready.ShowAll>Liste zeigen</RimWard.Ready.ShowAll>
     <RimWard.Ready.Hide>Liste ausblenden</RimWard.Ready.Hide>
+    <RimWard.Ready.SurgeryCount>{0} OP-Betten</RimWard.Ready.SurgeryCount>
+    <RimWard.Ready.MissingOne>Es fehlt noch eine Sache. Die Zeile sagt, was zu tun ist; meist erledigt es ein Knopf.</RimWard.Ready.MissingOne>
     <RimWard.Ready.ShowMe>Zeigen</RimWard.Ready.ShowMe>
     <RimWard.Ready.IntakeOff>der Bereich „Patientenaufnahme“ ist in den Mod-Einstellungen aus</RimWard.Ready.IntakeOff>
     <RimWard.Ready.Closed>das Krankenhaus ist geschlossen</RimWard.Ready.Closed>

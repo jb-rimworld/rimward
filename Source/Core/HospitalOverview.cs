@@ -151,7 +151,7 @@ namespace RimWard
             if (pol.acceptSurgery && HospitalMod.Settings.SurgeryCasesOn)
             {
                 int surgery = comp.SurgeryBedCount();
-                ReadinessItem sb = Add(list, "SurgeryBed", surgery > 0, surgery > 0 ? (string)"RimWard.Ready.BedsCount".Translate(surgery) : null, null);
+                ReadinessItem sb = Add(list, "SurgeryBed", surgery > 0, surgery > 0 ? (string)"RimWard.Ready.SurgeryCount".Translate(surgery) : null, null);
                 if (surgery == 0)
                 {
                     Building_Bed best = BestSurgeryBed(map);

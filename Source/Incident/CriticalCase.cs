@@ -33,7 +33,7 @@ namespace RimWard
         {
             Settings s = HospitalMod.Settings;
             if (s == null || !s.CriticalCasesOn || map == null || Recipe == null) return false;
-            return !Recipe.PotentiallyMissingIngredients(null, map).Any();
+            return !Recipe.PotentiallyMissingIngredients(null, map).Any() && SurgeryUtility.OnlyForbiddenIngredient(Recipe, map) == null;
         }
 
         /// <summary>Rolls the chance and, on a hit, turns the fresh patient into a critical case. False = a normal case follows.</summary>

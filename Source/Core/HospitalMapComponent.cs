@@ -147,7 +147,10 @@ namespace RimWard
             foreach (KeyValuePair<Pawn, PatientData> kv in this.Patients)
             {
                 Pawn p = kv.Key;
-                if (kv.Value == null || Caretaker.IsGone(p)) drop.Add(p);
+                // a pawn nobody holds (not spawned, not in a pod, transporter or caravan, not a world pawn) is not written to the save:
+                // its entry would come back as a null key ("Null key while loading dictionary")
+                bool unsaved = p != null && !p.Spawned && p.ParentHolder == null && !Find.WorldPawns.Contains(p);
+                if (kv.Value == null || Caretaker.IsGone(p) || unsaved) drop.Add(p);
             }
             foreach (Pawn p in drop)
             {

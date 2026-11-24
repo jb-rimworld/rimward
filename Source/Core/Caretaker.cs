@@ -193,6 +193,8 @@ namespace RimWard
             if (!surgeon) return "RimWard.Why.Impossible.NoSurgeon".Translate();
             ThingDef missing = r.PotentiallyMissingIngredients(null, comp.map).FirstOrDefault();
             if (missing != null) return "RimWard.Why.Impossible.Missing".Translate(missing.label);
+            ThingDef forbidden = SurgeryUtility.OnlyForbiddenIngredient(r, comp.map);
+            if (forbidden != null) return "RimWard.Why.Impossible.Forbidden".Translate(forbidden.label);
             string care = SurgeryUtility.MedicineBlockedByPolicy(r, comp.map, pawn.playerSettings?.medCare ?? comp.Policy.medCare);
             if (care != null) return "RimWard.Why.Impossible.MedicineLevel".Translate(care);
             return null;

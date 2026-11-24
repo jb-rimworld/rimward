@@ -25,6 +25,7 @@ namespace RimWard.Utilities
                 if (!IsCandidate(recipe, hospital)) continue;
                 if (!doctors.Any(col => recipe.PawnSatisfiesSkillRequirements(col))) continue;
                 if (recipe.PotentiallyMissingIngredients(null, map).Any()) continue;
+                if (OnlyForbiddenIngredient(recipe, map) != null) continue;
                 if (MedicineBlockedByPolicy(recipe, map, hospital?.Policy.medCare ?? MedicalCareCategory.Best) != null) continue;
                 list.Add(recipe);
             }
@@ -95,6 +96,35 @@ namespace RimWard.Utilities
                 bool any = map.listerThings.ThingsInGroup(ThingRequestGroup.Medicine)
                     .Any(t => ic.filter.Allows(t) && care.AllowsMedicine(t.def) && !t.IsForbidden(Faction.OfPlayer));
                 if (!any) return care.GetLabel();
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// An ingredient (not medicine: see <see cref="MedicineBlockedByPolicy"/>) whose whole stock on the map is forbidden or fogged:
+        /// the doctors would never fetch it. Returns that thing, else null. (Vanilla's PotentiallyMissingIngredients counts forbidden stock.)
+        /// </summary>
+        public static ThingDef OnlyForbiddenIngredient(RecipeDef recipe, Map map)
+        {
+            if (recipe?.ingredients == null || map == null) return null;
+            foreach (IngredientCount ic in recipe.ingredients)
+            {
+                if (ic?.filter == null) continue;
+                List<ThingDef> defs = ic.filter.AllowedThingDefs.ToList();
+                if (defs.Count == 0 || defs.All(d => d.IsMedicine)) continue;
+                ThingDef forbiddenOne = null;
+                bool usable = false;
+                foreach (ThingDef d in defs)
+                {
+                    foreach (Thing t in map.listerThings.ThingsOfDef(d))
+                    {
+                        if (!ic.filter.Allows(t)) continue;
+                        if (!t.IsForbidden(Faction.OfPlayer) && !t.PositionHeld.Fogged(map)) { usable = true; break; }
+                        forbiddenOne = forbiddenOne ?? d;
+                    }
+                    if (usable) break;
+                }
+                if (!usable && forbiddenOne != null) return forbiddenOne;
             }
             return null;
         }

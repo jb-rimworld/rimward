@@ -2,6 +2,8 @@
 
 ## 2.0.0
 
+- New Hospital tab: an open/closed switch you cannot miss, free beds, patients, offers and income this quadrum at a glance, and a checklist of what is still missing before patients come, most lines with a button that fixes it (open now, use the medical beds, a surgery bed, a doctor, forbidden medicine, a landing spot).
+- The tab lists every patient with their state and why they are still here, takes offers with Accept / Turn away (letters are optional now), has the hospital policies as a page, a short guide, and a start card once per colony: "Open the hospital now" and "Use all medical beds for patients".
 - New settings window (JB Framework): pages per area, search, presets Clinic / Charity / Meat shop, and a welcome card in a new colony. Your old RimWard settings carry over.
 - Settings now belong to each save; the settings file is the template for new games.
 - Switch whole areas off: patient intake, surgery cases, mass casualties, complications, billing extras, malpractice, renown, noble patients, Guilty ideoligions, the Hearth & Harbor bridge and Combat Extended.
