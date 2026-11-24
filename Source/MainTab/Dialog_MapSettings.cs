@@ -60,7 +60,7 @@ namespace RimWard.MainTab
 
             Rect foodLabel = new Rect(0f, y, 170f, 23f);
             Text.Anchor = TextAnchor.MiddleLeft;
-            Widgets.Label(foodLabel, Text.TinyFontSupported ? "FoodPolicy".Translate() : "FoodPolicyShort".Translate());
+            Widgets.Label(foodLabel, "FoodPolicy".Translate());
             GenUI.ResetLabelAlign();
             if (Widgets.ButtonText(new Rect(175f, y, 160f, 23f), pol.FoodPolicy?.label ?? "-"))
             {

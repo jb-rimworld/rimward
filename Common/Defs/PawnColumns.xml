@@ -10,7 +10,7 @@
         <defName>RimWard_PatientRating</defName>
         <workerClass>RimWard.MainTab.PawnColumnWorker_PatientRating</workerClass>
         <label>rating</label>
-        <headerTip>How happy the patient is. Get above 70 for more goodwill.</headerTip>
+        <headerTip>How much better the patient feels than on arrival. Above 60% earns extra goodwill on discharge.</headerTip>
         <width>45</width>
         <sortable>true</sortable>
     </PawnColumnDef>
@@ -19,7 +19,7 @@
         <defName>RimWard_PatientTimeSpent</defName>
         <workerClass>RimWard.MainTab.PawnColumnWorker_PatientTimeSpent</workerClass>
         <label>time spent</label>
-        <headerTip>How many hours the patient spent in your hospital.</headerTip>
+        <headerTip>How long the patient has been in your hospital.</headerTip>
         <width>45</width>
         <sortable>true</sortable>
     </PawnColumnDef>
@@ -28,7 +28,7 @@
         <defName>RimWard_PatientDiagnosis</defName>
         <workerClass>RimWard.MainTab.PawnColumnWorker_Diagnosis</workerClass>
         <label>diagnosis</label>
-        <headerTip>What's wrong with this patient?</headerTip>
+        <headerTip>What is wrong with this patient.</headerTip>
         <width>175</width>
         <sortable>false</sortable>
     </PawnColumnDef>
@@ -37,7 +37,7 @@
         <defName>RimWard_PatientCure</defName>
         <workerClass>RimWard.MainTab.PawnColumnWorker_Cure</workerClass>
         <label>treatment</label>
-        <headerTip>How will we help the patient?</headerTip>
+        <headerTip>How we will help the patient.</headerTip>
         <width>175</width>
         <sortable>false</sortable>
     </PawnColumnDef>
@@ -46,7 +46,7 @@
         <defName>RimWard_PatientBill</defName>
         <workerClass>RimWard.MainTab.PawnColumnWorker_Bill</workerClass>
         <label>bill</label>
-        <headerTip>How much the patient will pay.</headerTip>
+        <headerTip>What the patient would pay if discharged cured right now: the same invoice that pays out. Hover a row for the itemised bill.</headerTip>
         <width>45</width>
         <sortable>true</sortable>
     </PawnColumnDef>

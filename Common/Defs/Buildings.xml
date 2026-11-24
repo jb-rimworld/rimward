@@ -3,7 +3,7 @@
     <ThingDef ParentName="BuildingBase">
         <defName>RimWard_PatientLandingSpot</defName>
         <label>patients land here</label>
-        <description>Designates a spot where incoming patients will be dropped.</description>
+        <description>A painted pad that tells the drop pods where to put the paying customers. Without one they land somewhere safe near the colony, which is less precise but equally billable.</description>
         <graphicData>
             <texPath>Things/RimWard/PatientLandingSpot</texPath>
             <graphicClass>Graphic_Single</graphicClass>

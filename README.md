@@ -22,81 +22,81 @@ We provide the patients. We provide the paperwork. The anesthesia, famously, is 
 
 ## The pitch
 
-The old Hospital mod let patients show up and get healed. Lovely. But it also:
-
-- punished you with lost goodwill **every** time a patient died — including on the operating table,
-  including while they were *walking home cured*, including when they arrived already 90% dead;
-- gave up the moment a surgery botched, leaving the patient face-down in a bed forever, slowly
-  developing a personality made entirely of untended wounds;
-- buried you under popups; and
-- had roughly four settings.
-
-RimWard fixes all of that, then keeps going until it becomes a hospital management sim with a body count.
+The old Hospital mod let patients show up and get healed. Lovely. But it also punished you for deaths on the operating table,
+gave up after one botched surgery, let patients sit in your beds forever, and charged for operations that failed.
+RimWard fixes that and adds the paperwork.
 
 ---
 
-## Features
+## Features (RimWorld 1.7; the 1.6 build is frozen at the November 2026 state)
 
-**🩺 Triage, your way.** Run the **firehose** (patients just appear, no questions, good luck) or
-flip on **triage** and vet every case from a single clean inbox: name, diagnosis, odds of survival,
-and *exactly* how much silver is involved before you commit a bed. Mass casualty inbound? You get
-**one** offer — *"Plane crash. 30 patients in 6 hours. Yes / absolutely not"* — not thirty letters.
+**Triage, your way.** Three intake modes. *Firehose*: patients just arrive. *Prompt*: every case is a letter with name, faction,
+diagnosis, the estimated payment and, for an operation, what it uses from your stock. *Hybrid*: letters only for surgery cases
+and titled nobles. Unanswered offers expire (1 to 24 hours, default 6). Declining is free. Accepting with no free patient bed is
+refused and the offer stays open.
 
-**⚖️ A fair malpractice system.** We only blame you when it's *actually your fault*. Surgeon's hand
-slipped? Clinical risk, no penalty. Patient bled out jogging to the exit after you cured them? Not
-your problem. Showed up with a disease three days past terminal? You can't save everyone, and the
-faction knows it. Let a patient rot in a hallway untended for a week, though — that one's on you.
-Every line of it is a slider.
+**One invoice.** The Bill column, the offer letter and the silver you receive come from the same calculation: what was done
+(admission, each tend with medicine, each meal fed, each operation and the materials it used) times the payment scale, the room
+tier, a chief physician, the faction's medicine preference, a noble's room demand and your renown, capped at the maximum payout.
+Hover a row for the itemised bill. Large payouts arrive as a letter with the full invoice (threshold is a setting).
 
-**🔁 Surgeries that don't give up.** Botch an operation and RimWard simply schedules another one.
-And another. (Up to a configurable number — we're not *monsters*. That setting is right next to the
-one that says we are.)
+**Every operation is billed, failures are not.** Any recipe on a patient, vanilla or modded, is billed when it completes.
+A failed operation charges no fee; the medicine and parts it used up are reimbursed (two settings). A botched cure is retried
+up to 3 times (setting), and the patient cannot walk out between the botch and the retry.
 
-**📊 The discharge report card.** Every patient leaves with a fully itemized verdict. Removed their
-infected leg without asking? Minus points. *Replaced* it with a bionic so they walk out faster than
-they walked in? Big plus. Survived against the odds? Bonus. Picked up a fresh luciferium addiction
-on your watch? ...we've all been there. Their faction tallies the whole story and pays — or sulks —
-accordingly. **You are free to do whatever surgery you think is right.** Nobody gets to second-guess
-the doctor until the patient's standing at the door.
+**Nobody gets stuck.** A caretaker checks every patient every few seconds:
+- dismissed patients leave and pay their share of the bill so far (default 50%);
+- an operation that cannot be done (part gone, nobody skilled enough, missing ingredient, refused) sends a letter after 24 hours
+  (setting) and discharges the patient after another 24, with no penalty;
+- a maximum stay (default 15 days, 0 = off) discharges with the bill so far;
+- cured patients wait for an active threat to pass for at most 24 hours (setting); dormant mech clusters and weather never hold
+  anyone, and weather only stops new arrivals;
+- arrested, enslaved or recruited patients are dropped from the list without undoing their new status;
+- vanished patients are cleaned out before saving (no "null key" on load).
+Each patient has a readable reason why they are still here (shown in a future overview; the data exists now).
 
-**🏥 Renown & clinic tiers.** Save enough lives and your bloodstained shack becomes a name people
-say with respect across the planet. Higher renown means richer patients, fatter payouts, and the
-occasional "thank you" care package. Level up and the galaxy literally ships you medicine.
+**A fair malpractice system.** You only lose goodwill when it is your fault. Death in surgery or right after a botch, after dismissal,
+or within an hour of arrival: not on you. A no-fault death can still pay its share of the bill (setting). Neglect costs goodwill.
 
-**🛏️ Location, location, location.** A private room with a real bed pays like a private room. A bunk
-in a 12-bed barracks pays like a bunk in a 12-bed barracks. Capitalism, but with bedpans.
+**Policies per save.** Open/closed, opening hours, what the hospital accepts, food and medicine for patients and refused operations
+are stored once per save and apply to every map, including the new one after a gravship landing. A map can have its own policies
+(checkbox). New colonies start with the hospital open (setting); nobody comes until a medical bed is set to Patient.
 
-**👑 Difficult clientele.** Nobles who refuse to recover in anything less than a throne-adjacent
-suite. Tribals who want herbal medicine and recoil at your glittertech. Modern factions who recoil
-at your *herbs*. Patients on a drug clock who'll die mid-cure without their fix. Xenotypes with
-needs, genes with opinions, and at least one person who will not stop asking for beer.
+**Room-quality pay, renown, difficult clientele.** A private room pays 135%, a two-bed room 110%, a ward 85%, a hallway less. A chief
+physician (Medicine 12+) adds 25%. Four renown tiers, +5% each. Nobles pay 40% more for a private room and 25% less for a shared one.
+Tribal factions dislike glitterworld medicine, modern ones dislike herbs. Patients arrive with extra illnesses or chronic conditions
+(never anything that kills them or sends them berserk). They keep their faction's own xenotype; hemogen and deathrest xenotypes are
+not sent unless you allow them.
 
-**💸 Money from "almost nothing" to "frankly a crime."** A central payment dial runs from charity
-ward (you eat the cost, your ideoligion approves) through honest break-even, all the way up to
-cheat-rich tycoon mode. One slider does the same for difficulty.
+**Mass casualty events** (opt-in per save): a pandemic, raid, crash or fire sends a group of patients, at most as many as you have free
+patient beds. No triage letter.
 
-**🧟 Plays well with others.** Soft-compatible with More Injuries, Organ Failure, Zombieland (yes,
-you can take in the freshly bitten and race the clock), Vanilla Psycasts & Words of Healing (psychic
-surgery counts as medicine and gets paid), VFE Empire, Royalty, Ideology, Combat Extended, and
-Multiplayer. Doesn't depend on any of them. Future injury mods just work, because RimWard judges
-wounds by what they *are*, not by their name tag.
+**Contracts:** injured visitors and allies on your map offer to pay for treatment.
+
+**English and German.**
 
 ---
 
 ## What it is not
 
 - A guarantee that everyone lives. (See: name of mod.)
-- A reason to feel bad. The penalties are fair now. Probably.
+- Multiplayer-ready. Not supported, not tested.
 - Responsible for what your colonists do with the leftover corpses.
 
 ---
 
 ## Compatibility & requirements
 
-- **Requires:** Harmony (and Prepatcher on RimWorld 1.6 only; Prepatcher does not run on 1.7 and is not needed there).
-- **Replaces:** the *Hospital* mod and its patches — please disable those; RimWard is the whole
-  hospital now and will politely refuse to share the building.
-- **Multiplayer:** supported.
+- **Requires:** Harmony (and Prepatcher on RimWorld 1.6 only; it does not run on 1.7 and is not needed there).
+- **Replaces:** the *Hospital* mod and its patches. Please disable those.
+- **Multiplayer:** not supported.
+- **Combat Extended:** CE's "tend yourself" tactic is switched off for patients (soft patch, only when CE is loaded).
+- **Alien races / other languages:** body parts are found by their definition and tags, not by their (translated) names.
+- **Injury and medicine mods:** wounds, diseases and operations are read from the game's health system. Modded operations are billed
+  like vanilla ones. Nothing mod-specific beyond what is listed here.
+- **Hospital Beds Gen 2:** its beds are medical beds, so RimWard uses them. MedPod-style beds (detected by their building class) are not
+  patient beds by default and have no surgery use.
+- If a patch fails after a game or mod update, only that feature is off and the log names it.
 
 ---
 

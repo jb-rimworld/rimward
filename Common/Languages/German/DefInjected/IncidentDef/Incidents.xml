@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <RimWard_PatientArrives.label>Patient trifft ein</RimWard_PatientArrives.label>
+  <RimWard_PatientArrives.letterLabel>Neuer Patient eingetroffen</RimWard_PatientArrives.letterLabel>
+  <RimWard_PatientArrives.letterText>{PAWN_possessive} Name ist {0}. Diagnose: {1}</RimWard_PatientArrives.letterText>
+  <RimWard_MassCasualtyEvent.label>Massenanfall von Verletzten</RimWard_MassCasualtyEvent.label>
+  <RimWard_MassCasualtyEvent.letterLabel>Massenanfall von Verletzten</RimWard_MassCasualtyEvent.letterLabel>
+  <RimWard_MassCasualtyEvent.letterText>{0} in der Nähe. {1} Patienten sind auf dem Weg in dein Krankenhaus.</RimWard_MassCasualtyEvent.letterText>
+</LanguageData>

@@ -150,7 +150,7 @@ namespace RimWard
             l.CheckboxLabeled("ShowMessageAtArrival".Translate(), ref this.ShowMessageAtArrival, "ShowMessageAtArrivalTooltip".Translate());
             EnumRow(l, "RimWard.Set.IntakeMode".Translate(), this.Intake, v => this.Intake = v);
             if (this.Intake != IntakeMode.Firehose)
-                l.SliderLabeled("RimWard.Set.TriageHours".Translate(), ref this.TriageDecisionHours, this.TriageDecisionHours.ToString("0") + " h", 1f, 24f);
+                l.SliderLabeled("RimWard.Set.TriageHours".Translate(), ref this.TriageDecisionHours, (string)"RimWard.Unit.Hours".Translate(this.TriageDecisionHours.ToString("0")), 1f, 24f);
             l.CheckboxLabeled("RimWard.Set.Ambient".Translate(), ref this.AmbientContractsEnabled, "RimWard.Set.AmbientTip".Translate());
             l.CheckboxLabeled("RimWard.Set.OpenInNew".Translate(), ref this.OpenInNewColonies, "RimWard.Set.OpenInNewTip".Translate());
             l.CheckboxLabeled("RimWard.Set.SpecialNeeds".Translate(), ref this.AllowSpecialNeedsXenotypes, "RimWard.Set.SpecialNeedsTip".Translate());
@@ -177,9 +177,9 @@ namespace RimWard
             l.CheckboxLabeled("RimWard.Set.ReimburseProsth".Translate(), ref this.ReimburseProstheticsOnFailure, "RimWard.Set.ReimburseProsthTip".Translate());
 
             Header(l, "RimWard.Set.Caretaker".Translate());
-            l.SliderLabeled("RimWard.Set.MaxStay".Translate(), ref this.MaxStayDays, this.MaxStayDays < 0.5f ? (string)"RimWard.Set.Off".Translate() : this.MaxStayDays.ToString("0") + " d", 0f, 60f, "RimWard.Set.MaxStayTip".Translate());
-            l.SliderLabeled("RimWard.Set.Impossible".Translate(), ref this.ImpossibleTreatmentHours, this.ImpossibleTreatmentHours.ToString("0") + " h", 6f, 96f, "RimWard.Set.ImpossibleTip".Translate());
-            l.SliderLabeled("RimWard.Set.DangerHold".Translate(), ref this.MaxDangerHoldHours, this.MaxDangerHoldHours.ToString("0") + " h", 0f, 72f, "RimWard.Set.DangerHoldTip".Translate());
+            l.SliderLabeled("RimWard.Set.MaxStay".Translate(), ref this.MaxStayDays, this.MaxStayDays < 0.5f ? (string)"RimWard.Set.Off".Translate() : (string)"RimWard.Unit.Days".Translate(this.MaxStayDays.ToString("0")), 0f, 60f, "RimWard.Set.MaxStayTip".Translate());
+            l.SliderLabeled("RimWard.Set.Impossible".Translate(), ref this.ImpossibleTreatmentHours, (string)"RimWard.Unit.Hours".Translate(this.ImpossibleTreatmentHours.ToString("0")), 6f, 96f, "RimWard.Set.ImpossibleTip".Translate());
+            l.SliderLabeled("RimWard.Set.DangerHold".Translate(), ref this.MaxDangerHoldHours, (string)"RimWard.Unit.Hours".Translate(this.MaxDangerHoldHours.ToString("0")), 0f, 72f, "RimWard.Set.DangerHoldTip".Translate());
 
             Header(l, "RimWard.Set.Death".Translate());
             l.CheckboxLabeled("RimWard.Set.DeathPenalty".Translate(), ref this.DeathPenaltyEnabled);

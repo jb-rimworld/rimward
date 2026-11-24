@@ -22,8 +22,6 @@
     <AcceptSurgeryTooltip>Deaktivieren, wenn du keine OP-Patienten möchtest.</AcceptSurgeryTooltip>
     <AcceptDanger>Patienten auch bei Gefahr</AcceptDanger>
     <AcceptDangerTooltip>Aktivieren, um die Sicherheitsprüfung der Karte zu übergehen.</AcceptDangerTooltip>
-    <SilverMultiplier>Silber-Multiplikator</SilverMultiplier>
-    <SilverMultiplierTooltip>Skaliert die Rechnung des Patienten. (empfohlen: 100%)</SilverMultiplierTooltip>
     <ShowMessageAtArrival>Nachricht statt Brief anzeigen</ShowMessageAtArrival>
     <ShowMessageAtArrivalTooltip>Zeigt bei neuer Ankunft eine Nachricht statt eines Briefs.</ShowMessageAtArrivalTooltip>
     <MassCasualties>Massenanfall-Ereignisse aktivieren</MassCasualties>
@@ -98,10 +96,6 @@
     <RimWard.Set.Renown>Krankenhaus-Renommee &amp; Stufen</RimWard.Set.Renown>
     <RimWard.Set.RoyalRoom>Royale Patienten verlangen ein Qualitätszimmer</RimWard.Set.RoyalRoom>
     <RimWard.Set.IdeoGuilty>Ideology: Schuld beim Abweisen von Patienten</RimWard.Set.IdeoGuilty>
-    <RimWard.Set.SoftCompat>Sanfte Kompatibilität mit Verletzungs-/Medizin-Mods</RimWard.Set.SoftCompat>
-    <RimWard.Set.SoftCompatTip>Rechnet Heilung durch Psycasts und andere Mods an; auf jede Art geheilte Patienten dürfen gehen.</RimWard.Set.SoftCompatTip>
-    <RimWard.Set.Zombie>Zombiebiss-Patienten (optional)</RimWard.Set.Zombie>
-    <RimWard.Set.ZombieTip>Benötigt Zombieland. Frisch gebissene Patienten, die du heilen musst, bevor sie sich verwandeln.</RimWard.Set.ZombieTip>
 
     <!-- Royalty / Ideology -->
     <RimWard.RoyalRoomNeeded>Verlangt ein Qualitätszimmer</RimWard.RoyalRoomNeeded>
@@ -124,4 +118,140 @@
     <RimWard.Set.CombinedBedTip>Zeigt einen einzigen Knopf "Nutzung: Kolonist / Gast / Patient" statt getrennter Schalter für Krankenhaus-, OP- und Gästebett. Braucht eine Hearth-&amp;-Harbor-Version mit dem Auswahl-Protokoll.</RimWard.Set.CombinedBedTip>
     <RimWard.Set.Leisure>Patienten nutzen Gäste-Freizeit</RimWard.Set.Leisure>
     <RimWard.Set.LeisureTip>Patienten, die auf den Beinen sind (keine Blutung, keine OP wartet), dürfen Freizeitorte von Hearth &amp; Harbor wie das Spa besuchen, während sie genesen.</RimWard.Set.LeisureTip>
+
+    <!-- 2.0: invoice, caretaker, policies, overview -->
+    <RimWard.Enum.PaymentPreset.AlmostNothing>Fast nichts (10 %)</RimWard.Enum.PaymentPreset.AlmostNothing>
+    <RimWard.Enum.PaymentPreset.Charity>Wohltätig (40 %)</RimWard.Enum.PaymentPreset.Charity>
+    <RimWard.Enum.PaymentPreset.BreakEven>Kostendeckend (100 %)</RimWard.Enum.PaymentPreset.BreakEven>
+    <RimWard.Enum.PaymentPreset.Fair>Fair (150 %)</RimWard.Enum.PaymentPreset.Fair>
+    <RimWard.Enum.PaymentPreset.Generous>Großzügig (300 %)</RimWard.Enum.PaymentPreset.Generous>
+    <RimWard.Enum.PaymentPreset.Tycoon>Tycoon (1000 %)</RimWard.Enum.PaymentPreset.Tycoon>
+    <RimWard.Enum.PaymentPreset.Custom>Eigener Wert</RimWard.Enum.PaymentPreset.Custom>
+    <RimWard.Enum.MedicineStrictness.Off>Aus</RimWard.Enum.MedicineStrictness.Off>
+    <RimWard.Enum.MedicineStrictness.Soft>Mild</RimWard.Enum.MedicineStrictness.Soft>
+    <RimWard.Enum.MedicineStrictness.Strict>Streng</RimWard.Enum.MedicineStrictness.Strict>
+    <RimWard.Enum.IntakeMode.Firehose>Feuerwehrschlauch: Patienten kommen einfach</RimWard.Enum.IntakeMode.Firehose>
+    <RimWard.Enum.IntakeMode.Hybrid>Gemischt: Brief bei OP und Adel</RimWard.Enum.IntakeMode.Hybrid>
+    <RimWard.Enum.IntakeMode.Prompt>Nachfrage: ein Brief für jeden Fall</RimWard.Enum.IntakeMode.Prompt>
+    <RimWard.RoomTier.Hallway>Flur</RimWard.RoomTier.Hallway>
+    <RimWard.RoomTier.Barracks>Saal (3+ Betten)</RimWard.RoomTier.Barracks>
+    <RimWard.RoomTier.TwoBed>Zweibettzimmer</RimWard.RoomTier.TwoBed>
+    <RimWard.RoomTier.Single>Einzelzimmer</RimWard.RoomTier.Single>
+    <RimWard.Renown.Tier0>Feldlazarett</RimWard.Renown.Tier0>
+    <RimWard.Renown.Tier1>Klinik</RimWard.Renown.Tier1>
+    <RimWard.Renown.Tier2>Krankenhaus</RimWard.Renown.Tier2>
+    <RimWard.Renown.Tier3>Medizinzentrum</RimWard.Renown.Tier3>
+    <RimWard.Invoice.Line.Admission>Aufnahme ({0})</RimWard.Invoice.Line.Admission>
+    <RimWard.Invoice.Line.Tend>Behandlung mit {0}</RimWard.Invoice.Line.Tend>
+    <RimWard.Invoice.Line.Food>Mahlzeit: {0}</RimWard.Invoice.Line.Food>
+    <RimWard.Invoice.Line.Surgery>Operation: {0}</RimWard.Invoice.Line.Surgery>
+    <RimWard.Invoice.Line.Materials>Verbrauchtes Material: {0}</RimWard.Invoice.Line.Materials>
+    <RimWard.Invoice.Line.ReimburseMedicine>Ersatz Medizin nach misslungener OP: {0}</RimWard.Invoice.Line.ReimburseMedicine>
+    <RimWard.Invoice.Line.ReimburseParts>Ersatz Teile nach misslungener OP: {0}</RimWard.Invoice.Line.ReimburseParts>
+    <RimWard.Invoice.Line.Legacy>Bisherige Behandlung (älterer Spielstand)</RimWard.Invoice.Line.Legacy>
+    <RimWard.Invoice.Factor.Charity>Wohltätigkeitsstation (keine Rechnung)</RimWard.Invoice.Factor.Charity>
+    <RimWard.Invoice.Factor.Dial>Bezahl-Skala: {0}</RimWard.Invoice.Factor.Dial>
+    <RimWard.Invoice.Factor.Room>Zimmer: {0}</RimWard.Invoice.Factor.Room>
+    <RimWard.Invoice.Factor.Chief>Chefarzt</RimWard.Invoice.Factor.Chief>
+    <RimWard.Invoice.Factor.MedPref>Medizin nach Geschmack der Fraktion</RimWard.Invoice.Factor.MedPref>
+    <RimWard.Invoice.Factor.Royal>Raumanspruch des Adels</RimWard.Invoice.Factor.Royal>
+    <RimWard.Invoice.Factor.Renown>Ruf: {0}</RimWard.Invoice.Factor.Renown>
+    <RimWard.Invoice.Factor.Early>Bezahlter Anteil: {0}</RimWard.Invoice.Factor.Early>
+    <RimWard.Invoice.Reason.Estimate>Schätzung</RimWard.Invoice.Reason.Estimate>
+    <RimWard.Invoice.Reason.Cured>geheilt</RimWard.Invoice.Reason.Cured>
+    <RimWard.Invoice.Reason.Dismissed>vorzeitig entlassen</RimWard.Invoice.Reason.Dismissed>
+    <RimWard.Invoice.Reason.TreatmentImpossible>Behandlung unmöglich</RimWard.Invoice.Reason.TreatmentImpossible>
+    <RimWard.Invoice.Reason.MaxStay>Höchstdauer erreicht</RimWard.Invoice.Reason.MaxStay>
+    <RimWard.Invoice.Reason.DiedNoFault>verstorben, ohne deine Schuld</RimWard.Invoice.Reason.DiedNoFault>
+    <RimWard.Invoice.Header>Rechnung für {0} ({1})</RimWard.Invoice.Header>
+    <RimWard.Invoice.NoLines>nichts berechnet</RimWard.Invoice.NoLines>
+    <RimWard.Invoice.Subtotal>Zwischensumme: {0}</RimWard.Invoice.Subtotal>
+    <RimWard.Invoice.Capped>Gedeckelt auf die Höchstauszahlung von {0}</RimWard.Invoice.Capped>
+    <RimWard.Invoice.Total>Bezahlt: {0}</RimWard.Invoice.Total>
+    <RimWard.Invoice.Estimate>Auszahlung bei Entlassung als geheilt jetzt: {0}</RimWard.Invoice.Estimate>
+    <RimWard.Invoice.LetterLabel>Rechnung: {0}</RimWard.Invoice.LetterLabel>
+    <RimWard.Msg.Discharge.Cured>{0} geht geheilt und zahlt {1}.</RimWard.Msg.Discharge.Cured>
+    <RimWard.Msg.Discharge.Dismissed>{0} wurde vorzeitig entlassen und zahlt {1}.</RimWard.Msg.Discharge.Dismissed>
+    <RimWard.Msg.Discharge.TreatmentImpossible>{0} geht unbehandelt (Behandlung unmöglich) und zahlt {1}. Keine Strafe.</RimWard.Msg.Discharge.TreatmentImpossible>
+    <RimWard.Msg.Discharge.MaxStay>{0} hat die Höchstdauer erreicht, geht und zahlt {1}.</RimWard.Msg.Discharge.MaxStay>
+    <RimWard.Msg.Discharge.DiedNoFault>{0} ist verstorben. Nicht deine Schuld. Die Rechnung betrug {1}.</RimWard.Msg.Discharge.DiedNoFault>
+    <RimWard.Msg.Discharge.Estimate>{0}: {1}</RimWard.Msg.Discharge.Estimate>
+    <RimWard.Msg.Goodwill>Ansehen {0} bei {1}.</RimWard.Msg.Goodwill>
+    <RimWard.Msg.Died>{0} ist verstorben.</RimWard.Msg.Died>
+    <RimWard.Msg.DiedFault>{0} ist in deiner Obhut verstorben. Ansehen {1} bei {2}.</RimWard.Msg.DiedFault>
+    <RimWard.Msg.Refused>{0} wird ab jetzt abgelehnt.</RimWard.Msg.Refused>
+    <RimWard.Msg.LeftDespiteDanger>{0} hat lange genug gewartet, dass die Gefahr vorbeigeht ({1}), und geht trotzdem.</RimWard.Msg.LeftDespiteDanger>
+    <RimWard.Offer.NoBed>Kein freies Patientenbett. Das Angebot bleibt offen, bis es abläuft.</RimWard.Offer.NoBed>
+    <RimWard.Offer.UsesStock>Verbraucht aus deinem Lager: {0} (Wert {1}). Der Patient bezahlt es.</RimWard.Offer.UsesStock>
+    <RimWard.Impossible.Label>Behandlung unmöglich: {0}</RimWard.Impossible.Label>
+    <RimWard.Impossible.Text>{0} wartet auf "{1}", aber das geht nicht: {2}.
+
+Jetzt entlassen: der Patient zahlt den vereinbarten Anteil der bisherigen Rechnung und geht. Kein Ansehen geht verloren.
+Weiter warten: die Frist beginnt neu.
+
+Ohne Antwort wird der Patient in {3} entlassen.</RimWard.Impossible.Text>
+    <RimWard.Impossible.Discharge>Jetzt entlassen</RimWard.Impossible.Discharge>
+    <RimWard.Impossible.Wait>Weiter warten</RimWard.Impossible.Wait>
+    <RimWard.Why.Arriving>Ist unterwegs</RimWard.Why.Arriving>
+    <RimWard.Why.Acute>Akut: liegt am Boden, braucht Bett und Arzt</RimWard.Why.Acute>
+    <RimWard.Why.NeedsTending>Wunden oder Krankheit müssen noch versorgt werden</RimWard.Why.NeedsTending>
+    <RimWard.Why.Resting>Bettruhe bis zur Genesung</RimWard.Why.Resting>
+    <RimWard.Why.WaitingForSurgery>Wartet auf eine Operation</RimWard.Why.WaitingForSurgery>
+    <RimWard.Why.SurgeryRetry>Operation misslungen, ein neuer Versuch ist geplant</RimWard.Why.SurgeryRetry>
+    <RimWard.Why.SurgerySuspended>Operation von dir ausgesetzt</RimWard.Why.SurgerySuspended>
+    <RimWard.Why.TreatmentImpossible>Behandlung unmöglich: {0}</RimWard.Why.TreatmentImpossible>
+    <RimWard.Why.HeldByDanger>Geheilt, wartet, bis die Gefahr vorbei ist: {0}</RimWard.Why.HeldByDanger>
+    <RimWard.Why.ReadyToLeave>Geheilt, geht bald</RimWard.Why.ReadyToLeave>
+    <RimWard.Why.Leaving>Entlassen, auf dem Weg nach draußen</RimWard.Why.Leaving>
+    <RimWard.Why.Impossible.Refused>du lehnst {0} ab</RimWard.Why.Impossible.Refused>
+    <RimWard.Why.Impossible.BillGone>der Auftrag für {0} ist weg und lässt sich nicht neu anlegen</RimWard.Why.Impossible.BillGone>
+    <RimWard.Why.Impossible.NotPossible>{0} ist bei diesem Patienten nicht mehr möglich</RimWard.Why.Impossible.NotPossible>
+    <RimWard.Why.Impossible.NoSurgeon>niemand in der Kolonie hat die nötige Medizin-Fertigkeit</RimWard.Why.Impossible.NoSurgeon>
+    <RimWard.Why.Impossible.Missing>es fehlt: {0}</RimWard.Why.Impossible.Missing>
+    <RimWard.Block.NoHospital>Kein Krankenhaus auf dieser Karte</RimWard.Block.NoHospital>
+    <RimWard.Block.Closed>Das Krankenhaus ist geschlossen (Krankenhaus-Richtlinien: Patienten aufnehmen)</RimWard.Block.Closed>
+    <RimWard.Block.NoHours>Keine Öffnungszeiten eingestellt</RimWard.Block.NoHours>
+    <RimWard.Block.OutsideHours>Außerhalb der Öffnungszeiten (nächste: {0}:00)</RimWard.Block.OutsideHours>
+    <RimWard.Block.NoBeds>Keine Patientenbetten (ein medizinisches Bett, auf Patient gestellt)</RimWard.Block.NoBeds>
+    <RimWard.Block.Full>Alle Patientenbetten sind belegt</RimWard.Block.Full>
+    <RimWard.Block.Danger>Gefahr auf der Karte: {0}</RimWard.Block.Danger>
+    <RimWard.Block.NoEntry>Kein erreichbarer Kartenrand für Ankünfte</RimWard.Block.NoEntry>
+    <RimWard.Ready.Open>Krankenhaus geöffnet, mit mindestens einer Öffnungsstunde</RimWard.Ready.Open>
+    <RimWard.Ready.Beds>Mindestens ein Patientenbett in einem Raum</RimWard.Ready.Beds>
+    <RimWard.Ready.SurgeryBed>Ein OP-Bett (OP-Fälle werden angenommen)</RimWard.Ready.SurgeryBed>
+    <RimWard.Ready.Doctor>Jemand in der Kolonie, der laufen kann und Arztarbeit macht</RimWard.Ready.Doctor>
+    <RimWard.Ready.Medicine>Mindestens 5 Medizin auf Lager (Heilkräuter zählen)</RimWard.Ready.Medicine>
+    <RimWard.Ready.Landing>Ein Landeplatz für Transportkapseln</RimWard.Ready.Landing>
+    <RimWard.Ready.LandingNoSpot>kein Landeplatz gebaut, Kapseln landen nahe der Kolonie</RimWard.Ready.LandingNoSpot>
+    <RimWard.Ready.Safe>Keine aktive Gefahr, die Ankünfte blockiert</RimWard.Ready.Safe>
+    <RimWard.Ready.Food>Ernährungsrichtlinie für Patienten</RimWard.Ready.Food>
+    <RimWard.Policy.OwnMap>Diese Karte hat eigene Richtlinien</RimWard.Policy.OwnMap>
+    <RimWard.Policy.OwnMapTip>Aus: diese Karte nutzt die Richtlinien des ganzen Spielstands (alle Karten, auch jede neue Karte nach einer Gravschiff-Landung). An: Änderungen hier gelten nur für diese Karte.</RimWard.Policy.OwnMapTip>
+    <RimWard.Policy.NoneRefused>keine</RimWard.Policy.NoneRefused>
+    <RimWard.Set.OpenInNew>Krankenhaus in neuen Kolonien öffnen</RimWard.Set.OpenInNew>
+    <RimWard.Set.OpenInNewTip>Eine neue Kolonie startet mit geöffnetem Krankenhaus. Es kommt niemand, solange kein medizinisches Bett auf Patient steht. Bestehende Spielstände behalten ihre Einstellung.</RimWard.Set.OpenInNewTip>
+    <RimWard.Set.SpecialNeeds>Xenotypen mit Sonderbedarf als Patienten</RimWard.Set.SpecialNeeds>
+    <RimWard.Set.SpecialNeedsTip>Aus: Patienten, die von Hämogen leben oder einen Todesruhe-Sarg brauchen, werden nicht geschickt. Der eigene Xenotyp ihrer Fraktion bleibt immer erhalten.</RimWard.Set.SpecialNeedsTip>
+    <RimWard.Set.MCEMaster>Massenanfälle können vorkommen</RimWard.Set.MCEMaster>
+    <RimWard.Set.MCEMasterTip>Hauptschalter. Jeder Spielstand muss sie zusätzlich in den Krankenhaus-Richtlinien einschalten.</RimWard.Set.MCEMasterTip>
+    <RimWard.Set.Complications>Komplikationen bei Ankunft</RimWard.Set.Complications>
+    <RimWard.Set.ComplicationsTip>Zusätzliche Leiden (eine zweite Krankheit, ein chronisches Leiden, eine harmlose Sucht, Raumanspruch des Adels). Nie eines, das tötet oder Berserker-Wut auslöst.</RimWard.Set.ComplicationsTip>
+    <RimWard.Set.Charge>Patienten bezahlen</RimWard.Set.Charge>
+    <RimWard.Set.ChargeTip>Aus: Wohltätigkeitsstation. Niemand zahlt, Ansehen zählt weiter.</RimWard.Set.ChargeTip>
+    <RimWard.Set.EarlyPay>Anteil bei vorzeitigem Abgang</RimWard.Set.EarlyPay>
+    <RimWard.Set.EarlyPayTip>Anteil der bisherigen Rechnung, den ein Patient zahlt, wenn er vorzeitig entlassen wird, die Behandlung unmöglich ist oder nach einem Tod ohne deine Schuld.</RimWard.Set.EarlyPayTip>
+    <RimWard.Set.InvoiceLetter>Rechnungsbrief ab</RimWard.Set.InvoiceLetter>
+    <RimWard.Set.InvoiceLetterTip>Entlassungen, die mindestens so viel Silber zahlen, schicken einen Brief mit der Einzelrechnung. Kleinere eine Nachricht.</RimWard.Set.InvoiceLetterTip>
+    <RimWard.Set.ReimburseMedTip>Nach einer misslungenen Operation bezahlen die Leute des Patienten die verbrauchte Medizin. Für die Operation selbst gibt es kein Honorar.</RimWard.Set.ReimburseMedTip>
+    <RimWard.Set.ReimburseProsthTip>Nach einer misslungenen Operation bezahlen die Leute des Patienten die verbrauchten Teile (Prothesen, Organe).</RimWard.Set.ReimburseProsthTip>
+    <RimWard.Set.Caretaker>Niemand bleibt hängen</RimWard.Set.Caretaker>
+    <RimWard.Set.MaxStay>Höchste Aufenthaltsdauer</RimWard.Set.MaxStay>
+    <RimWard.Set.MaxStayTip>Nach so vielen Tagen wird ein Patient mit der vollen bisherigen Rechnung entlassen. 0 = keine Grenze.</RimWard.Set.MaxStayTip>
+    <RimWard.Set.Impossible>Unmögliche Behandlung: Brief nach</RimWard.Set.Impossible>
+    <RimWard.Set.ImpossibleTip>Eine offene Operation, die nicht durchführbar ist (Körperteil weg, niemand gut genug, Zutat fehlt, abgelehnt), schickt nach dieser Zeit einen Brief und entlässt den Patienten nach derselben Zeit noch einmal. Keine Strafe.</RimWard.Set.ImpossibleTip>
+    <RimWard.Set.DangerHold>Geheilte warten höchstens auf das Ende der Gefahr</RimWard.Set.DangerHold>
+    <RimWard.Set.DangerHoldTip>Nur aktive Gefahr zählt (Angreifer, Jagdtiere). Ruhende Mechanoiden-Cluster und Wetter halten niemanden fest.</RimWard.Set.DangerHoldTip>
+    <RimWard.Set.Off>aus</RimWard.Set.Off>
+    <RimWard.Unit.Hours>{0} Std.</RimWard.Unit.Hours>
+    <RimWard.Unit.Days>{0} T</RimWard.Unit.Days>
 </LanguageData>

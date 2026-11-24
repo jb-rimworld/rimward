@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <RimWard_PatientRating.label>Bewertung</RimWard_PatientRating.label>
+  <RimWard_PatientRating.headerTip>Wie viel besser sich der Patient fühlt als bei der Ankunft. Über 60 % bringt bei der Entlassung zusätzliches Ansehen.</RimWard_PatientRating.headerTip>
+  <RimWard_PatientTimeSpent.label>Dauer</RimWard_PatientTimeSpent.label>
+  <RimWard_PatientTimeSpent.headerTip>Wie lange der Patient schon in deinem Krankenhaus ist.</RimWard_PatientTimeSpent.headerTip>
+  <RimWard_PatientDiagnosis.label>Diagnose</RimWard_PatientDiagnosis.label>
+  <RimWard_PatientDiagnosis.headerTip>Was diesem Patienten fehlt.</RimWard_PatientDiagnosis.headerTip>
+  <RimWard_PatientCure.label>Behandlung</RimWard_PatientCure.label>
+  <RimWard_PatientCure.headerTip>Wie wir dem Patienten helfen.</RimWard_PatientCure.headerTip>
+  <RimWard_PatientBill.label>Rechnung</RimWard_PatientBill.label>
+  <RimWard_PatientBill.headerTip>Was der Patient zahlen würde, wenn er jetzt geheilt entlassen würde: dieselbe Rechnung, die ausgezahlt wird. Über einer Zeile zeigt der Hinweis die Einzelrechnung.</RimWard_PatientBill.headerTip>
+</LanguageData>

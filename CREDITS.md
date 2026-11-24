@@ -8,13 +8,21 @@
   guards, mass-casualty handling, Combat Extended self-tend suppression, disease/severity balancing,
   dismissal logic) are folded into RimWard natively.
 
+Ideas taken over in RimWard 2.0 (re-implemented in our own code, no code copied):
+
+- From **Adamas**' later *Hospital* updates (2.7 to 2.9.x): spawn-safe generation of surgery cases, billing every medical
+  operation instead of three worker classes, cleaning vanished patients out of the save (the "null key" fix), sizing mass casualty
+  events on free beds, Combat Extended self-tend handling, recruited-patient cleanup.
+- From **mgrTDziedzic**'s *Hospital (Fork)*: the deafness cure belongs on the ear, arrested patients leave the patient list without
+  losing their prisoner status, the "GR" defName filter that blocked unrelated recipes, beds named "...Pod..." no longer treated as
+  med pods, feeding billed only when the meal was actually fed.
+- From **assssssqwww**'s *Hospital Fix And Tweak*: the surgery fee formula (work, required skill, risk) and "excise carcinoma pays".
+
 RimWard keeps the parts that worked and rebuilds the rest (fair death penalties, surgery auto-retry,
 the unified outcome score, triage, the consolidated tab, renown, soft compat, and more).
 
-Soft-compatible content from (no dependency; each integration no-ops when the mod is absent):
-More Injuries (Th3Fr3d), More Injuries: Organ Failure (wenders), Zombieland (pardeike / brrainz),
-Vanilla Psycasts Expanded & Vanilla Expanded Framework (Oskar Potocki et al.), Vanilla Factions Expanded — Empire,
-and the author's own Hospital Beds Gen 2.
+Soft integrations (no dependency; each one does nothing when the mod is absent): Combat Extended (CE Team; patients do not
+self-tend), Hearth & Harbor and Hospital Beds Gen 2 (both by the same author).
 
 Built with Harmony (pardeike) and Prepatcher (Zetrith).
 
