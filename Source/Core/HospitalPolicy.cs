@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// RimWard - Hospital for Profit. Copyright (C) 2026 juliusberger00. Written for RimWard 2.0 (a GPL-3.0 fork of Hospital by Adamas and
+// Hospital Fix And Tweak by assssssqwww). Licensed under the GNU General Public License version 3 (LICENSE);
+// full source: https://github.com/jb-rimworld/rimward
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
@@ -21,11 +25,19 @@ namespace RimWard
         public bool acceptDanger;
         public MedicalCareCategory medCare = MedicalCareCategory.NormalOrWorse;
 
+        /// <summary>Open all day: the default since 2.0 (the 1.x default of four single hours let about one patient a week through).</summary>
         public static List<bool> DefaultOpeningHours()
         {
-            // 7:00, 11:00, 15:00 and 19:00
             List<bool> h = new List<bool>();
-            for (int i = 0; i < 24; i++) h.Add(i == 7 || i == 11 || i == 15 || i == 19);
+            for (int i = 0; i < 24; i++) h.Add(true);
+            return h;
+        }
+
+        /// <summary>The "day shift" choice in the policy editor: 6:00 to 21:59.</summary>
+        public static List<bool> DayShiftHours()
+        {
+            List<bool> h = new List<bool>();
+            for (int i = 0; i < 24; i++) h.Add(i >= 6 && i < 22);
             return h;
         }
 

@@ -15,13 +15,13 @@
     <RimWard.Tab.Page.Guide>Anleitung</RimWard.Tab.Page.Guide>
     <RimWard.Tab.Sub.Overview>Ist das Krankenhaus offen und bereit, wie steht es um die Patienten, und was bringt es ein.</RimWard.Tab.Sub.Overview>
     <RimWard.Tab.Sub.Patients>{0} Patienten in {1} Patientenbetten. Klick auf einen Namen zeigt den Patienten auf der Karte.</RimWard.Tab.Sub.Patients>
-    <RimWard.Tab.Sub.Inbox>Patienten, die um Behandlung bitten. Hier oder im Brief annehmen oder abweisen; Abweisen kostet nie Ansehen.</RimWard.Tab.Sub.Inbox>
+    <RimWard.Tab.Sub.Inbox>Patienten, die um Behandlung bitten. Hier oder im Brief annehmen oder abweisen; Abweisen kostet nie Ruf.</RimWard.Tab.Sub.Inbox>
     <RimWard.Tab.Sub.Policies>Wer hereinkommt, wann, und wie Patienten versorgt werden. Die Regeln gehören zu dieser Kolonie und gelten auch auf neuen Karten.</RimWard.Tab.Sub.Policies>
     <RimWard.Tab.Sub.Guide>Das Krankenhaus in sechs kurzen Karten.</RimWard.Tab.Sub.Guide>
 
     <!-- Startkarte -->
-    <RimWard.Start.Title>Dein Krankenhaus, bereit in zwei Klicks</RimWard.Start.Title>
-    <RimWard.Start.Text>Fremde kommen per Kapsel, deine Ärzte behandeln sie in medizinischen Betten, und beim Gehen zahlen sie. Öffne das Krankenhaus und lege fest, welche medizinischen Betten Patienten aufnehmen. Jedes medizinische Bett hat dafür auch einen eigenen Schalter.</RimWard.Start.Text>
+    <RimWard.Start.Title>Willkommen in deinem Krankenhaus</RimWard.Start.Title>
+    <RimWard.Start.Text>Fremde kommen per Kapsel, deine Ärzte behandeln sie in medizinischen Betten, und beim Gehen zahlen sie. Eine neue Kolonie startet mit geöffnetem Krankenhaus, und jedes medizinische Bett nimmt Patienten auf, bis du seinen Knopf „Krankenhausbett“ ausschaltest. Die Knöpfe unten zeigen, was erledigt ist, und erledigen den Rest.</RimWard.Start.Text>
     <RimWard.Start.OpenNow>Krankenhaus jetzt öffnen</RimWard.Start.OpenNow>
     <RimWard.Start.IsOpen>Das Krankenhaus ist geöffnet</RimWard.Start.IsOpen>
     <RimWard.Start.UseBeds>Alle {0} medizinischen Betten für Patienten nutzen</RimWard.Start.UseBeds>
@@ -83,7 +83,7 @@
     <RimWard.Ready.SafeHow>Patienten kommen wieder, sobald es vorbei ist</RimWard.Ready.SafeHow>
     <RimWard.Fix.IntakeOn>Aufnahme einschalten</RimWard.Fix.IntakeOn>
     <RimWard.Fix.OpenNow>Jetzt öffnen</RimWard.Fix.OpenNow>
-    <RimWard.Fix.DefaultHours>Um 7, 11, 15 und 19 Uhr öffnen</RimWard.Fix.DefaultHours>
+    <RimWard.Fix.DefaultHours>Den ganzen Tag öffnen</RimWard.Fix.DefaultHours>
     <RimWard.Fix.UseMedicalBeds>Alle {0} für Patienten nutzen</RimWard.Fix.UseMedicalBeds>
     <RimWard.Fix.SpareBed>Ein freies Bett medizinisch machen</RimWard.Fix.SpareBed>
     <RimWard.Fix.SurgeryBed>Ein Patientenbett als OP-Bett nutzen</RimWard.Fix.SurgeryBed>
@@ -120,14 +120,14 @@
     <RimWard.Tab.OfferPod>kommt per Kapsel</RimWard.Tab.OfferPod>
     <RimWard.Tab.OfferAmbient>ist schon auf deiner Karte</RimWard.Tab.OfferAmbient>
     <RimWard.Tab.OfferFacts>{0} · {1} · erwartete Zahlung {2} · verfällt in {3}</RimWard.Tab.OfferFacts>
-    <RimWard.Tab.DeclineTip>Den Patienten abweisen. Abweisen kostet nie Ansehen.</RimWard.Tab.DeclineTip>
+    <RimWard.Tab.DeclineTip>Den Patienten abweisen. Abweisen kostet nie Ruf.</RimWard.Tab.DeclineTip>
 
-    <!-- Ruf und Geld -->
-    <RimWard.Tab.RenownHead>Ruf</RimWard.Tab.RenownHead>
-    <RimWard.Tab.RenownOff>Ruf ist in den Mod-Einstellungen ausgeschaltet: Jeder Patient zahlt gleich.</RimWard.Tab.RenownOff>
-    <RimWard.Tab.RenownTip>Der Ruf des Krankenhauses und seine Stufe. Der Balken zeigt den Weg zur nächsten Stufe.</RimWard.Tab.RenownTip>
-    <RimWard.Tab.RenownWhat>Der Ruf erhöht jede Rechnung: jetzt {0} des normalen Betrags.</RimWard.Tab.RenownWhat>
-    <RimWard.Tab.RenownNext>Nächste Stufe: {0} ab {1} Ruf ({2}).</RimWard.Tab.RenownNext>
+    <!-- Renommee und Geld -->
+    <RimWard.Tab.RenownHead>Renommee</RimWard.Tab.RenownHead>
+    <RimWard.Tab.RenownOff>Renommee ist in den Mod-Einstellungen ausgeschaltet: Jeder Patient zahlt gleich.</RimWard.Tab.RenownOff>
+    <RimWard.Tab.RenownTip>Das Renommee des Krankenhauses und seine Stufe. Der Balken zeigt den Weg zur nächsten Stufe.</RimWard.Tab.RenownTip>
+    <RimWard.Tab.RenownWhat>Das Renommee erhöht jede Rechnung: jetzt {0} des normalen Betrags.</RimWard.Tab.RenownWhat>
+    <RimWard.Tab.RenownNext>Nächste Stufe: {0} ab {1} Renommee ({2}).</RimWard.Tab.RenownNext>
     <RimWard.Tab.RenownTop>Das ist die höchste Stufe.</RimWard.Tab.RenownTop>
     <RimWard.Tab.RenownHow>Patienten, die gesund und zufrieden gehen, heben ihn; Todesfälle und schlechte Aufenthalte senken ihn ein wenig.</RimWard.Tab.RenownHow>
     <RimWard.Tab.MoneyHead>Geld</RimWard.Tab.MoneyHead>
@@ -153,7 +153,7 @@
     <RimWard.Policy.Hours>Öffnungszeiten</RimWard.Policy.Hours>
     <RimWard.Policy.HoursHelp>Olivgrüne Stunden sind offen, blaue geschlossen (Ortszeit dieser Karte). Klicken oder über die Stunden ziehen, um sie zu ändern.</RimWard.Policy.HoursHelp>
     <RimWard.Policy.AllDay>Den ganzen Tag offen</RimWard.Policy.AllDay>
-    <RimWard.Policy.DefaultHours>7, 11, 15 und 19 Uhr (Standard)</RimWard.Policy.DefaultHours>
+    <RimWard.Policy.DefaultHours>Tagschicht (6 bis 22 Uhr)</RimWard.Policy.DefaultHours>
     <RimWard.Policy.Care>Versorgung</RimWard.Policy.Care>
     <RimWard.Policy.Unrefuse>{0} wieder annehmen</RimWard.Policy.Unrefuse>
     <RimWard.Policy.MoreInSettings>Mehr in den Mod-Einstellungen (Aufnahmemodus, Aufträge)</RimWard.Policy.MoreInSettings>
@@ -164,11 +164,11 @@
     <RimWard.Guide.2.Title>Betten und Räume</RimWard.Guide.2.Title>
     <RimWard.Guide.2.Text>Ein Patientenbett ist ein medizinisches Bett mit eingeschaltetem „Krankenhausbett“; OP-Fälle brauchen ein Bett mit „OP-Bett“. Ein eigenes Zimmer bringt am meisten, ein Zweibettzimmer etwas mehr als üblich, ein Saal und ein Flur weniger.</RimWard.Guide.2.Text>
     <RimWard.Guide.3.Title>Wer hereinkommt</RimWard.Guide.3.Title>
-    <RimWard.Guide.3.Text>Im Aufnahmemodus „Feuerwehrschlauch“ kommen Patienten einfach. „Gemischt“ und „Nachfrage“ schicken erst eine Anfrage: Beantworte sie unter „Anfragen“ oder im Brief. Abweisen ist kostenlos. Niemand kommt, wenn alle Patientenbetten belegt sind oder Gefahr auf der Karte ist.</RimWard.Guide.3.Text>
+    <RimWard.Guide.3.Text>Im Standardmodus „Gemischt“ kommen Verletzte und Kranke einfach; Operationen und Adlige schicken erst eine Anfrage, ebenso jeder Fall im Modus „Nachfrage“. Im Modus „Direkt“ kommen alle einfach. Beantworte Anfragen unter „Anfragen“ oder im Brief. Abweisen ist kostenlos. Niemand kommt, wenn alle Patientenbetten belegt sind oder Gefahr auf der Karte ist.</RimWard.Guide.3.Text>
     <RimWard.Guide.4.Title>Geld</RimWard.Guide.4.Title>
-    <RimWard.Guide.4.Text>Jede Behandlung kommt als Zeile auf die Rechnung des Patienten. Bei der Entlassung bestimmen Raum, dein bester Arzt, der Ruf und die Bezahlstufe den Preis, bis zur Obergrenze aus den Einstellungen. Die Seite „Patienten“ zeigt, was jeder voraussichtlich zahlt; die Rechnung listet jede Zeile.</RimWard.Guide.4.Text>
+    <RimWard.Guide.4.Text>Jede Behandlung kommt als Zeile auf die Rechnung des Patienten. Bei der Entlassung bestimmen Raum, dein bester Arzt, das Renommee und die Bezahlstufe den Preis, bis zur Obergrenze aus den Einstellungen. Die Seite „Patienten“ zeigt, was jeder voraussichtlich zahlt; die Rechnung listet jede Zeile.</RimWard.Guide.4.Text>
     <RimWard.Guide.5.Title>Wenn etwas schiefgeht</RimWard.Guide.5.Title>
-    <RimWard.Guide.5.Text>Ein Patient, der durch Vernachlässigung stirbt, kostet Ansehen bei seiner Fraktion. Tod auf dem OP-Tisch, nach der Entlassung oder gleich nach der Ankunft ist nicht deine Schuld. Eine Behandlung, die nicht machbar ist, meldet sich erst per Brief und schickt den Patienten später ohne Nachteil heim.</RimWard.Guide.5.Text>
+    <RimWard.Guide.5.Text>Ein Patient, der durch Vernachlässigung stirbt, kostet Ruf bei seiner Fraktion. Tod auf dem OP-Tisch, nach der Entlassung oder gleich nach der Ankunft ist nicht deine Schuld. Eine Behandlung, die nicht machbar ist, meldet sich erst per Brief und schickt den Patienten später ohne Nachteil heim.</RimWard.Guide.5.Text>
     <RimWard.Guide.6.Title>Hearth &amp; Harbor</RimWard.Guide.6.Title>
     <RimWard.Guide.6.Text>Mit Hearth &amp; Harbor stellt ein einziger Bettknopf ein Bett auf Kolonist, Gast, Patient oder OP-Patient, und Patienten, die schon wieder auf den Beinen sind, dürfen sich in seinem Spa erholen. Ohne die Mod ändert sich nichts.</RimWard.Guide.6.Text>
     <RimWard.Guide.Settings>Alle Einstellungen (Bezahlung, Behandlungsfehler, Bereiche)</RimWard.Guide.Settings>

@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// RimWard - Hospital for Profit. Copyright (C) 2026 juliusberger00. Written for RimWard 2.0 (a GPL-3.0 fork of Hospital by Adamas and
+// Hospital Fix And Tweak by assssssqwww). Licensed under the GNU General Public License version 3 (LICENSE);
+// full source: https://github.com/jb-rimworld/rimward
 using System.Collections.Generic;
 using System.Linq;
 using JBFramework;
@@ -48,7 +52,7 @@ namespace RimWard.MainTab
             string all = "RimWard.Policy.AllDay".Translate(), def = "RimWard.Policy.DefaultHours".Translate();
             float bw1 = RwUI.ButtonW(all), bw2 = RwUI.ButtonW(def);
             if (Widgets.ButtonText(new Rect(0f, y, bw1, 28f), all)) for (int i = 0; i < 24; i++) pol.openingHours[i] = true;
-            if (Widgets.ButtonText(new Rect(bw1 + 8f, y, bw2, 28f), def)) pol.openingHours = HospitalPolicy.DefaultOpeningHours();
+            if (Widgets.ButtonText(new Rect(bw1 + 8f, y, bw2, 28f), def)) pol.openingHours = HospitalPolicy.DayShiftHours();
             y += 38f;
 
             // ---- care

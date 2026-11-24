@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// RimWard - Hospital for Profit. Fork of Hospital (Copyright Adamas) and Hospital Fix And Tweak (Copyright assssssqwww), both GPL-3.0.
+// This file contains code from those mods, modified by juliusberger00 in 2026 (RimWard 1.x and 2.0); modifications Copyright (C) 2026
+// juliusberger00. Licensed under the GNU General Public License version 3 (LICENSE); full source: https://github.com/jb-rimworld/rimward
 using System.Collections.Generic;
 using System.Linq;
 using RimWard.Utilities;
@@ -39,6 +43,7 @@ namespace RimWard
         /// </summary>
         public static void DiscardGenerated(Pawn p)
         {
+            DonePreparing(p);
             if (p == null || p.Discarded) return;
             try
             {
@@ -109,8 +114,19 @@ namespace RimWard
             return CellFinder.TryFindRandomEdgeCellWith(c => map.reachability.CanReachColony(c) && !c.Fogged(map), map, CellFinder.EdgeRoadChance_Neutral, out cell);
         }
 
+        /// <summary>
+        /// Patients being made (case built, offer waiting, drop pod on the way) and not yet admitted. Their illnesses are part of the case,
+        /// so vanilla's "new disease" letters are not sent for them (<see cref="Patches.PatientDiseaseLetter_Patch"/>).
+        /// </summary>
+        private static readonly HashSet<Pawn> preparing = new HashSet<Pawn>();
+
+        public static bool InPreparation(Pawn p) => p != null && preparing.Contains(p);
+        public static void DonePreparing(Pawn p) { if (p != null) preparing.Remove(p); }
+
         public static void SetUpNewPatient(Pawn pawn)
         {
+            preparing.RemoveWhere(p => p == null || p.Discarded || p.Destroyed && !p.Dead || p.Dead);
+            preparing.Add(pawn);
             pawn.guest.SetGuestStatus(Faction.OfPlayer, GuestStatus.Guest);
             if (pawn.playerSettings != null) pawn.playerSettings.selfTend = false;
             pawn.equipment.DestroyAllEquipment();

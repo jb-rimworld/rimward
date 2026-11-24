@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// RimWard - Hospital for Profit. Fork of Hospital (Copyright Adamas) and Hospital Fix And Tweak (Copyright assssssqwww), both GPL-3.0.
+// This file contains code from those mods, modified by juliusberger00 in 2026 (RimWard 1.x and 2.0); modifications Copyright (C) 2026
+// juliusberger00. Licensed under the GNU General Public License version 3 (LICENSE); full source: https://github.com/jb-rimworld/rimward
 using System;
 using System.Collections.Generic;
 using HarmonyLib;
@@ -13,6 +17,7 @@ namespace RimWard.Patches
     /// pass through: <c>Bill_Medical.Notify_IterationCompleted</c>, which calls <c>recipe.Worker.ApplyOnPawn</c>.
     /// A failure is detected by <c>Recipe_Surgery.CheckSurgeryFail</c> returning true inside that call:
     /// then there is no fee, only (setting) the reimbursed medicine and parts the operation used up.
+    /// Operations vanilla counts as a violation on the patient (harvesting a healthy organ) are never billed.
     /// </summary>
     public static class Billing_Surgery_Patch
     {
@@ -20,6 +25,7 @@ namespace RimWard.Patches
         {
             public Pawn patient;
             public bool failed;
+            public bool violation;
             public Dictionary<ThingDef, int> anesthetic;
         }
 
@@ -34,9 +40,17 @@ namespace RimWard.Patches
                 current = null;
                 Pawn patient = __instance?.GiverPawn;
                 if (patient == null || !patient.IsPatient(out _, false)) return;
+                bool violation = false;
+                try
+                {
+                    // before the operation: afterwards a harvested part is gone and vanilla can no longer tell a harvest from an amputation
+                    violation = __instance.recipe?.Worker != null && __instance.recipe.Worker.IsViolationOnPawn(patient, __instance.Part, Faction.OfPlayer);
+                }
+                catch (Exception) { }
                 current = new Context
                 {
                     patient = patient,
+                    violation = violation,
                     anesthetic = __instance.consumedMedicine != null ? new Dictionary<ThingDef, int>(__instance.consumedMedicine) : null
                 };
             }
@@ -71,6 +85,9 @@ namespace RimWard.Patches
             Pawn pawn = ctx.patient;
             HospitalMapComponent hospital = HospitalMapComponent.For(pawn.MapHeld);
             if (hospital == null || !hospital.GetPatientData(pawn, out PatientData data) || data.Dismissed) return;
+            // An operation the patient's people count as a violation (harvesting an organ, euthanasia...) is not a treatment: nobody pays
+            // for it, and vanilla's goodwill penalty applies (the requested treatment itself is never a violation: AllowOperationsPatchNoViolation).
+            if (ctx.violation) return;
 
             float medicine = 0f, parts = 0f;
             Thing firstMedicine = null;

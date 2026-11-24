@@ -7,13 +7,14 @@
   <RimWard.Section.mce>Massenanfälle von Verletzten</RimWard.Section.mce>
   <RimWard.Section.mce.Desc>Ab und zu schicken eine Seuche, ein Überfall, ein Absturz oder ein Brand mehrere Patienten auf einmal, nie mehr als freie Patientenbetten. Jede Kolonie muss sie zusätzlich in den Krankenhausregeln einschalten.</RimWard.Section.mce.Desc>
   <RimWard.Section.complications>Komplikationen</RimWard.Section.complications>
-  <RimWard.Section.complications.Desc>Patienten bringen manchmal eine zweite Krankheit, ein chronisches Leiden oder eine harmlose Sucht mit. Nie etwas, das sie tötet oder in Raserei versetzt.</RimWard.Section.complications.Desc>
+  <RimWard.Section.complications.Desc>Patienten bringen manchmal eine harmlose zweite Krankheit (etwa Darmwürmer), ein chronisches Leiden oder eine harmlose Sucht mit. Nie etwas, das sie töten oder in Raserei versetzen kann.</RimWard.Section.complications.Desc>
   <RimWard.Section.billing>Abrechnungs-Extras</RimWard.Section.billing>
   <RimWard.Section.billing.Desc>Teilzahlung bei vorzeitigem Gehen, Erstattung nach einer misslungenen Operation, Rechnungsbriefe bei großen Beträgen. Aus: die einfache Rechnung, voll bezahlt bei Heilung, sonst nichts.</RimWard.Section.billing.Desc>
   <RimWard.Section.malpractice>Behandlungsfehler</RimWard.Section.malpractice>
-  <RimWard.Section.malpractice.Desc>Ein Patient, der durch deine Schuld stirbt, kostet Ansehen bei seiner Fraktion. Todesfälle, die du nicht verhindern konntest, nie.</RimWard.Section.malpractice.Desc>
-  <RimWard.Section.renown>Ruf</RimWard.Section.renown>
-  <RimWard.Section.renown.Desc>Gute Behandlungen bauen den Ruf des Krankenhauses in vier Stufen auf (Feldlazarett, Klinik, Krankenhaus, Medizinzentrum), jede zahlt 5 % mehr.</RimWard.Section.renown.Desc>
+  <RimWard.Section.malpractice.Desc>Ein Patient, der durch deine Schuld stirbt, kostet Ruf bei seiner Fraktion. Todesfälle, die du nicht verhindern konntest, nie.</RimWard.Section.malpractice.Desc>
+  <RimWard.Section.renown>Renommee</RimWard.Section.renown>
+  <RimWard.Section.renown.Desc>Gute Behandlungen bauen das Renommee des Krankenhauses in vier Stufen auf (Feldlazarett, Klinik, Krankenhaus, Medizinzentrum). Jede Stufe über dem Feldlazarett zahlt 5 % mehr: +5 %, +10 %, +15 %.</RimWard.Section.renown.Desc>
+  <RimWard.FirstStartPitch>RimWard macht aus deinen medizinischen Betten ein Krankenhaus, in dem Fremde gegen Bezahlung verarztet werden. Klinik ist das normale Spiel, Wohltätigkeit behandelt umsonst, Fleischerei zahlt mehr und verzeiht Todesfälle. Alles lässt sich später in den Mod-Einstellungen ändern.</RimWard.FirstStartPitch>
   <RimWard.Section.royalty>Adlige Patienten (Royalty)</RimWard.Section.royalty>
   <RimWard.Section.royalty.Desc>Patienten mit Titel wollen ein Einzelzimmer: Sie zahlen dafür 40 % mehr und 25 % weniger für ein geteiltes.</RimWard.Section.royalty.Desc>
   <RimWard.Section.ideology>Schuldbewusste Ideoreligionen (Ideology)</RimWard.Section.ideology>
@@ -28,7 +29,7 @@
   <RimWard.Setting.rw.difficulty>Schwierigkeit der Fälle</RimWard.Setting.rw.difficulty>
   <RimWard.Setting.rw.difficulty.Desc>Bestimmt, wie schwer Patienten verletzt oder krank sind und wie viele Komplikationen sie mitbringen.</RimWard.Setting.rw.difficulty.Desc>
   <RimWard.Setting.rw.openInNewColonies>Krankenhaus in neuen Kolonien öffnen</RimWard.Setting.rw.openInNewColonies>
-  <RimWard.Setting.rw.openInNewColonies.Desc>Eine neue Kolonie startet mit geöffnetem Krankenhaus. Niemand kommt, solange es kein medizinisches Bett für Patienten gibt. Bestehende Spielstände behalten ihren Stand.</RimWard.Setting.rw.openInNewColonies.Desc>
+  <RimWard.Setting.rw.openInNewColonies.Desc>Eine neue Kolonie startet mit geöffnetem Krankenhaus. Niemand kommt, solange es kein Patientenbett gibt (ein medizinisches Bett mit eingeschaltetem „Krankenhausbett“). Bestehende Spielstände behalten ihren Stand.</RimWard.Setting.rw.openInNewColonies.Desc>
   <RimWard.Setting.rw.specialNeedsXenotypes>Xenotypen mit besonderen Bedürfnissen als Patienten</RimWard.Setting.rw.specialNeedsXenotypes>
   <RimWard.Setting.rw.specialNeedsXenotypes.Desc>Aus: Patienten, die von Hämogen leben oder einen Todesruhe-Sarg brauchen, werden nicht geschickt. Der eigene Xenotyp ihrer Fraktion bleibt immer erhalten.</RimWard.Setting.rw.specialNeedsXenotypes.Desc>
   <RimWard.Setting.rw.messageAtArrival>Ankunft als Nachricht statt als Brief</RimWard.Setting.rw.messageAtArrival>
@@ -42,7 +43,7 @@
   <RimWard.Setting.rw.dangerHoldHours.Desc>Nur aktive Bedrohungen zählen (Angreifer, wilde Tiere). Schlafende Mech-Cluster und Wetter halten niemanden auf.</RimWard.Setting.rw.dangerHoldHours.Desc>
   <RimWard.SettingCat.Payment>Bezahlung</RimWard.SettingCat.Payment>
   <RimWard.Setting.rw.chargePatients>Patienten zahlen</RimWard.Setting.rw.chargePatients>
-  <RimWard.Setting.rw.chargePatients.Desc>Aus: eine Wohltätigkeitsstation. Niemand zahlt, Ansehen zählt trotzdem.</RimWard.Setting.rw.chargePatients.Desc>
+  <RimWard.Setting.rw.chargePatients.Desc>Aus: eine Wohltätigkeitsstation. Niemand zahlt, der Ruf bei den Fraktionen zählt trotzdem.</RimWard.Setting.rw.chargePatients.Desc>
   <RimWard.Setting.rw.payment>Bezahlstufe</RimWard.Setting.rw.payment>
   <RimWard.Setting.rw.payment.Desc>Wie viel Patienten im Verhältnis zu den Kosten ihrer Behandlung zahlen. Kostendeckend deckt Medizin und Arbeit.</RimWard.Setting.rw.payment.Desc>
   <RimWard.Setting.rw.customPayment>Eigene Bezahlstufe</RimWard.Setting.rw.customPayment>
@@ -66,7 +67,7 @@
   <RimWard.Setting.rw.chiefMultiplier.Desc>Bezahlfaktor, wenn der Chefarzt-Bonus gilt.</RimWard.Setting.rw.chiefMultiplier.Desc>
   <RimWard.SettingCat.Arrivals>Ankünfte</RimWard.SettingCat.Arrivals>
   <RimWard.Setting.rw.intakeMode>Aufnahmemodus</RimWard.Setting.rw.intakeMode>
-  <RimWard.Setting.rw.intakeMode.Desc>Feuerwehrschlauch: Patienten kommen einfach. Gemischt: Ein Brief fragt vorher bei Operationen und Adligen. Nachfrage: ein Brief für jeden Fall, mit Diagnose und geschätzter Bezahlung.</RimWard.Setting.rw.intakeMode.Desc>
+  <RimWard.Setting.rw.intakeMode.Desc>Gemischt (Standard): Verletzte und Kranke kommen einfach; bei Operationen und Adligen fragt erst ein Brief, denn eine Operation kann Teile und Medizin aus deinem Lager verbrauchen. Direkt: alle Patienten kommen einfach, Operationen eingeschlossen. Nachfrage: ein Brief für jeden Fall, mit Diagnose und geschätzter Bezahlung.</RimWard.Setting.rw.intakeMode.Desc>
   <RimWard.Setting.rw.triageHours>Bedenkzeit für Angebote (Stunden)</RimWard.Setting.rw.triageHours>
   <RimWard.Setting.rw.triageHours.Desc>Ein unbeantworteter Angebotsbrief verfällt nach dieser Zeit. Ablehnen kostet nichts.</RimWard.Setting.rw.triageHours.Desc>
   <RimWard.Setting.rw.contracts>Verletzte Besucher auf der Karte behandeln (Verträge)</RimWard.Setting.rw.contracts>
@@ -90,8 +91,8 @@
   <RimWard.Setting.rw.invoiceLetter>Rechnungsbrief ab</RimWard.Setting.rw.invoiceLetter>
   <RimWard.Setting.rw.invoiceLetter.Desc>Entlassungen, die mindestens so viel Silber zahlen, schicken einen Brief mit der Einzelrechnung. Kleinere schicken eine Nachricht.</RimWard.Setting.rw.invoiceLetter.Desc>
   <RimWard.SettingCat.Penalty>Strafe</RimWard.SettingCat.Penalty>
-  <RimWard.Setting.rw.deathPenalty>Ansehensverlust pro verschuldetem Tod</RimWard.Setting.rw.deathPenalty>
-  <RimWard.Setting.rw.deathPenalty.Desc>So viel Ansehen verliert die Fraktion des Patienten, wenn ein Tod deine Schuld ist.</RimWard.Setting.rw.deathPenalty.Desc>
+  <RimWard.Setting.rw.deathPenalty>Rufverlust pro verschuldetem Tod</RimWard.Setting.rw.deathPenalty>
+  <RimWard.Setting.rw.deathPenalty.Desc>So viel Ruf verliert die Fraktion des Patienten, wenn ein Tod deine Schuld ist.</RimWard.Setting.rw.deathPenalty.Desc>
   <RimWard.SettingCat.Notyourfault>Nicht deine Schuld</RimWard.SettingCat.Notyourfault>
   <RimWard.Setting.rw.noFaultSurgery>Keine Strafe für Tod bei Operationen</RimWard.Setting.rw.noFaultSurgery>
   <RimWard.Setting.rw.noFaultSurgery.Desc>Ein Patient, der auf dem OP-Tisch oder kurz nach einer verpfuschten Operation stirbt, ist ein Behandlungsrisiko, nicht deine Schuld.</RimWard.Setting.rw.noFaultSurgery.Desc>
@@ -111,9 +112,9 @@
   <RimWard.Setting.rw.criticalBonus>Zuschlag kritischer Fall</RimWard.Setting.rw.criticalBonus>
   <RimWard.Setting.rw.criticalBonus.Desc>Zuschlag zusätzlich zur Dosis selbst, als Vielfaches des Werts eines Luciferiums.</RimWard.Setting.rw.criticalBonus.Desc>
   <RimWard.Preset.clinic>Klinik</RimWard.Preset.clinic>
-  <RimWard.Preset.clinic.Desc>Das normale Spiel: Patienten zahlen, was ihre Behandlung dich gekostet hat; verschuldete Todesfälle kosten Ansehen.</RimWard.Preset.clinic.Desc>
+  <RimWard.Preset.clinic.Desc>Das normale Spiel: Patienten zahlen, was ihre Behandlung dich gekostet hat; verschuldete Todesfälle kosten Ruf.</RimWard.Preset.clinic.Desc>
   <RimWard.Preset.charity>Wohltätigkeit</RimWard.Preset.charity>
-  <RimWard.Preset.charity.Desc>Niemand zahlt. Ansehen und Ruf wachsen trotzdem mit jedem Patienten, den du gesund heimschickst.</RimWard.Preset.charity.Desc>
+  <RimWard.Preset.charity.Desc>Niemand zahlt. Ruf und Renommee wachsen trotzdem mit jedem Patienten, den du gesund heimschickst.</RimWard.Preset.charity.Desc>
   <RimWard.Preset.meatshop>Fleischerei</RimWard.Preset.meatshop>
   <RimWard.Preset.meatshop.Desc>Masse statt Bettkantengespräch: schwerere Fälle, großzügige Bezahlung, Todesfälle sind niemandes Schuld, niemand bleibt länger als eine Woche.</RimWard.Preset.meatshop.Desc>
   <RimWard.Page.policies>Krankenhausregeln</RimWard.Page.policies>

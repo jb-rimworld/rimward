@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// RimWard - Hospital for Profit. Copyright (C) 2026 juliusberger00. Written for RimWard 2.0 (a GPL-3.0 fork of Hospital by Adamas and
+// Hospital Fix And Tweak by assssssqwww). Licensed under the GNU General Public License version 3 (LICENSE);
+// full source: https://github.com/jb-rimworld/rimward
 #if JB_TESTS
 // Test-only helpers for RimWard's in-game suites (compiled only with -p:JBTests=true; never in a release DLL).
 using System;
@@ -161,7 +165,8 @@ namespace RimWard.Tests
 
         /// <summary>Game log lines (errors, and warnings when asked) containing <paramref name="fragment"/>.</summary>
         internal static List<string> LogLines(string fragment, bool warningsToo)
-            => Verse.Log.Messages.Where(m => (m.type == LogMessageType.Error || (warningsToo && m.type == LogMessageType.Warning)) && (m.text ?? "").Contains(fragment))
+            => Verse.Log.Messages.Where(m => (m.type == LogMessageType.Error || (warningsToo && m.type == LogMessageType.Warning)) && (m.text ?? "").Contains(fragment)
+                    && !(m.text ?? "").Contains("[JBTEST-EXPECTED]"))
                 .Select(m => m.text).ToList();
 
         // FW-REQUEST: the harness keeps its save and log helpers internal (request 7); these are small copies for RimWard's suites.
@@ -187,6 +192,23 @@ namespace RimWard.Tests
             if (!File.Exists(SidePath(save))) return null;
             foreach (string l in File.ReadAllLines(SidePath(save))) { int i = l.IndexOf('='); if (i > 0) d[l.Substring(0, i)] = l.Substring(i + 1); }
             return d;
+        }
+
+        /// <summary>
+        /// Tells the harness that a red error containing <paramref name="fragment"/> is provoked on purpose (it then never counts as ours).
+        /// // FW-REQUEST (19): KitTestLog.Expect is internal to the harness; reached by reflection here.
+        /// </summary>
+        internal static bool ExpectRedError(string fragment)
+        {
+            try
+            {
+                Type log = typeof(KitTestSuite).Assembly.GetType("JBFramework.Testing.KitTestLog");
+                System.Reflection.MethodInfo m = log == null ? null : AccessTools.Method(log, "Expect", new[] { typeof(string) });
+                if (m == null) return false;
+                m.Invoke(null, new object[] { fragment });
+                return true;
+            }
+            catch (Exception) { return false; }
         }
 
         internal static string Hours(HospitalPolicy p) { p.Repair(); return string.Join("", p.openingHours.Select(b => b ? "1" : "0")); }

@@ -129,6 +129,7 @@
     <RimWard.Msg.Discharge.DiedNoFault>{0} died. Not your fault. The bill was {1}.</RimWard.Msg.Discharge.DiedNoFault>
     <RimWard.Msg.Discharge.Estimate>{0}: {1}</RimWard.Msg.Discharge.Estimate>
     <RimWard.Msg.Goodwill>Goodwill {0} with {1}.</RimWard.Msg.Goodwill>
+    <RimWard.Msg.PatientNewDisease>Patient {0} has {1}.</RimWard.Msg.PatientNewDisease>
     <RimWard.Msg.Died>{0} died.</RimWard.Msg.Died>
     <RimWard.Msg.DiedFault>{0} died in your care. Goodwill {1} with {2}.</RimWard.Msg.DiedFault>
     <RimWard.Msg.Refused>{0} is refused from now on.</RimWard.Msg.Refused>
@@ -164,7 +165,7 @@ Without an answer the patient is discharged in {3}.</RimWard.Impossible.Text>
     <RimWard.Block.Closed>The hospital is closed (Hospital policies: Accept patients)</RimWard.Block.Closed>
     <RimWard.Block.NoHours>No opening hours are set</RimWard.Block.NoHours>
     <RimWard.Block.OutsideHours>Outside opening hours (next: {0}:00)</RimWard.Block.OutsideHours>
-    <RimWard.Block.NoBeds>No patient beds (a medical bed set to Patient)</RimWard.Block.NoBeds>
+    <RimWard.Block.NoBeds>No patient beds (a medical bed with its "Hospital Bed" switch on)</RimWard.Block.NoBeds>
     <RimWard.Block.Full>All patient beds are taken</RimWard.Block.Full>
     <RimWard.Block.Danger>Danger on the map: {0}</RimWard.Block.Danger>
     <RimWard.Block.NoEntry>No reachable map edge for arrivals</RimWard.Block.NoEntry>

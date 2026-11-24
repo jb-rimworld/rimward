@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// RimWard - Hospital for Profit. Fork of Hospital (Copyright Adamas) and Hospital Fix And Tweak (Copyright assssssqwww), both GPL-3.0.
+// This file contains code from those mods, modified by juliusberger00 in 2026 (RimWard 1.x and 2.0); modifications Copyright (C) 2026
+// juliusberger00. Licensed under the GNU General Public License version 3 (LICENSE); full source: https://github.com/jb-rimworld/rimward
 using System.Collections.Generic;
 using System.Linq;
 using RimWard.Utilities;
@@ -168,30 +172,55 @@ namespace RimWard
             if (Find.TickManager.TicksGame % 250 != 0) return;
             int now = Find.TickManager.TicksGame;
 
-            // Expire stale offers (auto-decline, no penalty) + scan for injured allies on the map.
-            for (int i = this.pendingOffers.Count - 1; i >= 0; i--)
+            // Every part is fenced: one broken patient or offer logs one error (once) and never stops the rest of the hospital.
+            try
             {
-                PatientOffer o = this.pendingOffers[i];
-                if (now >= o.expiresTick || o.pawn == null || o.pawn.Dead || o.pawn.Discarded || (o.kind == OfferKind.Ambient && !o.pawn.Spawned))
+                // Expire stale offers (auto-decline, no penalty) + scan for injured allies on the map.
+                for (int i = this.pendingOffers.Count - 1; i >= 0; i--)
                 {
-                    this.pendingOffers.RemoveAt(i);
-                    DiscardOffer(o);
+                    PatientOffer o = this.pendingOffers[i];
+                    if (now >= o.expiresTick || o.pawn == null || o.pawn.Dead || o.pawn.Discarded || (o.kind == OfferKind.Ambient && !o.pawn.Spawned))
+                    {
+                        this.pendingOffers.RemoveAt(i);
+                        DiscardOffer(o);
+                    }
                 }
+                if (HospitalMod.Settings.AmbientContractsEnabled && now % 1000 == 0) AmbientScan();
             }
-            if (HospitalMod.Settings.AmbientContractsEnabled && now % 1000 == 0) AmbientScan();
+            catch (System.Exception e)
+            {
+                Log.ErrorOnce("[RimWard] hospital offers failed on map " + this.map?.uniqueID + ": " + e, 0x4f7e1a ^ (this.map?.uniqueID ?? 0));
+            }
 
             Caretaker.Run(this);
 
             foreach (KeyValuePair<Pawn, PatientData> kv in this.Patients.ToList())
             {
-                Pawn pawn = kv.Key;
-                PatientData data = kv.Value;
-                if (data == null || pawn == null || !pawn.Spawned) continue;
+                try { this.TickPatient(kv.Key, kv.Value, now); }
+                catch (System.Exception e)
+                {
+                    Log.ErrorOnce("[RimWard] hospital tick failed for " + (kv.Key?.LabelShort ?? "?") + ": " + e, 0x2c91b3 ^ (kv.Key?.thingIDNumber ?? 0));
+                }
+            }
+        }
+
+#if JB_TESTS
+        /// <summary>Test-only: runs at the start of every patient's tick (a suite throws from here to prove the fence).</summary>
+        internal static System.Action<Pawn> TestTickHook;
+#endif
+
+        private void TickPatient(Pawn pawn, PatientData data, int now)
+        {
+            {
+#if JB_TESTS
+                TestTickHook?.Invoke(pawn);
+#endif
+                if (data == null || pawn == null || !pawn.Spawned) return;
 
                 // Auto-rescue: a downed patient on the floor is carried to a hospital bed by a free doctor, exactly like a downed colonist.
                 // Also for dismissed patients who collapsed before they could leave.
                 if (pawn.Downed && !pawn.InBed()) TryAutoRescue(pawn);
-                if (data.Dismissed) continue;
+                if (data.Dismissed) return;
 
                 // Track the best room the patient actually rested in (used at discharge for pay/goodwill,
                 // since by discharge they may be up and walking, which would read as a hallway).
@@ -217,10 +246,10 @@ namespace RimWard
                         }
                         data.HasPendingSurgeryBill = true;
                     }
-                    continue;
+                    return;
                 }
 
-                if (!data.HasPendingSurgeryBill) continue;
+                if (!data.HasPendingSurgeryBill) return;
 
                 // Heal-by-any-means: a patient cured WITHOUT our surgery (psycast, another mod, natural) must not
                 // stay forever. Cure target gone -> delete its bill properly + clear pending.
@@ -300,6 +329,7 @@ namespace RimWard
             data.AdmitHealth = pawn.health.summaryHealth.SummaryHealthPercent;
             data.EnsureLines(false);
             this.Patients[pawn] = data;
+            IncidentHelper.DonePreparing(pawn);
             this.ApplyPolicyTo(pawn);
             MainTabWindowUtility.NotifyAllPawnTables_PawnsChanged();
         }
@@ -503,6 +533,20 @@ namespace RimWard
             HospitalGameComponent gc = HospitalGameComponent.Get;
             float silver = data.PaidOnDischarge ? 0f : inv.TotalSilver;
             data.PaidOnDischarge = true;
+            if (silver >= 1f)
+            {
+                // Paid where the patient stands; a patient who is not on the map (carried, in a pod) pays at the trade drop spot,
+                // so the silver the stats count is always silver the colony gets.
+                Thing thing = ThingMaker.MakeThing(ThingDefOf.Silver);
+                thing.stackCount = (int)silver;
+                Map payMap = pawn.Spawned ? pawn.Map : this.map;
+                IntVec3 at = pawn.Spawned ? pawn.Position : (payMap != null ? DropCellFinder.TradeDropSpot(payMap) : IntVec3.Invalid);
+                if (payMap == null || !at.IsValid || !GenPlace.TryPlaceThing(thing, at, payMap, ThingPlaceMode.Near))
+                {
+                    if (!thing.Destroyed) thing.Destroy(DestroyMode.Vanish);
+                    silver = 0f;
+                }
+            }
             bool cured = reason == DischargeReason.Cured;
             gc?.RecordDischarge(true, cured ? OutcomeUtility.DischargeScore(pawn, data, true) : 40f, silver);
             if (!cured && gc != null) gc.patientsDischargedEarly++;
@@ -513,12 +557,6 @@ namespace RimWard
             {
                 goodwill = OutcomeUtility.GoodwillFor(pawn, data);
                 pawn.Faction.TryAffectGoodwillWith(Faction.OfPlayer, goodwill, false, true, null, null);
-            }
-            if (silver > 0f && pawn.Spawned)
-            {
-                Thing thing = ThingMaker.MakeThing(ThingDefOf.Silver);
-                thing.stackCount = (int)silver;
-                GenPlace.TryPlaceThing(thing, pawn.Position, pawn.Map, ThingPlaceMode.Near);
             }
             this.AnnounceDischarge(pawn, inv, reason, goodwill);
 

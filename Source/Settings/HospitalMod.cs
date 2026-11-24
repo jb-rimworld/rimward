@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// RimWard - Hospital for Profit. Fork of Hospital (Copyright Adamas) and Hospital Fix And Tweak (Copyright assssssqwww), both GPL-3.0.
+// This file contains code from those mods, modified by juliusberger00 in 2026 (RimWard 1.x and 2.0); modifications Copyright (C) 2026
+// juliusberger00. Licensed under the GNU General Public License version 3 (LICENSE); full source: https://github.com/jb-rimworld/rimward
 using System.Collections.Generic;
 using System.Linq;
 using JBFramework;
@@ -152,8 +156,8 @@ namespace RimWard
                 .InGroup("Rooms and doctors").Legacy("ChiefPhysicianMultiplier");
 
             // ---- Intake
-            r.Enum(Sections.Intake, Keys.IntakeMode, IntakeMode.Firehose, "Intake mode",
-                "Firehose: patients just arrive. Hybrid: a letter asks first for surgery cases and nobles. Prompt: a letter for every case, with diagnosis and estimated pay.")
+            r.Enum(Sections.Intake, Keys.IntakeMode, IntakeMode.Hybrid, "Intake mode",
+                "Hybrid (default): wound and disease cases just arrive; a letter asks first for surgery cases and nobles, because an operation may use parts and medicine from your stock. Firehose: every patient just arrives, operations included. Prompt: a letter for every case, with diagnosis and estimated pay.")
                 .InGroup("Arrivals").Legacy("Intake");
             r.Float(Sections.Intake, Keys.TriageHours, 6f, 1f, 24f, "Offer decision time (hours)", "An offer letter you do not answer expires after this time. Declining is free.")
                 .InGroup("Arrivals").WithStep(1f).Legacy("TriageDecisionHours");
@@ -248,7 +252,8 @@ namespace RimWard
             r.Compat("Hearth & Harbor", HearthHarborId, "One bed button for all bed uses; patients may use the spa. Switch: the Hearth & Harbor bridge area.")
                 .HealthyWhen(() => HearthBridge.HearthLoaded);
             r.Compat("Luciferium Overhaul", LuciferiumOverhaulId, "Offers the Luciferium critical cases area (off until you switch it on); its addiction rules apply after the dose.");
-            r.Compat("Combat Extended", CombatExtendedId, "CE's tactical self-tend is blocked for patients. Switch: the Combat Extended area.");
+            r.Compat("Combat Extended", CombatExtendedId, "CE's tactical self-tend is blocked for patients. Switch: the Combat Extended area.")
+                .HealthyWhen(() => RimWard.Patches.CombatExtended_SelfTend_Patch.Applied);
             r.Compat("Royalty", KitDetect.RoyaltyId, "Noble patients want a private room.");
             r.Compat("Ideology", KitDetect.IdeologyId, "Guilty ideoligions mind turning the sick away.");
             r.Compat("Biotech", KitDetect.BiotechId, "Patients keep their faction's xenotype; hemogen and deathrest xenotypes stay home unless you allow them.");
@@ -288,6 +293,36 @@ namespace RimWard
             Settings s = Settings;
             if (s != null)
                 yield return "Blacklists: " + s.blockedDiseases.Count + " diseases, " + s.blockedSurgeries.Count + " operations, " + s.blockedFactions.Count + " factions";
+        }
+    }
+}
+
+namespace RimWard
+{
+    /// <summary>
+    /// // FW-REQUEST (2): the framework copies <c>KitInfo.FirstStartPitch</c> in the Mod constructor, before languages load, and never
+    /// translates it. Once the game has started (languages loaded, before any welcome card), this puts the translated pitch
+    /// (key RimWard.FirstStartPitch) into the framework's copy. Fenced: without the internal field the English pitch stays.
+    /// </summary>
+    [StaticConstructorOnStartup]
+    internal static class PitchTranslation
+    {
+        internal static bool Applied;
+
+        static PitchTranslation()
+        {
+            try
+            {
+                KitMod k = HospitalMod.K;
+                if (k == null || !"RimWard.FirstStartPitch".CanTranslate()) return;
+                object cfg = HarmonyLib.AccessTools.Field(typeof(KitMod), "Cfg")?.GetValue(k);
+                if (cfg is KitInfo info)
+                {
+                    info.FirstStartPitch = "RimWard.FirstStartPitch".Translate().ToString();
+                    Applied = true;
+                }
+            }
+            catch (System.Exception) { }
         }
     }
 }

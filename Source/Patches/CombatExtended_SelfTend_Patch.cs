@@ -1,4 +1,9 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// RimWard - Hospital for Profit. Copyright (C) 2026 juliusberger00. Written for RimWard 2.0 (a GPL-3.0 fork of Hospital by Adamas and
+// Hospital Fix And Tweak by assssssqwww). Licensed under the GNU General Public License version 3 (LICENSE);
+// full source: https://github.com/jb-rimworld/rimward
 using System;
+using System.Linq;
 using System.Reflection;
 using HarmonyLib;
 using RimWard.Utilities;
@@ -30,6 +35,22 @@ namespace RimWard.Patches
         }
 
         public static MethodBase TargetMethod() => target;
+
+        /// <summary>
+        /// True when the prefix really sits on CE's method. Feeds the Compatibility entry (HealthyWhen): a CE version without
+        /// CompTend.TryGiveTacticalJob shows "installed, but the integration reports a problem" instead of claiming the block works.
+        /// // FW-REQUEST (17): the framework should report skipped [KitCompat] classes itself.
+        /// </summary>
+        public static bool Applied
+        {
+            get
+            {
+                if (target == null && !Prepare()) return false;
+                HarmonyLib.Patches info = Harmony.GetPatchInfo(target);
+                MethodInfo ours = AccessTools.Method(typeof(CombatExtended_SelfTend_Patch), nameof(Prefix));
+                return info != null && info.Prefixes.Any(p => p.PatchMethod == ours);
+            }
+        }
 
         public static bool Prefix(object __instance, ref Job __result)
         {

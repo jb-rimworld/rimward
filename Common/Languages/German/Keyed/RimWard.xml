@@ -13,9 +13,9 @@
     <RefusedOperations>Abgelehnte Operationen:</RefusedOperations>
     <DefaultMedicineSettings>Standardmedizin</DefaultMedicineSettings>
 
-    <!-- Einstellungen / Richtlinien -->
-    <HospitalMapSettings>Krankenhaus-Richtlinien...</HospitalMapSettings>
-    <HospitalSettings>Krankenhaus-Richtlinien</HospitalSettings>
+    <!-- Einstellungen / Regeln -->
+    <HospitalMapSettings>Krankenhausregeln...</HospitalMapSettings>
+    <HospitalSettings>Krankenhausregeln</HospitalSettings>
     <AcceptPatients>Patienten aufnehmen</AcceptPatients>
     <AcceptPatientsTooltip>Deaktivieren, um keine Patienten mehr zu empfangen.</AcceptPatientsTooltip>
     <AcceptSurgery>Operationen annehmen</AcceptSurgery>
@@ -39,7 +39,7 @@
     <MCE_Fire>Ein großer Gebäudebrand</MCE_Fire>
 
     <!-- Laufzeit-Nachrichten -->
-    <RimWard.NoGoodwillLost>(kein Ansehen verloren)</RimWard.NoGoodwillLost>
+    <RimWard.NoGoodwillLost>(kein Ruf verloren)</RimWard.NoGoodwillLost>
     <RimWard.NoFaction>keine Fraktion</RimWard.NoFaction>
     <RimWard.AmbientDiagnosis>vor Ort verletzt</RimWard.AmbientDiagnosis>
 
@@ -82,7 +82,7 @@
     <RimWard.Enum.MedicineStrictness.Off>Aus</RimWard.Enum.MedicineStrictness.Off>
     <RimWard.Enum.MedicineStrictness.Soft>Mild</RimWard.Enum.MedicineStrictness.Soft>
     <RimWard.Enum.MedicineStrictness.Strict>Streng</RimWard.Enum.MedicineStrictness.Strict>
-    <RimWard.Enum.IntakeMode.Firehose>Feuerwehrschlauch: Patienten kommen einfach</RimWard.Enum.IntakeMode.Firehose>
+    <RimWard.Enum.IntakeMode.Firehose>Direkt: Patienten kommen einfach</RimWard.Enum.IntakeMode.Firehose>
     <RimWard.Enum.IntakeMode.Hybrid>Gemischt: Brief bei OP und Adel</RimWard.Enum.IntakeMode.Hybrid>
     <RimWard.Enum.IntakeMode.Prompt>Nachfrage: ein Brief für jeden Fall</RimWard.Enum.IntakeMode.Prompt>
     <RimWard.RoomTier.Hallway>Flur</RimWard.RoomTier.Hallway>
@@ -107,7 +107,7 @@
     <RimWard.Invoice.Factor.Chief>Chefarzt</RimWard.Invoice.Factor.Chief>
     <RimWard.Invoice.Factor.MedPref>Medizin nach Geschmack der Fraktion</RimWard.Invoice.Factor.MedPref>
     <RimWard.Invoice.Factor.Royal>Raumanspruch des Adels</RimWard.Invoice.Factor.Royal>
-    <RimWard.Invoice.Factor.Renown>Ruf: {0}</RimWard.Invoice.Factor.Renown>
+    <RimWard.Invoice.Factor.Renown>Renommee: {0}</RimWard.Invoice.Factor.Renown>
     <RimWard.Invoice.Factor.Early>Bezahlter Anteil: {0}</RimWard.Invoice.Factor.Early>
     <RimWard.Invoice.Reason.Estimate>Schätzung</RimWard.Invoice.Reason.Estimate>
     <RimWard.Invoice.Reason.Cured>geheilt</RimWard.Invoice.Reason.Cured>
@@ -128,9 +128,10 @@
     <RimWard.Msg.Discharge.MaxStay>{0} hat die Höchstdauer erreicht, geht und zahlt {1}.</RimWard.Msg.Discharge.MaxStay>
     <RimWard.Msg.Discharge.DiedNoFault>{0} ist verstorben. Nicht deine Schuld. Die Rechnung betrug {1}.</RimWard.Msg.Discharge.DiedNoFault>
     <RimWard.Msg.Discharge.Estimate>{0}: {1}</RimWard.Msg.Discharge.Estimate>
-    <RimWard.Msg.Goodwill>Ansehen {0} bei {1}.</RimWard.Msg.Goodwill>
+    <RimWard.Msg.Goodwill>Ruf {0} bei {1}.</RimWard.Msg.Goodwill>
+    <RimWard.Msg.PatientNewDisease>Patient {0} hat: {1}.</RimWard.Msg.PatientNewDisease>
     <RimWard.Msg.Died>{0} ist verstorben.</RimWard.Msg.Died>
-    <RimWard.Msg.DiedFault>{0} ist in deiner Obhut verstorben. Ansehen {1} bei {2}.</RimWard.Msg.DiedFault>
+    <RimWard.Msg.DiedFault>{0} ist in deiner Obhut verstorben. Ruf {1} bei {2}.</RimWard.Msg.DiedFault>
     <RimWard.Msg.Refused>{0} wird ab jetzt abgelehnt.</RimWard.Msg.Refused>
     <RimWard.Msg.LeftDespiteDanger>{0} hat lange genug gewartet, dass die Gefahr vorbeigeht ({1}), und geht trotzdem.</RimWard.Msg.LeftDespiteDanger>
     <RimWard.Offer.NoBed>Kein freies Patientenbett. Das Angebot bleibt offen, bis es abläuft.</RimWard.Offer.NoBed>
@@ -138,7 +139,7 @@
     <RimWard.Impossible.Label>Behandlung unmöglich: {0}</RimWard.Impossible.Label>
     <RimWard.Impossible.Text>{0} wartet auf "{1}", aber das geht nicht: {2}.
 
-Jetzt entlassen: der Patient zahlt den vereinbarten Anteil der bisherigen Rechnung und geht. Kein Ansehen geht verloren.
+Jetzt entlassen: der Patient zahlt den vereinbarten Anteil der bisherigen Rechnung und geht. Kein Ruf geht verloren.
 Weiter warten: die Frist beginnt neu.
 
 Ohne Antwort wird der Patient in {3} entlassen.</RimWard.Impossible.Text>
@@ -161,10 +162,10 @@ Ohne Antwort wird der Patient in {3} entlassen.</RimWard.Impossible.Text>
     <RimWard.Why.Impossible.NoSurgeon>niemand in der Kolonie hat die nötige Medizin-Fertigkeit</RimWard.Why.Impossible.NoSurgeon>
     <RimWard.Why.Impossible.Missing>es fehlt: {0}</RimWard.Why.Impossible.Missing>
     <RimWard.Block.NoHospital>Kein Krankenhaus auf dieser Karte</RimWard.Block.NoHospital>
-    <RimWard.Block.Closed>Das Krankenhaus ist geschlossen (Krankenhaus-Richtlinien: Patienten aufnehmen)</RimWard.Block.Closed>
+    <RimWard.Block.Closed>Das Krankenhaus ist geschlossen (Krankenhausregeln: Patienten aufnehmen)</RimWard.Block.Closed>
     <RimWard.Block.NoHours>Keine Öffnungszeiten eingestellt</RimWard.Block.NoHours>
     <RimWard.Block.OutsideHours>Außerhalb der Öffnungszeiten (nächste: {0}:00)</RimWard.Block.OutsideHours>
-    <RimWard.Block.NoBeds>Keine Patientenbetten (ein medizinisches Bett, auf Patient gestellt)</RimWard.Block.NoBeds>
+    <RimWard.Block.NoBeds>Keine Patientenbetten (ein medizinisches Bett mit eingeschaltetem „Krankenhausbett“)</RimWard.Block.NoBeds>
     <RimWard.Block.Full>Alle Patientenbetten sind belegt</RimWard.Block.Full>
     <RimWard.Block.Danger>Gefahr auf der Karte: {0}</RimWard.Block.Danger>
     <RimWard.Block.NoEntry>Kein erreichbarer Kartenrand für Ankünfte</RimWard.Block.NoEntry>
@@ -177,8 +178,8 @@ Ohne Antwort wird der Patient in {3} entlassen.</RimWard.Impossible.Text>
     <RimWard.Ready.LandingNoSpot>kein Landeplatz gebaut, Kapseln landen nahe der Kolonie</RimWard.Ready.LandingNoSpot>
     <RimWard.Ready.Safe>Keine aktive Gefahr, die Ankünfte blockiert</RimWard.Ready.Safe>
     <RimWard.Ready.Food>Ernährungsrichtlinie für Patienten</RimWard.Ready.Food>
-    <RimWard.Policy.OwnMap>Diese Karte hat eigene Richtlinien</RimWard.Policy.OwnMap>
-    <RimWard.Policy.OwnMapTip>Aus: diese Karte nutzt die Richtlinien des ganzen Spielstands (alle Karten, auch jede neue Karte nach einer Gravschiff-Landung). An: Änderungen hier gelten nur für diese Karte.</RimWard.Policy.OwnMapTip>
+    <RimWard.Policy.OwnMap>Diese Karte hat eigene Regeln</RimWard.Policy.OwnMap>
+    <RimWard.Policy.OwnMapTip>Aus: diese Karte nutzt die Regeln des ganzen Spielstands (alle Karten, auch jede neue Karte nach einer Gravschiff-Landung). An: Änderungen hier gelten nur für diese Karte.</RimWard.Policy.OwnMapTip>
     <RimWard.Policy.NoneRefused>keine</RimWard.Policy.NoneRefused>
     <RimWard.Set.Off>aus</RimWard.Set.Off>
 
@@ -210,7 +211,7 @@ Ohne Antwort wird der Patient in {3} entlassen.</RimWard.Impossible.Text>
     <RimWard.Page.Pricing.Ward>Saal (drei oder mehr Betten)</RimWard.Page.Pricing.Ward>
     <RimWard.Page.Pricing.Hallway>Flur oder draußen</RimWard.Page.Pricing.Hallway>
     <RimWard.Page.Pricing.Chief>Chefarzt (Medizin {0}+)</RimWard.Page.Pricing.Chief>
-    <RimWard.Page.Pricing.Renown>Ruf</RimWard.Page.Pricing.Renown>
+    <RimWard.Page.Pricing.Renown>Renommee</RimWard.Page.Pricing.Renown>
     <RimWard.Page.Pricing.RenownValue>{0} in dieser Kolonie</RimWard.Page.Pricing.RenownValue>
     <RimWard.Page.Pricing.Noble>Adlige im Einzel- / Mehrbettzimmer</RimWard.Page.Pricing.Noble>
     <RimWard.Page.Pricing.Cap>Höchstbetrag pro Patient</RimWard.Page.Pricing.Cap>

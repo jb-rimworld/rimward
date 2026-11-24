@@ -20,8 +20,8 @@
     <RimWard.Tab.Sub.Guide>The hospital in six short cards.</RimWard.Tab.Sub.Guide>
 
     <!-- start card -->
-    <RimWard.Start.Title>Your hospital, ready in two clicks</RimWard.Start.Title>
-    <RimWard.Start.Text>Strangers drop in by pod, your doctors treat them in medical beds, and they pay when they leave. Open the hospital and choose which medical beds take patients. Every medical bed also has its own switch.</RimWard.Start.Text>
+    <RimWard.Start.Title>Welcome to your hospital</RimWard.Start.Title>
+    <RimWard.Start.Text>Strangers drop in by pod, your doctors treat them in medical beds, and they pay when they leave. A new colony starts with the hospital open, and every medical bed takes patients until you switch its "Hospital Bed" button off. The buttons below show what is done and do what is left.</RimWard.Start.Text>
     <RimWard.Start.OpenNow>Open the hospital now</RimWard.Start.OpenNow>
     <RimWard.Start.IsOpen>The hospital is open</RimWard.Start.IsOpen>
     <RimWard.Start.UseBeds>Use all {0} medical beds for patients</RimWard.Start.UseBeds>
@@ -83,7 +83,7 @@
     <RimWard.Ready.SafeHow>Patients come again once it is over</RimWard.Ready.SafeHow>
     <RimWard.Fix.IntakeOn>Switch intake on</RimWard.Fix.IntakeOn>
     <RimWard.Fix.OpenNow>Open now</RimWard.Fix.OpenNow>
-    <RimWard.Fix.DefaultHours>Open at 7, 11, 15 and 19</RimWard.Fix.DefaultHours>
+    <RimWard.Fix.DefaultHours>Open all day</RimWard.Fix.DefaultHours>
     <RimWard.Fix.UseMedicalBeds>Use all {0} for patients</RimWard.Fix.UseMedicalBeds>
     <RimWard.Fix.SpareBed>Make a spare bed medical</RimWard.Fix.SpareBed>
     <RimWard.Fix.SurgeryBed>Use one patient bed for surgery</RimWard.Fix.SurgeryBed>
@@ -153,7 +153,7 @@
     <RimWard.Policy.Hours>Opening hours</RimWard.Policy.Hours>
     <RimWard.Policy.HoursHelp>Olive hours are open, blue hours closed (local time of this map). Click or drag across the hours to change them.</RimWard.Policy.HoursHelp>
     <RimWard.Policy.AllDay>Open all day</RimWard.Policy.AllDay>
-    <RimWard.Policy.DefaultHours>7, 11, 15 and 19 (default)</RimWard.Policy.DefaultHours>
+    <RimWard.Policy.DefaultHours>Day shift (6 to 22)</RimWard.Policy.DefaultHours>
     <RimWard.Policy.Care>Care</RimWard.Policy.Care>
     <RimWard.Policy.Unrefuse>Accept {0} again</RimWard.Policy.Unrefuse>
     <RimWard.Policy.MoreInSettings>More in Mod settings (intake mode, contracts)</RimWard.Policy.MoreInSettings>
@@ -164,7 +164,7 @@
     <RimWard.Guide.2.Title>Beds and rooms</RimWard.Guide.2.Title>
     <RimWard.Guide.2.Text>A patient bed is a medical bed with its "Hospital Bed" switch on; surgery cases need a bed with "Surgery Bed" on. A room of their own pays most, a two-bed room a little more than usual, a ward and a hallway less.</RimWard.Guide.2.Text>
     <RimWard.Guide.3.Title>Who gets in</RimWard.Guide.3.Title>
-    <RimWard.Guide.3.Text>In the Firehose intake mode patients just arrive. Hybrid and Prompt send an offer first: answer it in the Inbox or in its letter. Declining is free. Nobody comes when all patient beds are taken or danger is on the map.</RimWard.Guide.3.Text>
+    <RimWard.Guide.3.Text>In the default mode, Hybrid, wound and disease cases just arrive; operations and nobles send an offer first, as does every case in Prompt mode. In Firehose mode everybody just arrives. Answer offers in the Inbox or in their letter. Declining is free. Nobody comes while every patient bed is taken or there is danger on the map.</RimWard.Guide.3.Text>
     <RimWard.Guide.4.Title>Money</RimWard.Guide.4.Title>
     <RimWard.Guide.4.Text>Every treatment adds a line to the patient's bill. On discharge the room, your best doctor, renown and the payment scale set the price, up to the cap in the settings. The Patients page shows what each patient is expected to pay; the invoice lists every line.</RimWard.Guide.4.Text>
     <RimWard.Guide.5.Title>When things go wrong</RimWard.Guide.5.Title>

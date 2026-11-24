@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
   <RimWard_PatientRating.label>Bewertung</RimWard_PatientRating.label>
-  <RimWard_PatientRating.headerTip>Wie viel besser sich der Patient fühlt als bei der Ankunft. Über 60 % bringt bei der Entlassung zusätzliches Ansehen.</RimWard_PatientRating.headerTip>
+  <RimWard_PatientRating.headerTip>Wie viel besser sich der Patient fühlt als bei der Ankunft. Über 60 % bringt bei der Entlassung zusätzlichen Ruf.</RimWard_PatientRating.headerTip>
   <RimWard_PatientTimeSpent.label>Dauer</RimWard_PatientTimeSpent.label>
   <RimWard_PatientTimeSpent.headerTip>Wie lange der Patient schon in deinem Krankenhaus ist.</RimWard_PatientTimeSpent.headerTip>
   <RimWard_PatientDiagnosis.label>Diagnose</RimWard_PatientDiagnosis.label>

@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// RimWard - Hospital for Profit. Copyright (C) 2026 juliusberger00. Written for RimWard 2.0 (a GPL-3.0 fork of Hospital by Adamas and
+// Hospital Fix And Tweak by assssssqwww). Licensed under the GNU General Public License version 3 (LICENSE);
+// full source: https://github.com/jb-rimworld/rimward
 #if JB_TESTS
 // RimWard's in-game suites (rw.*), the 20 checks owed by the logic wave (handoff/RimWard.md section 4) plus the area switches.
 // Compiled only with -p:JBTests=true (jbmod test builds); never part of a release DLL.
@@ -195,6 +199,15 @@ namespace RimWard.Tests
     sealed class ComplicationsSuite : KitTestSuite
     {
         public override string Name => "rw.complications";
+
+        static readonly HashSet<string> DangerousAddictions = new HashSet<string>
+            { "LuciferiumAddiction", "GoJuiceAddiction", "PsychiteAddiction", "AlcoholAddiction", "SmokeleafAddiction", "WakeUpAddiction" };
+
+        static bool RawCanKill(HediffDef def)
+            => def.lethalSeverity > 0f || (def.stages != null && def.stages.Any(st => st != null && (st.lifeThreatening || st.deathMtbDays > 0f)));
+
+        static bool RawAggro(HediffDef def)
+            => def.stages != null && def.stages.Any(st => st?.mentalStateGivers != null && st.mentalStateGivers.Any(g => g?.mentalState != null && g.mentalState.IsAggro));
         public override int MaxTicks => 3000;
         public override IEnumerable<int> Run(TestContext t)
         {
@@ -202,7 +215,7 @@ namespace RimWard.Tests
             RwT.SetUp(t, 1, 0);
             float oldDiff = RwT.K.Get(Keys.Difficulty);
             RwT.K.Set(Keys.Difficulty, 2f);
-            int made = 0, badAddiction = 0, carcinoma = 0, aggro = 0, hemogen = 0, xenoOff = 0, extra = 0;
+            int made = 0, badAddiction = 0, carcinoma = 0, aggro = 0, hemogen = 0, xenoOff = 0, extra = 0, lethalComplication = 0;
             HediffDef carc = DefDatabase<HediffDef>.GetNamedSilentFail("Carcinoma");
             HospitalMapComponent comp = RwT.Comp(map);
             Faction fac = RwT.PatientFaction();
@@ -215,13 +228,17 @@ namespace RimWard.Tests
                 var before = new HashSet<Hediff>(p.health.hediffSet.hediffs);
                 PatientData d = new PatientData(RwT.Now, p.MarketValue, 0.5f, (PatientType)(1 + i % 2));
                 PatientUtility.DamagePawn(p, d, comp);
+                var afterCase = new HashSet<Hediff>(p.health.hediffSet.hediffs);
                 PatientComplexityGenerator.ApplyComplexity(p, d, comp);
                 made++;
+                // independent of the generator's own filters (IsSafeAddiction, NoAggroStage): a fixed list of vanilla's dangerous
+                // addictions and the raw def data (lethal severity, deadly or life-threatening stages, aggressive mental states)
                 foreach (Hediff h in p.health.hediffSet.hediffs.Where(h => !before.Contains(h)))
                 {
-                    if (h is Hediff_Addiction && !PatientComplexityGenerator.IsSafeAddiction(h.def)) { badAddiction++; t.Note("dangerous addiction " + h.def.defName); }
+                    if (h is Hediff_Addiction && DangerousAddictions.Contains(h.def.defName)) { badAddiction++; t.Note("dangerous addiction " + h.def.defName); }
                     if (carc != null && h.def == carc) carcinoma++;
-                    if (!DiseaseUtility.NoAggroStage(h.def) && h.def.makesSickThought) { aggro++; t.Note("rage illness " + h.def.defName); }
+                    if (h.def.makesSickThought && RawAggro(h.def)) { aggro++; t.Note("rage illness " + h.def.defName); }
+                    if (!afterCase.Contains(h) && RawCanKill(h.def)) { lethalComplication++; t.Note("complication that can kill: " + h.def.defName); }
                 }
                 if (p.health.hediffSet.hediffs.Count > 2) extra++;
                 if (ModsConfig.BiotechActive && p.genes != null)
@@ -239,6 +256,7 @@ namespace RimWard.Tests
             t.Check(badAddiction == 0, "no luciferium, psychite or other dangerous addiction (" + badAddiction + ")");
             t.Check(carcinoma == 0, "RimWard adds no carcinoma, as a case or a complication (" + carcinoma + ")");
             t.Check(aggro == 0, "no illness that causes a berserk rage (" + aggro + ")");
+            t.Check(lethalComplication == 0, "no complication can kill (lethal severity, deadly or life-threatening stage) (" + lethalComplication + ")");
             if (ModsConfig.BiotechActive)
             {
                 t.Check(hemogen == 0, "no hemogen or deathrest xenotype while the setting is off (" + hemogen + ")");
@@ -466,7 +484,7 @@ namespace RimWard.Tests
             t.Check(q.Downed, "the second patient is downed");
             comp.DismissPatient(q);
             yield return 300;
-            t.Check(q.Spawned && e.Dismissed, "a downed dismissed patient is not lost (still on the map, dismissed)");
+            t.Check(q.MapHeld == map && e.Dismissed, "a downed dismissed patient is not lost (still on the map or carried to a bed, dismissed)");
             Hediff an = q.health.hediffSet.GetFirstHediffOfDef(anest); if (an != null) q.health.RemoveHediff(an);
             w = 0;
             while (q.Spawned && q.GetLord()?.CurLordToil is LordToil_Patient && w < 2500) { yield return 250; w += 250; }
@@ -805,6 +823,16 @@ namespace RimWard.Tests
             t.Note("Hearth & Harbor " + (hh ? "loaded" : "absent") + ", Hospital Beds Gen 2 " + (hbg ? "loaded" : "absent"));
             t.Check(RwT.K.On(Sections.Hearth) == hh, "the Hearth & Harbor bridge area exists exactly when H&H is loaded");
             Building_Bed bed = RwT.Spawned.OfType<Building_Bed>().FirstOrDefault();
+            if (!hh && bed != null)
+            {
+                // without H&H: RimWard's own two bed switches are the ones shown
+                t.Check(!BedSelector.HidesOwnToggles(bed), "without Hearth & Harbor RimWard shows its own bed switches");
+                List<string> labels = bed.GetGizmos().OfType<Command>().Select(c => c.defaultLabel ?? "").ToList();
+                t.Check(labels.Contains("CommandBedSetAsHospitalLabel".Translate()), "the bed has the Hospital Bed switch (" + string.Join(" | ", labels.Take(12)) + ")");
+            }
+            bool ce = ModsConfig.IsActive(HospitalMod.CombatExtendedId);
+            t.Check(RimWard.Patches.CombatExtended_SelfTend_Patch.Applied == ce, "the Combat Extended self-tend patch is applied exactly when CE is loaded (CE " + (ce ? "loaded" : "absent") + ")");
+            if (!hh && !hbg && !ce) t.Note("no other mod loaded: the H&H, HBG2 and CE branches did not run (run with extra mods for them)");
             if (hh && bed != null)
             {
                 t.Check(HearthBridge.ProtocolVersion > 0, "H&H speaks the bed selector protocol (v" + HearthBridge.ProtocolVersion + ")");
@@ -855,7 +883,12 @@ namespace RimWard.Tests
             Pawn keeper = null;
             try
             {
-                if (TileFinder.TryFindNewSiteTile(out PlanetTile tile, home.Tile, 2, 12))
+                // a tile without map features: vanilla's ancient-structure mutator logs "Failed to find location structure" on a small map
+                PlanetTile tile = PlanetTile.Invalid;
+                for (int i = 0; i < 30; i++)
+                    if (TileFinder.TryFindNewSiteTile(out PlanetTile cand, home.Tile, 2, 12) && (Find.WorldGrid[cand].Mutators?.Count ?? 0) == 0) { tile = cand; break; }
+                if (!tile.Valid && TileFinder.TryFindNewSiteTile(out PlanetTile any, home.Tile, 2, 12)) { tile = any; RwT.ExpectRedError("Failed to find location structure"); }
+                if (tile.Valid)
                     other = GetOrGenerateMapUtility.GetOrGenerateMap(tile, new IntVec3(75, 1, 75), WorldObjectDefOf.Camp);
                 if (other != null)
                 {
@@ -921,10 +954,11 @@ namespace RimWard.Tests
             {
                 RwT.SetUp(t, 4, 1);
                 HospitalMapComponent comp = RwT.Comp(map);
+                float modeBefore = RwT.K.Get(Keys.IntakeMode);
                 RwT.K.Set(Keys.IntakeMode, (float)(int)IntakeMode.Prompt);
                 IncidentDef inc = DefDatabase<IncidentDef>.GetNamed("RimWard_PatientArrives");
                 for (int i = 0; i < 5 && comp.pendingOffers.Count == 0; i++) inc.Worker.TryExecute(new IncidentParms { target = map });
-                RwT.K.Set(Keys.IntakeMode, (float)(int)IntakeMode.Firehose);
+                RwT.K.Set(Keys.IntakeMode, modeBefore);
                 Pawn surg = RwT.NewPatient(map, PatientType.Wounds, out PatientData ds, true, false);
                 BillingSuite.MakeArmCase(surg, ds, out _, out _);
                 ds.SurgeryAttempts = 1; ds.RetryAfterTick = RwT.Now + 5000;

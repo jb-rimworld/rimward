@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// RimWard - Hospital for Profit. Copyright (C) 2026 juliusberger00. Written for RimWard 2.0 (a GPL-3.0 fork of Hospital by Adamas and
+// Hospital Fix And Tweak by assssssqwww). Licensed under the GNU General Public License version 3 (LICENSE);
+// full source: https://github.com/jb-rimworld/rimward
 #if JB_TESTS
 // RimWard's Hospital tab suites (M8): rw.tab (fresh colony, readiness fixes, patients in every state, all pages at three screen sizes),
 // rw.tabload (two phases: the tab after a save and load) and rw.longrun (three in-game days with real arrivals). JB_TESTS only.
@@ -54,7 +58,8 @@ namespace RimWard.Tests
 
         /// <summary>Red errors in the game log after <paramref name="since"/> that name RimWard or the framework.</summary>
         internal static List<string> RedSince(int since)
-            => Log.Messages.Skip(since).Where(m => m.type == LogMessageType.Error && ((m.text ?? "").Contains("RimWard") || (m.text ?? "").Contains("JBFramework")))
+            => Log.Messages.Skip(since).Where(m => m.type == LogMessageType.Error && ((m.text ?? "").Contains("RimWard") || (m.text ?? "").Contains("JBFramework"))
+                    && !(m.text ?? "").Contains("[JBTEST-EXPECTED]"))
                 .Select(m => m.text.Split('\n')[0]).ToList();
         internal static int LogMark => Log.Messages.Count();
 
@@ -197,13 +202,14 @@ namespace RimWard.Tests
             string lang = LanguageDatabase.activeLanguage?.folderName ?? "?";
             string L = lang.StartsWith("German") ? "de" : "en";
             List<Pawn> made = null;
+            object[] statsKept = null;
             var doctorPrio = new Dictionary<Pawn, int>();
             try
             {
                 // ---- 1. fresh colony: no patient bed at all
                 t.Check(HospitalOverview.PatientBeds(map).Count() == 0, "fresh colony: no patient bed yet");
-                int treated0 = gc.patientsTreated, died0 = gc.patientsDied;
-                gc.patientsTreated = 0; gc.patientsDied = 0;   // earlier suites in the same game may have sent patients home
+                statsKept = gc.TestClearStats();   // earlier suites in the same game sent patients home and earned silver: a fresh colony has none
+                t.Check(gc.IncomeThisQuadrum(Find.WorldGrid.LongLatOf(map.Tile).x) == 0 && gc.recentInvoices.Count == 0 && gc.renown == 0f, "fresh colony: no income, no invoice, no renown on the overview");
                 t.Check(OverviewPage.StartCardDue(), "fresh colony: the start card is due");
                 List<ReadinessItem> ready = HospitalOverview.Readiness(map);
                 t.Note("checklist: " + string.Join(" | ", ready.Select(i => (i.ok ? "ok " : "NO ") + i.key + (i.detail != null ? " (" + i.detail + ")" : "") + (i.fixLabel != null ? " [" + i.fixLabel + "]" : "") + (i.pointer != null ? " -> " + i.pointer : ""))));
@@ -228,7 +234,7 @@ namespace RimWard.Tests
                 open = TabT.Line(map, "Open");
                 t.Check(open != null && !open.ok && open.fix != null, "no opening hour: the Open line has a fix (" + open?.fixLabel + ")");
                 open?.fix();
-                t.Check(comp.Policy.OpenHourCount == 4, "the hours fix sets the four default hours (" + comp.Policy.OpenHourCount + ")");
+                t.Check(comp.Policy.OpenHourCount == 24, "the hours fix opens the hospital all day, the default (" + comp.Policy.OpenHourCount + ")");
                 // intake area off
                 HospitalMod.K.Current.SetSection(Sections.Intake, false);
                 open = TabT.Line(map, "Open");
@@ -296,14 +302,19 @@ namespace RimWard.Tests
                 foreach (int y in TabT.CheckPage(t, "overview", "ready", "rw_tab_" + L + "_ready_overview")) yield return y;
 
                 // ---- 3. patients in every state, a pending offer, income and a discharge
+                // the random quicktest map may hold awake hostiles (an insect hive): they block arrivals and hold cured patients by design
+                int cleared = 0;
+                foreach (Pawn hp in map.mapPawns.AllPawnsSpawned.Where(x => x.HostileTo(Faction.OfPlayer) && !x.IsPrisoner && x.Faction != null).ToList()) { hp.Destroy(DestroyMode.Vanish); cleared++; }
+                if (cleared > 0) { t.Note("removed " + cleared + " hostile pawns of the random map"); Threats.ClearCache(); }
                 for (int i = 0; i < 14; i++) RwT.SpawnBed(map, false);
+                float modeBefore = RwT.K.Get(Keys.IntakeMode);
                 RwT.K.Set(Keys.IntakeMode, (float)(int)IntakeMode.Prompt);
                 IncidentDef inc = DefDatabase<IncidentDef>.GetNamed("RimWard_PatientArrives");
                 Threats.ClearCache();
                 comp.Policy.acceptDanger = true;   // the random test map may hold a dormant hive or other danger
                 for (int i = 0; i < 5 && comp.pendingOffers.Count == 0; i++) inc.Worker.TryExecute(new IncidentParms { target = map });
                 comp.Policy.acceptDanger = false;
-                RwT.K.Set(Keys.IntakeMode, (float)(int)IntakeMode.Firehose);
+                RwT.K.Set(Keys.IntakeMode, modeBefore);
                 t.Check(comp.pendingOffers.Count > 0, "a pending offer for the inbox (" + comp.pendingOffers.Count + "; " + (IncidentHelper.ArrivalBlockReason(map) ?? "no block") + ")");
                 made = TabT.EveryState(t, map, out Pawn cured);
                 Pawn payer = RwT.NewPatient(map, PatientType.Wounds, out PatientData dp, true, false);
@@ -361,7 +372,7 @@ namespace RimWard.Tests
                 t.Check(!OverviewPage.StartCardDue(), "the start card is gone once answered");
                 gc.startCardDone = false; gc.patientsTreated++;
                 t.Check(!OverviewPage.StartCardDue(), "and never shows for a hospital that already sent a patient home");
-                gc.patientsTreated = treated0; gc.patientsDied = died0;
+                gc.patientsTreated = 0; gc.patientsDied = 0;
                 // an operation whose part in stock is forbidden says so (doctors never fetch forbidden things)
                 comp.Policy.refusedOperations.Clear();
                 ThingDef legDef = ThingDefOf.WoodLog;   // a peg leg is made of wood on the spot
@@ -388,6 +399,7 @@ namespace RimWard.Tests
                 foreach (var kv in doctorPrio) kv.Key.workSettings?.SetPriority(WorkTypeDefOf.Doctor, kv.Value);
                 TabT.Close();
                 TabT.CleanUpAll(map, made);
+                gc.TestRestoreStats(statsKept);
             }
             t.Check(HospitalMod.K.Log.ErrorCount == guard0, "no fenced failure in the whole suite");
             List<string> red = TabT.RedSince(red0);
@@ -416,13 +428,14 @@ namespace RimWard.Tests
             {
                 RwT.SetUp(t, 16, 2);
                 for (int i = 0; i < 24; i++) comp.Policy.openingHours[i] = true;
+                float modeBefore = RwT.K.Get(Keys.IntakeMode);
                 RwT.K.Set(Keys.IntakeMode, (float)(int)IntakeMode.Prompt);
                 IncidentDef inc = DefDatabase<IncidentDef>.GetNamed("RimWard_PatientArrives");
                 Threats.ClearCache();
                 comp.Policy.acceptDanger = true;   // the random test map may hold a dormant hive or other danger
                 for (int i = 0; i < 5 && comp.pendingOffers.Count == 0; i++) inc.Worker.TryExecute(new IncidentParms { target = map });
                 comp.Policy.acceptDanger = false;
-                RwT.K.Set(Keys.IntakeMode, (float)(int)IntakeMode.Firehose);
+                RwT.K.Set(Keys.IntakeMode, modeBefore);
                 t.Check(comp.pendingOffers.Count > 0, "a pending offer before saving (" + (IncidentHelper.ArrivalBlockReason(map) ?? "no block") + ")");
                 List<Pawn> made = TabT.EveryState(t, map, out _);
                 Pawn payer = RwT.NewPatient(map, PatientType.Wounds, out PatientData dp, true, false);

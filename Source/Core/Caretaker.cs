@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// RimWard - Hospital for Profit. Copyright (C) 2026 juliusberger00. Written for RimWard 2.0 (a GPL-3.0 fork of Hospital by Adamas and
+// Hospital Fix And Tweak by assssssqwww). Licensed under the GNU General Public License version 3 (LICENSE);
+// full source: https://github.com/jb-rimworld/rimward
 using System.Collections.Generic;
 using System.Linq;
 using RimWard.Utilities;
@@ -33,7 +37,7 @@ namespace RimWard
     /// </summary>
     public static class Caretaker
     {
-        public enum Fix { StaleEntry, MovedToOtherMap, PrisonerOrRecruited, Relorded, ExitLordGiven, LostCureBill, ImpossibleLetter, ImpossibleDischarge, MaxStay, DangerTimeout }
+        public enum Fix { StaleEntry, MovedToOtherMap, PrisonerOrRecruited, Relorded, ExitLordGiven, LostCureBill, ImpossibleLetter, ImpossibleDischarge, MaxStay, DangerTimeout, TurnedHostile }
 
         private static readonly Dictionary<Fix, int> counts = new Dictionary<Fix, int>();
         private static readonly List<string> recent = new List<string>();
@@ -91,6 +95,20 @@ namespace RimWard
                     {
                         comp.ForgetPatient(pawn);
                         Log(comp, Fix.PrisonerOrRecruited, pawn);
+                        continue;
+                    }
+
+                    // 8. their faction is now hostile and they are not our prisoner: no longer a patient, they walk off.
+                    // Vanilla arrests guests of a faction that turns hostile (step 7 then applies); this catches a patient vanilla does not
+                    // hold as a guest. A patient in a mental break (berserk) stays a patient: that passes.
+                    if (pawn.Faction != null && pawn.Faction.HostileTo(Faction.OfPlayer))
+                    {
+                        comp.ForgetPatient(pawn);
+                        Lord old = pawn.GetLord();
+                        if (old != null && old.LordJob is LordJob_VisitColonyAsPatient) old.RemovePawn(pawn);
+                        if (pawn.Spawned && pawn.GetLord() == null && !pawn.Downed)
+                            LordMaker.MakeNewLord(pawn.Faction, new LordJob_ExitMapBest(LocomotionUrgency.Jog), comp.map, new List<Pawn> { pawn });
+                        Log(comp, Fix.TurnedHostile, pawn);
                         continue;
                     }
 

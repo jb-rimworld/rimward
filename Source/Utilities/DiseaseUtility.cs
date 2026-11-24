@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// RimWard - Hospital for Profit. Fork of Hospital (Copyright Adamas) and Hospital Fix And Tweak (Copyright assssssqwww), both GPL-3.0.
+// This file contains code from those mods, modified by juliusberger00 in 2026 (RimWard 1.x and 2.0); modifications Copyright (C) 2026
+// juliusberger00. Licensed under the GNU General Public License version 3 (LICENSE); full source: https://github.com/jb-rimworld/rimward
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
@@ -68,23 +72,33 @@ namespace RimWard.Utilities
             return false;
         }
 
-        // Adds a low-severity secondary disease without touching the patient's primary diagnosis (complexity layer).
-        public static void AddSecondaryDisease(Pawn pawn)
+        /// <summary>
+        /// Diseases a complication may add: tendable sickness that can never kill (no lethal severity, no life-threatening or deadly stage)
+        /// and never sends the patient berserk. In vanilla: gut worms and muscle parasites. Flu, plague and malaria are main diagnoses only.
+        /// </summary>
+        public static List<HediffDef> SecondaryDiseasePool()
         {
-            List<HediffDef> pool = DefDatabase<HediffDef>.AllDefsListForReading.Where(def =>
-                def.tendable && def.makesSickThought
+            return DefDatabase<HediffDef>.AllDefsListForReading.Where(def =>
+                def.tendable && def.makesSickThought && def.lethalSeverity <= 0f
                 && !def.defName.ToLower().Contains("scaria")
                 && !def.defName.ToLower().Contains("mechanites")
                 && !def.defName.ToLower().Contains("rot")
                 && !def.defName.ToLower().Contains("animal")
+                && !def.defName.ToLower().Contains("infant")
                 && !def.defName.StartsWith("GR_") && !def.defName.StartsWith("VDE")
-                && NoAggroStage(def) && !def.chronic && !(HospitalMod.Settings?.DiseaseBlocked(def) ?? false)).ToList();
-            if (pool.Count == 0) return;
-            HediffDef chosen = pool.RandomElement();
-            if (chosen.lethalSeverity <= 0f || pawn.health.hediffSet.GetFirstHediffOfDef(chosen) != null) return;
-            Hediff h = HediffMaker.MakeHediff(chosen, pawn);
-            h.Severity = Rand.Range(chosen.lethalSeverity / 30f, chosen.lethalSeverity / 15f) * HospitalMod.Settings.Difficulty;
-            if (!pawn.health.WouldDieAfterAddingHediff(h)) pawn.health.AddHediff(h);
+                && PatientComplexityGenerator.HasNoDangerousStage(def)
+                && !def.chronic && !(HospitalMod.Settings?.DiseaseBlocked(def) ?? false)).ToList();
+        }
+
+        /// <summary>Adds a harmless secondary disease without touching the primary diagnosis (complexity layer). False when none was added.</summary>
+        public static bool AddSecondaryDisease(Pawn pawn)
+        {
+            List<HediffDef> pool = SecondaryDiseasePool().Where(d => pawn.health.hediffSet.GetFirstHediffOfDef(d) == null).ToList();
+            if (pool.Count == 0) return false;
+            Hediff h = HediffMaker.MakeHediff(pool.RandomElement(), pawn);
+            if (pawn.health.WouldDieAfterAddingHediff(h)) return false;
+            pawn.health.AddHediff(h);
+            return true;
         }
 
         /// <summary>No stage of this hediff drives the patient into an aggressive mental state (berserk on the ward).</summary>

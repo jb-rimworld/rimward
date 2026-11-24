@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// RimWard - Hospital for Profit. Fork of Hospital (Copyright Adamas) and Hospital Fix And Tweak (Copyright assssssqwww), both GPL-3.0.
+// This file contains code from those mods, modified by juliusberger00 in 2026 (RimWard 1.x and 2.0); modifications Copyright (C) 2026
+// juliusberger00. Licensed under the GNU General Public License version 3 (LICENSE); full source: https://github.com/jb-rimworld/rimward
 using System.Collections.Generic;
 using RimWorld;
 using UnityEngine;
@@ -31,6 +35,26 @@ namespace RimWard
 
         /// <summary>The hospital start card on the Hospital tab was answered (per save).</summary>
         public bool startCardDone;
+
+#if JB_TESTS
+        /// <summary>Test-only: clears the stats a fresh colony would not have (earlier suites in the same game) and returns them for <see cref="TestRestoreStats"/>.</summary>
+        internal object[] TestClearStats()
+        {
+            object[] keep = { this.renown, this.patientsTreated, this.patientsDied, this.silverEarned, this.payoutTicksAbs, this.payoutSilver, this.recentInvoices };
+            this.renown = 0f; this.patientsTreated = 0; this.patientsDied = 0; this.silverEarned = 0;
+            this.payoutTicksAbs = new List<int>(); this.payoutSilver = new List<int>(); this.recentInvoices = new List<Invoice>();
+            return keep;
+        }
+
+        internal void TestRestoreStats(object[] k)
+        {
+            if (k == null || k.Length != 7) return;
+            this.renown += (float)k[0]; this.patientsTreated += (int)k[1]; this.patientsDied += (int)k[2]; this.silverEarned += (long)k[3];
+            ((List<int>)k[4]).AddRange(this.payoutTicksAbs); ((List<int>)k[5]).AddRange(this.payoutSilver);
+            this.payoutTicksAbs = (List<int>)k[4]; this.payoutSilver = (List<int>)k[5];
+            ((List<Invoice>)k[6]).InsertRange(0, this.recentInvoices); this.recentInvoices = (List<Invoice>)k[6];
+        }
+#endif
 
         public HospitalGameComponent(Game game)
         {
