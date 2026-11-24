@@ -2,6 +2,7 @@
 <Defs>
     <PawnColumnDef>
         <defName>RimWard_LabelCustom</defName>
+        <label>patient</label>
         <workerClass>RimWard.MainTab.PawnColumnWorker_LabelCustom</workerClass>
         <sortable>false</sortable>
     </PawnColumnDef>
@@ -53,12 +54,14 @@
 
     <PawnColumnDef>
         <defName>RimWard_Dismiss</defName>
+        <label>discharge</label>
         <workerClass>RimWard.MainTab.PawnColumnWorker_ButtonDismiss</workerClass>
         <width>100</width>
     </PawnColumnDef>
 
     <PawnColumnDef>
         <defName>RimWard_Disallow</defName>
+        <label>refuse operation</label>
         <workerClass>RimWard.MainTab.PawnColumnWorker_ButtonDisallow</workerClass>
         <width>300</width>
     </PawnColumnDef>

@@ -2,6 +2,7 @@
 <Defs>
     <LetterDef>
         <defName>RimWard_PatientOffer</defName>
+        <label>patient offer</label>
         <letterClass>RimWard.ChoiceLetter_PatientOffer</letterClass>
         <color>(0.4, 0.7, 1.0)</color>
         <bounce>true</bounce>
@@ -9,6 +10,7 @@
     </LetterDef>
     <LetterDef>
         <defName>RimWard_TreatmentImpossible</defName>
+        <label>treatment impossible</label>
         <letterClass>RimWard.ChoiceLetter_TreatmentImpossible</letterClass>
         <color>(0.85, 0.65, 0.3)</color>
         <bounce>true</bounce>

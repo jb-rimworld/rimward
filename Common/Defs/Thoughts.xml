@@ -2,6 +2,7 @@
 <Defs>
     <ThoughtDef>
         <defName>RimWard_TurnedAwayPatient</defName>
+        <label>turned away the sick</label>
         <durationDays>4</durationDays>
         <stackLimit>5</stackLimit>
         <stackedEffectMultiplier>0.6</stackedEffectMultiplier>

@@ -2,6 +2,7 @@
 <Defs>
     <PawnTableDef>
         <defName>RimWard_Patients</defName>
+        <label>patients</label>
         <workerClass>RimWard.MainTab.PawnTable_Patients</workerClass>
         <columns>
             <li>RimWard_LabelCustom</li>

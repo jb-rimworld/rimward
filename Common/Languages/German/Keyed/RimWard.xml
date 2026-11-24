@@ -226,4 +226,5 @@ Ohne Antwort wird der Patient in {3} entlassen.</RimWard.Impossible.Text>
     <RimWard.Page.Black.None>nichts gesperrt</RimWard.Page.Black.None>
     <RimWard.Page.Black.NotLoaded>(nicht in diesem Spiel)</RimWard.Page.Black.NotLoaded>
     <RimWard.Page.Black.Add>Hinzufügen …</RimWard.Page.Black.Add>
+    <RimWard.Why.Impossible.MedicineLevel>die Krankenhausregeln erlauben nur {0}, und davon ist nichts auf Lager</RimWard.Why.Impossible.MedicineLevel>
 </LanguageData>

@@ -2,6 +2,7 @@
 <Defs>
     <DutyDef>
         <defName>RimWard_Patient</defName>
+        <label>patient</label>
         <alwaysShowWeapon>false</alwaysShowWeapon>
         <thinkNode Class="ThinkNode_Priority">
             <subNodes>

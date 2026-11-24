@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <RimWard.Section.intake>Patientenaufnahme</RimWard.Section.intake>
+  <RimWard.Section.intake.Desc>Patienten kommen per Landekapsel, solange das Krankenhaus geöffnet ist. Aus: niemand Neues kommt, keine Verträge werden angeboten; wer schon da ist, wird behandelt und geht wie gewohnt.</RimWard.Section.intake.Desc>
+  <RimWard.Section.surgery>Operationsfälle</RimWard.Section.surgery>
+  <RimWard.Section.surgery.Desc>Manche Patienten kommen für eine Operation, die deine Kolonie durchführen kann (ein bionisches Teil, ein Karzinom). Aus: keine neuen Operationspatienten; geplante Operationen finden trotzdem statt.</RimWard.Section.surgery.Desc>
+  <RimWard.Section.mce>Massenanfälle von Verletzten</RimWard.Section.mce>
+  <RimWard.Section.mce.Desc>Ab und zu schicken eine Seuche, ein Überfall, ein Absturz oder ein Brand mehrere Patienten auf einmal, nie mehr als freie Patientenbetten. Jede Kolonie muss sie zusätzlich in den Krankenhausregeln einschalten.</RimWard.Section.mce.Desc>
+  <RimWard.Section.complications>Komplikationen</RimWard.Section.complications>
+  <RimWard.Section.complications.Desc>Patienten bringen manchmal eine zweite Krankheit, ein chronisches Leiden oder eine harmlose Sucht mit. Nie etwas, das sie tötet oder in Raserei versetzt.</RimWard.Section.complications.Desc>
+  <RimWard.Section.billing>Abrechnungs-Extras</RimWard.Section.billing>
+  <RimWard.Section.billing.Desc>Teilzahlung bei vorzeitigem Gehen, Erstattung nach einer misslungenen Operation, Rechnungsbriefe bei großen Beträgen. Aus: die einfache Rechnung, voll bezahlt bei Heilung, sonst nichts.</RimWard.Section.billing.Desc>
+  <RimWard.Section.malpractice>Behandlungsfehler</RimWard.Section.malpractice>
+  <RimWard.Section.malpractice.Desc>Ein Patient, der durch deine Schuld stirbt, kostet Ansehen bei seiner Fraktion. Todesfälle, die du nicht verhindern konntest, nie.</RimWard.Section.malpractice.Desc>
+  <RimWard.Section.renown>Ruf</RimWard.Section.renown>
+  <RimWard.Section.renown.Desc>Gute Behandlungen bauen den Ruf des Krankenhauses in vier Stufen auf (Feldlazarett, Klinik, Krankenhaus, Medizinzentrum), jede zahlt 5 % mehr.</RimWard.Section.renown.Desc>
+  <RimWard.Section.royalty>Adlige Patienten (Royalty)</RimWard.Section.royalty>
+  <RimWard.Section.royalty.Desc>Patienten mit Titel wollen ein Einzelzimmer: Sie zahlen dafür 40 % mehr und 25 % weniger für ein geteiltes.</RimWard.Section.royalty.Desc>
+  <RimWard.Section.ideology>Schuldbewusste Ideoreligionen (Ideology)</RimWard.Section.ideology>
+  <RimWard.Section.ideology.Desc>Kolonisten, deren Ideoreligion das Mem „Schuldbewusst“ hat, fühlen sich schlecht, wenn das Krankenhaus Kranke abweist.</RimWard.Section.ideology.Desc>
+  <RimWard.Section.hearth>Brücke zu Hearth &amp; Harbor</RimWard.Section.hearth>
+  <RimWard.Section.hearth.Desc>Mit Hearth &amp; Harbor: ein Bettknopf für Kolonist / Gast / Patient / Operationspatient, und Patienten, die auf den Beinen sind, dürfen das Spa nutzen.</RimWard.Section.hearth.Desc>
+  <RimWard.Section.ce>Combat Extended</RimWard.Section.ce>
+  <RimWard.Section.ce.Desc>Mit Combat Extended: Patienten versorgen sich nie mit der taktischen Selbstversorgung von CE; deine Ärzte behandeln sie.</RimWard.Section.ce.Desc>
+  <RimWard.Section.luciferium>Kritische Fälle mit Luciferium</RimWard.Section.luciferium>
+  <RimWard.Section.luciferium.Desc>Mit Luciferium Overhaul: Ab und zu kommt ein Patient, dem nur Luciferium helfen kann. Ein Arzt verabreicht eine Dosis aus deinem Lager, und der Patient zahlt sehr gut; er geht danach abhängig nach Hause, und seine Leute versorgen ihn weiter.</RimWard.Section.luciferium.Desc>
+  <RimWard.SettingCat.Patients>Patienten</RimWard.SettingCat.Patients>
+  <RimWard.Setting.rw.difficulty>Schwierigkeit der Fälle</RimWard.Setting.rw.difficulty>
+  <RimWard.Setting.rw.difficulty.Desc>Bestimmt, wie schwer Patienten verletzt oder krank sind und wie viele Komplikationen sie mitbringen.</RimWard.Setting.rw.difficulty.Desc>
+  <RimWard.Setting.rw.openInNewColonies>Krankenhaus in neuen Kolonien öffnen</RimWard.Setting.rw.openInNewColonies>
+  <RimWard.Setting.rw.openInNewColonies.Desc>Eine neue Kolonie startet mit geöffnetem Krankenhaus. Niemand kommt, solange es kein medizinisches Bett für Patienten gibt. Bestehende Spielstände behalten ihren Stand.</RimWard.Setting.rw.openInNewColonies.Desc>
+  <RimWard.Setting.rw.specialNeedsXenotypes>Xenotypen mit besonderen Bedürfnissen als Patienten</RimWard.Setting.rw.specialNeedsXenotypes>
+  <RimWard.Setting.rw.specialNeedsXenotypes.Desc>Aus: Patienten, die von Hämogen leben oder einen Todesruhe-Sarg brauchen, werden nicht geschickt. Der eigene Xenotyp ihrer Fraktion bleibt immer erhalten.</RimWard.Setting.rw.specialNeedsXenotypes.Desc>
+  <RimWard.Setting.rw.messageAtArrival>Ankunft als Nachricht statt als Brief</RimWard.Setting.rw.messageAtArrival>
+  <RimWard.Setting.rw.messageAtArrival.Desc>Gewöhnliche Ankünfte zeigen eine kurze Nachricht oben am Bildschirm statt eines Briefs.</RimWard.Setting.rw.messageAtArrival.Desc>
+  <RimWard.SettingCat.Nobodygetsstuck>Niemand bleibt hängen</RimWard.SettingCat.Nobodygetsstuck>
+  <RimWard.Setting.rw.maxStayDays>Höchste Aufenthaltsdauer (Tage)</RimWard.Setting.rw.maxStayDays>
+  <RimWard.Setting.rw.maxStayDays.Desc>Nach so vielen Tagen wird ein Patient mit der vollen bisherigen Rechnung entlassen. 0 = keine Grenze.</RimWard.Setting.rw.maxStayDays.Desc>
+  <RimWard.Setting.rw.impossibleHours>Unmögliche Behandlung: Brief nach (Stunden)</RimWard.Setting.rw.impossibleHours>
+  <RimWard.Setting.rw.impossibleHours.Desc>Eine geplante Operation, die nicht durchführbar ist (Körperteil fehlt, niemand geschickt genug, Zutat fehlt, abgelehnt), schickt nach dieser Zeit einen Brief und entlässt den Patienten nach derselben Zeit noch einmal. Ohne Strafe.</RimWard.Setting.rw.impossibleHours.Desc>
+  <RimWard.Setting.rw.dangerHoldHours>Geheilte warten höchstens auf Gefahr (Stunden)</RimWard.Setting.rw.dangerHoldHours>
+  <RimWard.Setting.rw.dangerHoldHours.Desc>Nur aktive Bedrohungen zählen (Angreifer, wilde Tiere). Schlafende Mech-Cluster und Wetter halten niemanden auf.</RimWard.Setting.rw.dangerHoldHours.Desc>
+  <RimWard.SettingCat.Payment>Bezahlung</RimWard.SettingCat.Payment>
+  <RimWard.Setting.rw.chargePatients>Patienten zahlen</RimWard.Setting.rw.chargePatients>
+  <RimWard.Setting.rw.chargePatients.Desc>Aus: eine Wohltätigkeitsstation. Niemand zahlt, Ansehen zählt trotzdem.</RimWard.Setting.rw.chargePatients.Desc>
+  <RimWard.Setting.rw.payment>Bezahlstufe</RimWard.Setting.rw.payment>
+  <RimWard.Setting.rw.payment.Desc>Wie viel Patienten im Verhältnis zu den Kosten ihrer Behandlung zahlen. Kostendeckend deckt Medizin und Arbeit.</RimWard.Setting.rw.payment.Desc>
+  <RimWard.Setting.rw.customPayment>Eigene Bezahlstufe</RimWard.Setting.rw.customPayment>
+  <RimWard.Setting.rw.customPayment.Desc>Gilt, wenn die Bezahlstufe „Eigene“ ist.</RimWard.Setting.rw.customPayment.Desc>
+  <RimWard.Setting.rw.billCap>Höchstbetrag pro Patient</RimWard.Setting.rw.billCap>
+  <RimWard.Setting.rw.billCap.Desc>Kein Patient zahlt mehr als das, wie lang die Rechnung auch ist.</RimWard.Setting.rw.billCap.Desc>
+  <RimWard.Setting.rw.medicinePreference>Medizin-Vorlieben der Fraktionen</RimWard.Setting.rw.medicinePreference>
+  <RimWard.Setting.rw.medicinePreference.Desc>Stammespatienten mögen keine Glitzerwelt-Medizin, moderne keine Kräutermedizin: Damit behandelt zahlen sie weniger. Streng verdoppelt die Wirkung.</RimWard.Setting.rw.medicinePreference.Desc>
+  <RimWard.SettingCat.Roomsanddoctors>Zimmer und Ärzte</RimWard.SettingCat.Roomsanddoctors>
+  <RimWard.Setting.rw.singleRoom>Bezahlung Einzelzimmer</RimWard.Setting.rw.singleRoom>
+  <RimWard.Setting.rw.singleRoom.Desc>Bezahlfaktor für einen Patienten, der in einem eigenen Zimmer lag.</RimWard.Setting.rw.singleRoom.Desc>
+  <RimWard.Setting.rw.twoBedRoom>Bezahlung Zweibettzimmer</RimWard.Setting.rw.twoBedRoom>
+  <RimWard.Setting.rw.twoBedRoom.Desc>Bezahlfaktor für ein Zimmer mit zwei Betten.</RimWard.Setting.rw.twoBedRoom.Desc>
+  <RimWard.Setting.rw.barracks>Bezahlung Saal</RimWard.Setting.rw.barracks>
+  <RimWard.Setting.rw.barracks.Desc>Bezahlfaktor für ein Zimmer mit drei oder mehr Betten. Ein Bett im Flur zahlt 85 % davon.</RimWard.Setting.rw.barracks.Desc>
+  <RimWard.Setting.rw.chiefPhysician>Chefarzt-Bonus</RimWard.Setting.rw.chiefPhysician>
+  <RimWard.Setting.rw.chiefPhysician.Desc>Patienten, die ein sehr geschickter Arzt behandelt hat, zahlen mehr und gehen zufriedener.</RimWard.Setting.rw.chiefPhysician.Desc>
+  <RimWard.Setting.rw.chiefSkill>Chefarzt: Mindestwert Medizin</RimWard.Setting.rw.chiefSkill>
+  <RimWard.Setting.rw.chiefSkill.Desc>Der beste Arzt, der den Patienten behandelt hat, braucht mindestens diesen Medizinwert.</RimWard.Setting.rw.chiefSkill.Desc>
+  <RimWard.Setting.rw.chiefMultiplier>Bezahlung Chefarzt</RimWard.Setting.rw.chiefMultiplier>
+  <RimWard.Setting.rw.chiefMultiplier.Desc>Bezahlfaktor, wenn der Chefarzt-Bonus gilt.</RimWard.Setting.rw.chiefMultiplier.Desc>
+  <RimWard.SettingCat.Arrivals>Ankünfte</RimWard.SettingCat.Arrivals>
+  <RimWard.Setting.rw.intakeMode>Aufnahmemodus</RimWard.Setting.rw.intakeMode>
+  <RimWard.Setting.rw.intakeMode.Desc>Ansturm: Patienten kommen einfach. Gemischt: Ein Brief fragt vorher bei Operationen und Adligen. Nachfrage: ein Brief für jeden Fall, mit Diagnose und geschätzter Bezahlung.</RimWard.Setting.rw.intakeMode.Desc>
+  <RimWard.Setting.rw.triageHours>Bedenkzeit für Angebote (Stunden)</RimWard.Setting.rw.triageHours>
+  <RimWard.Setting.rw.triageHours.Desc>Ein unbeantworteter Angebotsbrief verfällt nach dieser Zeit. Ablehnen kostet nichts.</RimWard.Setting.rw.triageHours.Desc>
+  <RimWard.Setting.rw.contracts>Verletzte Besucher auf der Karte behandeln (Verträge)</RimWard.Setting.rw.contracts>
+  <RimWard.Setting.rw.contracts.Desc>Werden Besucher, Händler oder Verbündete auf deiner Karte verletzt, bieten sie Geld für eine Behandlung.</RimWard.Setting.rw.contracts.Desc>
+  <RimWard.SettingCat.Operations>Operationen</RimWard.SettingCat.Operations>
+  <RimWard.Setting.rw.autoRetry>Misslungene Operationen wiederholen</RimWard.Setting.rw.autoRetry>
+  <RimWard.Setting.rw.autoRetry.Desc>Eine verpfuschte Operation wird erneut versucht, statt den Patienten ungeheilt heimzuschicken.</RimWard.Setting.rw.autoRetry.Desc>
+  <RimWard.Setting.rw.maxRetries>Höchstens so viele Versuche</RimWard.Setting.rw.maxRetries>
+  <RimWard.Setting.rw.maxRetries.Desc>Wie oft eine misslungene Operation wiederholt wird.</RimWard.Setting.rw.maxRetries.Desc>
+  <RimWard.SettingCat.Leavingearly>Vorzeitig gehen</RimWard.SettingCat.Leavingearly>
+  <RimWard.Setting.rw.earlyPay>Anteil bei vorzeitigem Gehen</RimWard.Setting.rw.earlyPay>
+  <RimWard.Setting.rw.earlyPay.Desc>Anteil der bisherigen Rechnung, den ein Patient zahlt, wenn er früher heimgeschickt wird, die Behandlung unmöglich ist oder er ohne deine Schuld stirbt.</RimWard.Setting.rw.earlyPay.Desc>
+  <RimWard.Setting.rw.noFaultDeathPays>Tod ohne deine Schuld wird trotzdem bezahlt</RimWard.Setting.rw.noFaultDeathPays>
+  <RimWard.Setting.rw.noFaultDeathPays.Desc>Die bisherige Rechnung mal dem Anteil oben wird bezahlt, wenn ein Patient stirbt und es nicht deine Schuld war.</RimWard.Setting.rw.noFaultDeathPays.Desc>
+  <RimWard.SettingCat.Failedoperations>Misslungene Operationen</RimWard.SettingCat.Failedoperations>
+  <RimWard.Setting.rw.reimburseMedicine>Medizin nach misslungener Operation erstatten</RimWard.Setting.rw.reimburseMedicine>
+  <RimWard.Setting.rw.reimburseMedicine.Desc>Nach einer misslungenen Operation bezahlen die Leute des Patienten die verbrauchte Medizin. Die Operation selbst kostet nichts.</RimWard.Setting.rw.reimburseMedicine.Desc>
+  <RimWard.Setting.rw.reimburseParts>Teile nach misslungener Operation erstatten</RimWard.Setting.rw.reimburseParts>
+  <RimWard.Setting.rw.reimburseParts.Desc>Nach einer misslungenen Operation bezahlen die Leute des Patienten die verbrauchten Teile (Prothesen, Organe).</RimWard.Setting.rw.reimburseParts.Desc>
+  <RimWard.SettingCat.Invoices>Rechnungen</RimWard.SettingCat.Invoices>
+  <RimWard.Setting.rw.invoiceLetter>Rechnungsbrief ab</RimWard.Setting.rw.invoiceLetter>
+  <RimWard.Setting.rw.invoiceLetter.Desc>Entlassungen, die mindestens so viel Silber zahlen, schicken einen Brief mit der Einzelrechnung. Kleinere schicken eine Nachricht.</RimWard.Setting.rw.invoiceLetter.Desc>
+  <RimWard.SettingCat.Penalty>Strafe</RimWard.SettingCat.Penalty>
+  <RimWard.Setting.rw.deathPenalty>Ansehensverlust pro verschuldetem Tod</RimWard.Setting.rw.deathPenalty>
+  <RimWard.Setting.rw.deathPenalty.Desc>So viel Ansehen verliert die Fraktion des Patienten, wenn ein Tod deine Schuld ist.</RimWard.Setting.rw.deathPenalty.Desc>
+  <RimWard.SettingCat.Notyourfault>Nicht deine Schuld</RimWard.SettingCat.Notyourfault>
+  <RimWard.Setting.rw.noFaultSurgery>Keine Strafe für Tod bei Operationen</RimWard.Setting.rw.noFaultSurgery>
+  <RimWard.Setting.rw.noFaultSurgery.Desc>Ein Patient, der auf dem OP-Tisch oder kurz nach einer verpfuschten Operation stirbt, ist ein Behandlungsrisiko, nicht deine Schuld.</RimWard.Setting.rw.noFaultSurgery.Desc>
+  <RimWard.Setting.rw.noFaultLeaving>Keine Strafe für Tod nach der Entlassung</RimWard.Setting.rw.noFaultLeaving>
+  <RimWard.Setting.rw.noFaultLeaving.Desc>Ein heimgeschickter Patient, der unterwegs stirbt, ist nicht deine Schuld.</RimWard.Setting.rw.noFaultLeaving.Desc>
+  <RimWard.Setting.rw.noFaultDoomed>Keine Strafe bei Tod kurz nach Ankunft</RimWard.Setting.rw.noFaultDoomed>
+  <RimWard.Setting.rw.noFaultDoomed.Desc>Ein Patient, der in der ersten Stunde nach der Ankunft stirbt, war nicht mehr zu retten.</RimWard.Setting.rw.noFaultDoomed.Desc>
+  <RimWard.SettingCat.Beds>Betten</RimWard.SettingCat.Beds>
+  <RimWard.Setting.rw.combinedBedButton>Ein gemeinsamer Bettknopf</RimWard.Setting.rw.combinedBedButton>
+  <RimWard.Setting.rw.combinedBedButton.Desc>Ein Knopf „Nutzung: Kolonist / Gast / Patient / Operationspatient“ statt einzelner Krankenhaus-, Operations- und Gastbett-Schalter. Braucht eine Hearth-&amp;-Harbor-Version mit dem Auswahl-Protokoll.</RimWard.Setting.rw.combinedBedButton.Desc>
+  <RimWard.SettingCat.Leisure>Freizeit</RimWard.SettingCat.Leisure>
+  <RimWard.Setting.rw.patientLeisure>Patienten dürfen Gäste-Freizeit nutzen</RimWard.Setting.rw.patientLeisure>
+  <RimWard.Setting.rw.patientLeisure.Desc>Patienten, die auf den Beinen sind (keine Blutung, keine Operation geplant), dürfen während der Genesung das Spa und andere Freizeitorte von Hearth &amp; Harbor besuchen.</RimWard.Setting.rw.patientLeisure.Desc>
+  <RimWard.SettingCat.Criticalcases>Kritische Fälle</RimWard.SettingCat.Criticalcases>
+  <RimWard.Setting.rw.criticalChance>Anteil kritischer Patienten</RimWard.Setting.rw.criticalChance>
+  <RimWard.Setting.rw.criticalChance.Desc>Chance, dass ein neuer Patient ein kritischer Fall ist, wenn Luciferium auf Lager ist und ein Arzt es verabreichen kann.</RimWard.Setting.rw.criticalChance.Desc>
+  <RimWard.Setting.rw.criticalBonus>Zuschlag kritischer Fall</RimWard.Setting.rw.criticalBonus>
+  <RimWard.Setting.rw.criticalBonus.Desc>Zuschlag zusätzlich zur Dosis selbst, als Vielfaches des Werts eines Luciferiums.</RimWard.Setting.rw.criticalBonus.Desc>
+  <RimWard.Preset.clinic>Klinik</RimWard.Preset.clinic>
+  <RimWard.Preset.clinic.Desc>Das normale Spiel: Patienten zahlen, was ihre Behandlung dich gekostet hat; verschuldete Todesfälle kosten Ansehen.</RimWard.Preset.clinic.Desc>
+  <RimWard.Preset.charity>Wohltätigkeit</RimWard.Preset.charity>
+  <RimWard.Preset.charity.Desc>Niemand zahlt. Ansehen und Ruf wachsen trotzdem mit jedem Patienten, den du gesund heimschickst.</RimWard.Preset.charity.Desc>
+  <RimWard.Preset.meatshop>Fleischerei</RimWard.Preset.meatshop>
+  <RimWard.Preset.meatshop.Desc>Masse statt Bettkantengespräch: schwerere Fälle, großzügige Bezahlung, Todesfälle sind niemandes Schuld, niemand bleibt länger als eine Woche.</RimWard.Preset.meatshop.Desc>
+  <RimWard.Page.policies>Krankenhausregeln (diese Kolonie)</RimWard.Page.policies>
+  <RimWard.Page.pricing>Preise erklärt</RimWard.Page.pricing>
+  <RimWard.Page.blacklists>Sperrlisten</RimWard.Page.blacklists>
+  <RimWard.Compat.HospitalBedsGen2.What>Ihre Betten sind medizinische Betten und zählen damit automatisch als Patienten- und Operationsbetten.</RimWard.Compat.HospitalBedsGen2.What>
+  <RimWard.Compat.HearthHarbor.What>Ein Bettknopf für alle Bettnutzungen; Patienten dürfen das Spa nutzen. Schalter: der Bereich „Brücke zu Hearth &amp; Harbor“.</RimWard.Compat.HearthHarbor.What>
+  <RimWard.Compat.LuciferiumOverhaul.What>Bietet den Bereich „Kritische Fälle mit Luciferium“ an (aus, bis du ihn einschaltest); nach der Dosis gelten seine Suchtregeln.</RimWard.Compat.LuciferiumOverhaul.What>
+  <RimWard.Compat.CombatExtended.What>Die taktische Selbstversorgung von CE ist für Patienten gesperrt. Schalter: der Bereich „Combat Extended“.</RimWard.Compat.CombatExtended.What>
+  <RimWard.Compat.Royalty.What>Adlige Patienten wollen ein Einzelzimmer.</RimWard.Compat.Royalty.What>
+  <RimWard.Compat.Ideology.What>Schuldbewusste Ideoreligionen stören sich am Abweisen von Kranken.</RimWard.Compat.Ideology.What>
+  <RimWard.Compat.Biotech.What>Patienten behalten den Xenotyp ihrer Fraktion; Hämogen- und Todesruhe-Xenotypen bleiben zu Hause, außer du lässt sie zu.</RimWard.Compat.Biotech.What>
+  <RimWard.Compat.Odyssey.What>Krankenhausregeln gehören zum Spielstand und kommen nach einer Gravschiff-Landung mit.</RimWard.Compat.Odyssey.What>
+  <RimWard.Compat.Hospital.Why>RimWard ist der neu gebaute Nachfolger von Hospital: Nutze nur eines von beiden.</RimWard.Compat.Hospital.Why>
+  <RimWard.Compat.HospitalFixAndTweak.Why>Seine Korrekturen stecken schon in RimWard.</RimWard.Compat.HospitalFixAndTweak.Why>
+  <RimWard.Compat.HospitalPatch.Why>Patcht die Mod Hospital, die RimWard ersetzt.</RimWard.Compat.HospitalPatch.Why>
+</LanguageData>

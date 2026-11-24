@@ -10,4 +10,7 @@
   <RimWard_PatientCure.headerTip>Wie wir dem Patienten helfen.</RimWard_PatientCure.headerTip>
   <RimWard_PatientBill.label>Rechnung</RimWard_PatientBill.label>
   <RimWard_PatientBill.headerTip>Was der Patient zahlen würde, wenn er jetzt geheilt entlassen würde: dieselbe Rechnung, die ausgezahlt wird. Über einer Zeile zeigt der Hinweis die Einzelrechnung.</RimWard_PatientBill.headerTip>
+  <RimWard_LabelCustom.label>Patient</RimWard_LabelCustom.label>
+  <RimWard_Dismiss.label>Entlassen</RimWard_Dismiss.label>
+  <RimWard_Disallow.label>Operation ablehnen</RimWard_Disallow.label>
 </LanguageData>

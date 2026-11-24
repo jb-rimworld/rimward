@@ -226,4 +226,5 @@ Without an answer the patient is discharged in {3}.</RimWard.Impossible.Text>
     <RimWard.Page.Black.None>nothing blocked</RimWard.Page.Black.None>
     <RimWard.Page.Black.NotLoaded>(not in this game)</RimWard.Page.Black.NotLoaded>
     <RimWard.Page.Black.Add>Add...</RimWard.Page.Black.Add>
+    <RimWard.Why.Impossible.MedicineLevel>the hospital policy allows only {0}, and none of that is in stock</RimWard.Why.Impossible.MedicineLevel>
 </LanguageData>
