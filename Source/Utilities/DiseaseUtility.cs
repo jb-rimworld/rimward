@@ -23,7 +23,7 @@ namespace RimWard.Utilities
                 && !def.defName.ToLower().Contains("rot")        // folded in from Hospital: Disease Patch
                 && !def.defName.StartsWith("GR_")
                 && !def.defName.StartsWith("VDE")
-                && NoAggroStage(def) && !(HospitalMod.Settings?.DiseaseBlocked(def) ?? false)).ToList();
+                && NoAggroStage(def) && !def.chronic && !(HospitalMod.Settings?.DiseaseBlocked(def) ?? false)).ToList();
             if (list.Count == 0) return true;
 
             Hediff hediff = null;
@@ -78,7 +78,7 @@ namespace RimWard.Utilities
                 && !def.defName.ToLower().Contains("rot")
                 && !def.defName.ToLower().Contains("animal")
                 && !def.defName.StartsWith("GR_") && !def.defName.StartsWith("VDE")
-                && NoAggroStage(def) && !(HospitalMod.Settings?.DiseaseBlocked(def) ?? false)).ToList();
+                && NoAggroStage(def) && !def.chronic && !(HospitalMod.Settings?.DiseaseBlocked(def) ?? false)).ToList();
             if (pool.Count == 0) return;
             HediffDef chosen = pool.RandomElement();
             if (chosen.lethalSeverity <= 0f || pawn.health.hediffSet.GetFirstHediffOfDef(chosen) != null) return;

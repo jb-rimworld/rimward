@@ -64,10 +64,10 @@ namespace RimWard
             float y = 0f, w = view.width;
             y += KitStyle.Paragraph(0f, y, w, "RimWard.Page.Pricing.Intro".Translate(), KitStyle.Grey) + 12f;
 
-            y = KitStyle.Section(0f, y, w, "RimWard.Page.Pricing.Lines".Translate());
+            y += KitStyle.Section(0f, y, w, "RimWard.Page.Pricing.Lines".Translate());
             y += KitStyle.Paragraph(0f, y, w, "RimWard.Page.Pricing.LinesText".Translate(), Color.white) + 12f;
 
-            y = KitStyle.Section(0f, y, w, "RimWard.Page.Pricing.Factors".Translate());
+            y += KitStyle.Section(0f, y, w, "RimWard.Page.Pricing.Factors".Translate());
             float renown = HospitalGameComponent.Get != null && s.RenownEnabled ? HospitalGameComponent.Get.RenownPaymentMultiplier : 1f;
             var rows = new List<(string, string)>
             {
@@ -93,13 +93,13 @@ namespace RimWard
             }
             y += 12f;
 
-            y = KitStyle.Section(0f, y, w, "RimWard.Page.Pricing.Example".Translate());
+            y += KitStyle.Section(0f, y, w, "RimWard.Page.Pricing.Example".Translate());
             float baseBill = 300f;
             float total = baseBill * (s.ChargePatients ? s.PaymentMultiplier : 0f) * s.SingleRoomMultiplier * (s.ChiefPhysicianEnabled ? s.ChiefPhysicianMultiplier : 1f) * renown;
             total = Mathf.Min(total, s.BillCap);
             y += KitStyle.Paragraph(0f, y, w, "RimWard.Page.Pricing.ExampleText".Translate(baseBill.ToStringMoney(), ((float)Mathf.FloorToInt(total)).ToStringMoney()), Color.white) + 12f;
 
-            y = KitStyle.Section(0f, y, w, "RimWard.Page.Pricing.Early".Translate());
+            y += KitStyle.Section(0f, y, w, "RimWard.Page.Pricing.Early".Translate());
             y += KitStyle.Paragraph(0f, y, w, s.BillingExtrasOn
                 ? "RimWard.Page.Pricing.EarlyText".Translate(s.EarlyDischargePayFraction.ToStringPercent()).ToString()
                 : "RimWard.Page.Pricing.EarlyOff".Translate().ToString(), Color.white) + 12f;
@@ -125,7 +125,7 @@ namespace RimWard
 
         private static float Block<T>(float y, float w, string title, List<string> list, Func<string, T> lookup, Func<IEnumerable<T>> candidates) where T : Def
         {
-            y = KitStyle.Section(0f, y, w, title + " (" + list.Count + ")");
+            y += KitStyle.Section(0f, y, w, title + " (" + list.Count + ")");
             if (list.Count == 0) { KitStyle.LabelColored(new Rect(8f, y, w, 24f), "RimWard.Page.Black.None".Translate(), KitStyle.DimGrey); y += 26f; }
             foreach (string name in list.ToList())
             {

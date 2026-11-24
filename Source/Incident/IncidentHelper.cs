@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using RimWard.Utilities;
 using RimWorld;
+using RimWorld.Planet;
 using Verse;
 
 namespace RimWard
@@ -26,9 +27,28 @@ namespace RimWard
             {
                 Pawn p = GeneratePawn(faction);
                 if (!IsWeirdPawn(p) && !CompatGen.IsUnservableXenotype(p)) return p;
-                if (p != null && !p.Destroyed) p.Discard(true);
+                DiscardGenerated(p);
             }
             return null;
+        }
+
+        /// <summary>
+        /// Throws away a generated pawn RimWard will not use (rejected, declined offer, failed delivery). Vanilla's Thing.Discard only works
+        /// on a destroyed thing, and destroying a pawn passes it to the world pawns (both log "Tried to discard ..." and keep the pawn), so:
+        /// despawn, out of its holder and the world pawns, then WorldPawns.PassToWorld(Discard), which destroys and discards in one go.
+        /// </summary>
+        public static void DiscardGenerated(Pawn p)
+        {
+            if (p == null || p.Discarded) return;
+            try
+            {
+                if (p.Spawned) p.DeSpawn();
+                p.holdingOwner?.Remove(p);
+                if (Find.WorldPawns.Contains(p)) Find.WorldPawns.RemovePawn(p);
+                // vanilla's own way to drop a pawn for good: destroy (without passing it back to the world) and discard
+                if (!p.Discarded) Find.WorldPawns.PassToWorld(p, PawnDiscardDecideMode.Discard);
+            }
+            catch (System.Exception e) { Log.Warning("[RimWard] could not discard " + p.LabelShort + ": " + e.Message); }
         }
 
         public static Pawn GeneratePawn(Faction faction)

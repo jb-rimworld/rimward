@@ -46,10 +46,6 @@ namespace RimWard
             {
                 Accent = new Color(0.40f, 0.74f, 0.70f),   // hospital teal
                 MarkTex = "UI/RimWard/IconSmall",
-                Icons =
-                {
-                    ["section:intake"] = "UI/RimWard/IconSmall",
-                },
             },
         }) { }
 
@@ -113,7 +109,7 @@ namespace RimWard
                 .InGroup("Patients").Legacy("OpenInNewColonies");
             r.Bool(core, Keys.SpecialNeeds, false, "Special-needs xenotypes as patients",
                 "Off: patients who live on hemogen or need a deathrest casket are not sent. Their faction's own xenotype is always kept.")
-                .InGroup("Patients").RequiresOn(KitDetect.BiotechId, "Needs Biotech.").Legacy("AllowSpecialNeedsXenotypes");
+                .InGroup("Patients").RequiresOn(KitDetect.BiotechId).Legacy("AllowSpecialNeedsXenotypes");
             r.Bool(core, Keys.ShowMessageAtArrival, false, "Arrival as a message instead of a letter",
                 "Routine arrivals show a short message at the top of the screen instead of a letter.")
                 .InGroup("Patients").Legacy("ShowMessageAtArrival");

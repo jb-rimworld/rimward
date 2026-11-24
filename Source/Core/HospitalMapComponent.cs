@@ -334,7 +334,7 @@ namespace RimWard
             if (!info.innerContainer.TryAdd(pawn, true))
             {
                 Log.Warning("[RimWard] Could not load patient into drop pod; aborting delivery.");
-                if (!pawn.Destroyed) pawn.Discard(true);
+                IncidentHelper.DiscardGenerated(pawn);
                 return;
             }
             info.openDelay = 60;
@@ -426,8 +426,7 @@ namespace RimWard
             // No goodwill penalty for declining. Discard a held drop-pod pawn; leave ambient pawns be.
             if (offer.kind == OfferKind.DropPod && offer.pawn != null && !offer.pawn.Spawned && !offer.pawn.Discarded)
             {
-                if (offer.pawn.IsWorldPawn()) Find.WorldPawns.RemovePawn(offer.pawn);
-                offer.pawn.Discard(true);
+                IncidentHelper.DiscardGenerated(offer.pawn);
             }
         }
 

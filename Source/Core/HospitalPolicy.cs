@@ -31,9 +31,9 @@ namespace RimWard
 
         public static HospitalPolicy NewDefault(bool open)
         {
-            HospitalPolicy p = new HospitalPolicy { open = open };
-            try { p.medCare = Find.PlaySettings?.defaultCareForNeutralFaction ?? MedicalCareCategory.NormalOrWorse; } catch { }
-            return p;
+            // Normal medicine or worse: vanilla's default for visitors (herbal or worse) leaves every operation that needs medicine undone
+            // in a colony without herbal medicine. The player changes it in the Hospital policies.
+            return new HospitalPolicy { open = open, medCare = MedicalCareCategory.NormalOrWorse };
         }
 
         /// <summary>Food policy for patients; falls back to the game's default policy (never null while a game runs).</summary>

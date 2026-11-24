@@ -109,7 +109,7 @@ namespace RimWard
 
                     // 6. a patient without our lord job (lost on map change, taken by another mod)
                     Lord lord = pawn.GetLord();
-                    if (lord == null || !(lord.LordJob is LordJob_VisitColonyAsPatient))
+                    if (lord == null || !(lord.LordJob is LordJob_VisitColonyAsPatient) || lord.Map != comp.map)
                     {
                         lord?.RemovePawn(pawn);
                         LordMaker.MakeNewLord(pawn.Faction, new LordJob_VisitColonyAsPatient(pawn.Faction), comp.map, new List<Pawn> { pawn });
@@ -193,6 +193,8 @@ namespace RimWard
             if (!surgeon) return "RimWard.Why.Impossible.NoSurgeon".Translate();
             ThingDef missing = r.PotentiallyMissingIngredients(null, comp.map).FirstOrDefault();
             if (missing != null) return "RimWard.Why.Impossible.Missing".Translate(missing.label);
+            string care = SurgeryUtility.MedicineBlockedByPolicy(r, comp.map, pawn.playerSettings?.medCare ?? comp.Policy.medCare);
+            if (care != null) return "RimWard.Why.Impossible.MedicineLevel".Translate(care);
             return null;
         }
 

@@ -25,6 +25,7 @@ namespace RimWard.Utilities
                 if (!IsCandidate(recipe, hospital)) continue;
                 if (!doctors.Any(col => recipe.PawnSatisfiesSkillRequirements(col))) continue;
                 if (recipe.PotentiallyMissingIngredients(null, map).Any()) continue;
+                if (MedicineBlockedByPolicy(recipe, map, hospital?.Policy.medCare ?? MedicalCareCategory.Best) != null) continue;
                 list.Add(recipe);
             }
             if (list.Count == 0) return true;
@@ -78,6 +79,24 @@ namespace RimWard.Utilities
             if (pawn.health.surgeryBills.Count == 0) return true;
             patientData.HasPendingSurgeryBill = true;
             return false;
+        }
+
+        /// <summary>
+        /// The operation needs medicine, but none in stock is allowed by the patient's medicine level (hospital policy): the doctors would
+        /// never start it. Returns the level's label then, else null. (Vanilla's PotentiallyMissingIngredients ignores the medicine level.)
+        /// </summary>
+        public static string MedicineBlockedByPolicy(RecipeDef recipe, Map map, MedicalCareCategory care)
+        {
+            if (recipe?.ingredients == null || map == null) return null;
+            foreach (IngredientCount ic in recipe.ingredients)
+            {
+                if (ic?.filter == null || !ic.filter.AllowedThingDefs.Any(d => d.IsMedicine)) continue;
+                if (ic.filter.AllowedThingDefs.Any(d => !d.IsMedicine)) continue; // a mixed filter can be met without medicine
+                bool any = map.listerThings.ThingsInGroup(ThingRequestGroup.Medicine)
+                    .Any(t => ic.filter.Allows(t) && care.AllowsMedicine(t.def) && !t.IsForbidden(Faction.OfPlayer));
+                if (!any) return care.GetLabel();
+            }
+            return null;
         }
 
         public static bool IsCandidate(RecipeDef recipe, HospitalMapComponent hospital)
