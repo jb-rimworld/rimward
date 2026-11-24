@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+    <!-- Krankenhaus-Reiter: Rahmen -->
+    <RimWard.Tab.Title>RimWard-Krankenhaus</RimWard.Tab.Title>
+    <RimWard.Tab.Settings>Mod-Einstellungen</RimWard.Tab.Settings>
+    <RimWard.Tab.OpenChip>GEÖFFNET</RimWard.Tab.OpenChip>
+    <RimWard.Tab.ClosedChip>GESCHLOSSEN</RimWard.Tab.ClosedChip>
+    <RimWard.Tab.OpenChipTip>Das Krankenhaus nimmt zu seinen Öffnungszeiten neue Patienten auf. Klicken zum Schließen.</RimWard.Tab.OpenChipTip>
+    <RimWard.Tab.ClosedChipTip>Es kommen keine neuen Patienten. Wer schon da ist, wird behandelt und geht wie gewohnt. Klicken zum Öffnen.</RimWard.Tab.ClosedChipTip>
+    <RimWard.Tab.NoMap>Gerade wird keine Karte gezeigt. Das Krankenhaus gehört zur Karte, die du ansiehst.</RimWard.Tab.NoMap>
+    <RimWard.Tab.Page.Overview>Übersicht</RimWard.Tab.Page.Overview>
+    <RimWard.Tab.Page.Patients>Patienten</RimWard.Tab.Page.Patients>
+    <RimWard.Tab.Page.Inbox>Anfragen</RimWard.Tab.Page.Inbox>
+    <RimWard.Tab.Page.Policies>Regeln</RimWard.Tab.Page.Policies>
+    <RimWard.Tab.Page.Guide>Anleitung</RimWard.Tab.Page.Guide>
+    <RimWard.Tab.Sub.Overview>Ist das Krankenhaus offen und bereit, wie steht es um die Patienten, und was bringt es ein.</RimWard.Tab.Sub.Overview>
+    <RimWard.Tab.Sub.Patients>{0} Patienten in {1} Patientenbetten. Klick auf einen Namen zeigt den Patienten auf der Karte.</RimWard.Tab.Sub.Patients>
+    <RimWard.Tab.Sub.Inbox>Patienten, die um Behandlung bitten. Hier oder im Brief annehmen oder abweisen; Abweisen kostet nie Ansehen.</RimWard.Tab.Sub.Inbox>
+    <RimWard.Tab.Sub.Policies>Wer hereinkommt, wann, und wie Patienten versorgt werden. Die Regeln gehören zu dieser Kolonie und gelten auch auf neuen Karten.</RimWard.Tab.Sub.Policies>
+    <RimWard.Tab.Sub.Guide>Das Krankenhaus in sechs kurzen Karten.</RimWard.Tab.Sub.Guide>
+
+    <!-- Startkarte -->
+    <RimWard.Start.Title>Dein Krankenhaus, bereit in zwei Klicks</RimWard.Start.Title>
+    <RimWard.Start.Text>Fremde kommen per Kapsel, deine Ärzte behandeln sie in medizinischen Betten, und beim Gehen zahlen sie. Öffne das Krankenhaus und lege fest, welche medizinischen Betten Patienten aufnehmen. Jedes medizinische Bett hat dafür auch einen eigenen Schalter.</RimWard.Start.Text>
+    <RimWard.Start.OpenNow>Krankenhaus jetzt öffnen</RimWard.Start.OpenNow>
+    <RimWard.Start.IsOpen>Das Krankenhaus ist geöffnet</RimWard.Start.IsOpen>
+    <RimWard.Start.UseBeds>Alle {0} medizinischen Betten für Patienten nutzen</RimWard.Start.UseBeds>
+    <RimWard.Start.UseBedsTip>Jedes medizinische Bett dieser Kolonie nimmt Patienten auf. Einzelne Betten stellst du mit ihrem Knopf „Krankenhausbett“ wieder um.</RimWard.Start.UseBedsTip>
+    <RimWard.Start.BedsDone>Alle {0} medizinischen Betten nehmen Patienten auf</RimWard.Start.BedsDone>
+    <RimWard.Start.NoBeds>Noch kein medizinisches Bett</RimWard.Start.NoBeds>
+    <RimWard.Start.BedsMsg>{0} medizinische Betten nehmen jetzt Patienten auf.</RimWard.Start.BedsMsg>
+    <RimWard.Start.Done>Fertig</RimWard.Start.Done>
+    <RimWard.Start.Hint>Die Liste unten sagt, was noch fehlt. Diese Karte erscheint einmal pro Kolonie.</RimWard.Start.Hint>
+
+    <!-- Statusband -->
+    <RimWard.Band.IntakeOff>Die Patientenaufnahme ist ausgeschaltet</RimWard.Band.IntakeOff>
+    <RimWard.Band.IntakeOffSub>Der Bereich „Patientenaufnahme“ ist in den Mod-Einstellungen aus, also kommt niemand Neues. Wer schon da ist, wird wie gewohnt behandelt.</RimWard.Band.IntakeOffSub>
+    <RimWard.Band.Closed>Das Krankenhaus ist GESCHLOSSEN</RimWard.Band.Closed>
+    <RimWard.Band.ClosedSub>Es kommen keine neuen Patienten. Wer schon da ist, bleibt, bis die Behandlung fertig ist.</RimWard.Band.ClosedSub>
+    <RimWard.Band.Open>Das Krankenhaus ist GEÖFFNET</RimWard.Band.Open>
+    <RimWard.Band.OpenNow>Patienten können jetzt kommen.</RimWard.Band.OpenNow>
+    <RimWard.Band.OpenLater>Geöffnet, aber gerade kommt niemand: {0}.</RimWard.Band.OpenLater>
+    <RimWard.Band.OpenBlocked>Geöffnet, aber kein Patient kann kommen: {0}.</RimWard.Band.OpenBlocked>
+    <RimWard.Band.OpenButton>Krankenhaus öffnen</RimWard.Band.OpenButton>
+    <RimWard.Band.CloseButton>Krankenhaus schließen</RimWard.Band.CloseButton>
+
+    <!-- Kacheln -->
+    <RimWard.Tile.Beds>Freie Patientenbetten</RimWard.Tile.Beds>
+    <RimWard.Tile.BedsValue>{0} von {1}</RimWard.Tile.BedsValue>
+    <RimWard.Tile.BedsTip>{0} frei, {1} belegt. Davon {2} OP-Betten. Ein Patientenbett ist ein medizinisches Bett, dessen Schalter „Krankenhausbett“ an ist.</RimWard.Tile.BedsTip>
+    <RimWard.Tile.Patients>Patienten jetzt</RimWard.Tile.Patients>
+    <RimWard.Tile.PatientsTip>Patienten auf dieser Karte, die noch behandelt werden. Klicken für die Liste.</RimWard.Tile.PatientsTip>
+    <RimWard.Tile.Offers>Warten auf deine Antwort</RimWard.Tile.Offers>
+    <RimWard.Tile.OffersTip>Patienten, die um Behandlung bitten. Klicken für die Anfragen.</RimWard.Tile.OffersTip>
+    <RimWard.Tile.Income>Einnahmen dieses Quartal</RimWard.Tile.Income>
+    <RimWard.Tile.IncomeTip>Silber, das Patienten in diesem Quartal gezahlt haben. Seit der Eröffnung: {0}.</RimWard.Tile.IncomeTip>
+
+    <!-- Bereitschaft -->
+    <RimWard.Ready.Head>Bevor Patienten kommen</RimWard.Ready.Head>
+    <RimWard.Ready.AllGood>Alles ist bereit.</RimWard.Ready.AllGood>
+    <RimWard.Ready.Missing>Es fehlen noch {0} Dinge. Jede Zeile sagt, was zu tun ist; meist erledigt es ein Knopf.</RimWard.Ready.Missing>
+    <RimWard.Ready.ShowAll>Liste zeigen</RimWard.Ready.ShowAll>
+    <RimWard.Ready.Hide>Liste ausblenden</RimWard.Ready.Hide>
+    <RimWard.Ready.ShowMe>Zeigen</RimWard.Ready.ShowMe>
+    <RimWard.Ready.IntakeOff>der Bereich „Patientenaufnahme“ ist in den Mod-Einstellungen aus</RimWard.Ready.IntakeOff>
+    <RimWard.Ready.Closed>das Krankenhaus ist geschlossen</RimWard.Ready.Closed>
+    <RimWard.Ready.NoHours>keine Öffnungsstunde eingestellt</RimWard.Ready.NoHours>
+    <RimWard.Ready.HoursCount>{0} Öffnungsstunden am Tag</RimWard.Ready.HoursCount>
+    <RimWard.Ready.BedsCount>{0} in Räumen</RimWard.Ready.BedsCount>
+    <RimWard.Ready.BedsNotPatient>bei {0} medizinischen Betten ist „Krankenhausbett“ aus</RimWard.Ready.BedsNotPatient>
+    <RimWard.Ready.BedsOutdoors>die Patientenbetten stehen im Freien</RimWard.Ready.BedsOutdoors>
+    <RimWard.Ready.BedsOutdoorsHow>Baue Wände und ein Dach darum oder stelle sie in einen Raum</RimWard.Ready.BedsOutdoorsHow>
+    <RimWard.Ready.NoMedicalBed>kein medizinisches Bett</RimWard.Ready.NoMedicalBed>
+    <RimWard.Ready.NoMedicalBedHow>Baue ein Bett in einem Raum, wähle es aus und schalte „Medizinisch“ ein</RimWard.Ready.NoMedicalBedHow>
+    <RimWard.Ready.SurgeryBedHow>Richte zuerst ein Patientenbett ein und schalte dann seinen Knopf „OP-Bett“ ein</RimWard.Ready.SurgeryBedHow>
+    <RimWard.Ready.DoctorNames>{0}</RimWard.Ready.DoctorNames>
+    <RimWard.Ready.NoDoctor>niemand macht Arztarbeit</RimWard.Ready.NoDoctor>
+    <RimWard.Ready.NoDoctorHow>Gerade kann niemand in der Kolonie Arztarbeit machen (unfähig, am Boden oder kann nicht laufen)</RimWard.Ready.NoDoctorHow>
+    <RimWard.Ready.MedicineCount>{0} auf Lager</RimWard.Ready.MedicineCount>
+    <RimWard.Ready.MedicineHow>Kaufe Medizin bei Händlern, baue Heilwurz an oder stelle Kräutermedizin her</RimWard.Ready.MedicineHow>
+    <RimWard.Ready.SafeHow>Patienten kommen wieder, sobald es vorbei ist</RimWard.Ready.SafeHow>
+    <RimWard.Fix.IntakeOn>Aufnahme einschalten</RimWard.Fix.IntakeOn>
+    <RimWard.Fix.OpenNow>Jetzt öffnen</RimWard.Fix.OpenNow>
+    <RimWard.Fix.DefaultHours>Um 7, 11, 15 und 19 Uhr öffnen</RimWard.Fix.DefaultHours>
+    <RimWard.Fix.UseMedicalBeds>Alle {0} für Patienten nutzen</RimWard.Fix.UseMedicalBeds>
+    <RimWard.Fix.SpareBed>Ein freies Bett medizinisch machen</RimWard.Fix.SpareBed>
+    <RimWard.Fix.SurgeryBed>Ein Patientenbett als OP-Bett nutzen</RimWard.Fix.SurgeryBed>
+    <RimWard.Fix.Doctor>{0} Arztarbeit machen lassen</RimWard.Fix.Doctor>
+    <RimWard.Fix.Unforbid>{0} verbotene Medizin freigeben</RimWard.Fix.Unforbid>
+    <RimWard.Fix.LandingSpot>Landeplatz setzen</RimWard.Fix.LandingSpot>
+
+    <!-- Patienten -->
+    <RimWard.Tab.PatientsHead>Patienten</RimWard.Tab.PatientsHead>
+    <RimWard.Tab.NoPatients>Gerade keine Patienten.</RimWard.Tab.NoPatients>
+    <RimWard.Tab.WhyNoPatients>Warum niemand kommt: {0}.</RimWard.Tab.WhyNoPatients>
+    <RimWard.Tab.AllPatients>Alle {0} Patienten</RimWard.Tab.AllPatients>
+    <RimWard.Tab.RowTip>Klicken, um {0} auf der Karte zu finden.</RimWard.Tab.RowTip>
+    <RimWard.Tab.RowFacts>{0} · Behandlung: {1} · seit {2} hier · erwartete Rechnung {3}</RimWard.Tab.RowFacts>
+    <RimWard.Tab.DismissTip>Den Patienten jetzt nach Hause schicken. Er zahlt für das bisher Getane, wie unter „Abrechnungs-Extras“ eingestellt.</RimWard.Tab.DismissTip>
+    <RimWard.Tab.RefuseTip>{0} ab jetzt ablehnen (für alle Patienten) und diesen Patienten nach Hause schicken. Rückgängig auf der Seite „Regeln“.</RimWard.Tab.RefuseTip>
+    <RimWard.Status.None>Unbekannt</RimWard.Status.None>
+    <RimWard.Status.Arriving>Kommt an</RimWard.Status.Arriving>
+    <RimWard.Status.Acute>Akut</RimWard.Status.Acute>
+    <RimWard.Status.NeedsTending>Braucht Versorgung</RimWard.Status.NeedsTending>
+    <RimWard.Status.Resting>Bettruhe</RimWard.Status.Resting>
+    <RimWard.Status.WaitingForSurgery>Wartet auf OP</RimWard.Status.WaitingForSurgery>
+    <RimWard.Status.SurgeryRetry>OP wird wiederholt</RimWard.Status.SurgeryRetry>
+    <RimWard.Status.SurgerySuspended>OP ausgesetzt</RimWard.Status.SurgerySuspended>
+    <RimWard.Status.TreatmentImpossible>Behandlung unmöglich</RimWard.Status.TreatmentImpossible>
+    <RimWard.Status.HeldByDanger>Wartet wegen Gefahr</RimWard.Status.HeldByDanger>
+    <RimWard.Status.ReadyToLeave>Geheilt</RimWard.Status.ReadyToLeave>
+    <RimWard.Status.Leaving>Geht</RimWard.Status.Leaving>
+
+    <!-- Anfragen -->
+    <RimWard.Tab.InboxMode>Aufnahmemodus: {0} (Mod-Einstellungen, Patientenaufnahme).</RimWard.Tab.InboxMode>
+    <RimWard.Tab.InboxEmpty>Niemand wartet auf eine Antwort.</RimWard.Tab.InboxEmpty>
+    <RimWard.Tab.InboxFull>Alle Patientenbetten sind belegt: Annehmen geht wieder, sobald ein Bett frei ist. Unbeantwortete Anfragen verfallen ohne Nachteil.</RimWard.Tab.InboxFull>
+    <RimWard.Tab.OfferPod>kommt per Kapsel</RimWard.Tab.OfferPod>
+    <RimWard.Tab.OfferAmbient>ist schon auf deiner Karte</RimWard.Tab.OfferAmbient>
+    <RimWard.Tab.OfferFacts>{0} · {1} · erwartete Zahlung {2} · verfällt in {3}</RimWard.Tab.OfferFacts>
+    <RimWard.Tab.DeclineTip>Den Patienten abweisen. Abweisen kostet nie Ansehen.</RimWard.Tab.DeclineTip>
+
+    <!-- Ruf und Geld -->
+    <RimWard.Tab.RenownHead>Ruf</RimWard.Tab.RenownHead>
+    <RimWard.Tab.RenownOff>Ruf ist in den Mod-Einstellungen ausgeschaltet: Jeder Patient zahlt gleich.</RimWard.Tab.RenownOff>
+    <RimWard.Tab.RenownTip>Der Ruf des Krankenhauses und seine Stufe. Der Balken zeigt den Weg zur nächsten Stufe.</RimWard.Tab.RenownTip>
+    <RimWard.Tab.RenownWhat>Der Ruf erhöht jede Rechnung: jetzt {0} des normalen Betrags.</RimWard.Tab.RenownWhat>
+    <RimWard.Tab.RenownNext>Nächste Stufe: {0} ab {1} Ruf ({2}).</RimWard.Tab.RenownNext>
+    <RimWard.Tab.RenownTop>Das ist die höchste Stufe.</RimWard.Tab.RenownTop>
+    <RimWard.Tab.RenownHow>Patienten, die gesund und zufrieden gehen, heben ihn; Todesfälle und schlechte Aufenthalte senken ihn ein wenig.</RimWard.Tab.RenownHow>
+    <RimWard.Tab.MoneyHead>Geld</RimWard.Tab.MoneyHead>
+    <RimWard.Tab.Money.Charity>Armenstation: Patienten zahlen nichts (Mod-Einstellungen, „Patienten zahlen“).</RimWard.Tab.Money.Charity>
+    <RimWard.Tab.Money.Quadrum>Einnahmen im {0}</RimWard.Tab.Money.Quadrum>
+    <RimWard.Tab.Money.Total>Einnahmen seit der Eröffnung</RimWard.Tab.Money.Total>
+    <RimWard.Tab.Money.Treated>Entlassene Patienten</RimWard.Tab.Money.Treated>
+    <RimWard.Tab.Money.Died>Verstorbene Patienten</RimWard.Tab.Money.Died>
+    <RimWard.Tab.Money.DiedValue>{0} (davon {1} durch deine Schuld)</RimWard.Tab.Money.DiedValue>
+    <RimWard.Tab.LastDischarges>Letzte Entlassungen (Klick zeigt die Rechnung)</RimWard.Tab.LastDischarges>
+    <RimWard.Tab.NoDischarges>Bisher ist niemand gegangen.</RimWard.Tab.NoDischarges>
+    <RimWard.Tab.Reason.Estimate>Schätzung</RimWard.Tab.Reason.Estimate>
+    <RimWard.Tab.Reason.Cured>geheilt</RimWard.Tab.Reason.Cured>
+    <RimWard.Tab.Reason.Dismissed>früher entlassen</RimWard.Tab.Reason.Dismissed>
+    <RimWard.Tab.Reason.TreatmentImpossible>Behandlung unmöglich</RimWard.Tab.Reason.TreatmentImpossible>
+    <RimWard.Tab.Reason.MaxStay>Höchstaufenthalt erreicht</RimWard.Tab.Reason.MaxStay>
+    <RimWard.Tab.Reason.DiedNoFault>verstorben, nicht deine Schuld</RimWard.Tab.Reason.DiedNoFault>
+    <RimWard.Invoice.Title>Rechnung: {0}</RimWard.Invoice.Title>
+
+    <!-- Regeln -->
+    <RimWard.Policy.Who>Wer hereinkommt</RimWard.Policy.Who>
+    <RimWard.Policy.OpenTip>Aus: Es kommen keine neuen Patienten. Wer schon da ist, wird behandelt und geht wie gewohnt.</RimWard.Policy.OpenTip>
+    <RimWard.Policy.Hours>Öffnungszeiten</RimWard.Policy.Hours>
+    <RimWard.Policy.HoursHelp>Olivgrüne Stunden sind offen, blaue geschlossen (Ortszeit dieser Karte). Klicken oder über die Stunden ziehen, um sie zu ändern.</RimWard.Policy.HoursHelp>
+    <RimWard.Policy.AllDay>Den ganzen Tag offen</RimWard.Policy.AllDay>
+    <RimWard.Policy.DefaultHours>7, 11, 15 und 19 Uhr (Standard)</RimWard.Policy.DefaultHours>
+    <RimWard.Policy.Care>Versorgung</RimWard.Policy.Care>
+    <RimWard.Policy.Unrefuse>{0} wieder annehmen</RimWard.Policy.Unrefuse>
+    <RimWard.Policy.MoreInSettings>Mehr in den Mod-Einstellungen (Aufnahmemodus, Aufträge)</RimWard.Policy.MoreInSettings>
+
+    <!-- Anleitung -->
+    <RimWard.Guide.1.Title>Das Krankenhaus öffnen</RimWard.Guide.1.Title>
+    <RimWard.Guide.1.Text>Der Schalter oben in diesem Reiter öffnet und schließt das Krankenhaus. Solange es offen ist, kommen Patienten zu den Öffnungszeiten (Seite „Regeln“) per Kapsel. Schließen schickt niemanden weg, der schon da ist.</RimWard.Guide.1.Text>
+    <RimWard.Guide.2.Title>Betten und Räume</RimWard.Guide.2.Title>
+    <RimWard.Guide.2.Text>Ein Patientenbett ist ein medizinisches Bett mit eingeschaltetem „Krankenhausbett“; OP-Fälle brauchen ein Bett mit „OP-Bett“. Ein eigenes Zimmer bringt am meisten, ein Zweibettzimmer etwas mehr als üblich, ein Saal und ein Flur weniger.</RimWard.Guide.2.Text>
+    <RimWard.Guide.3.Title>Wer hereinkommt</RimWard.Guide.3.Title>
+    <RimWard.Guide.3.Text>Im Aufnahmemodus „Feuerwehrschlauch“ kommen Patienten einfach. „Gemischt“ und „Nachfrage“ schicken erst eine Anfrage: Beantworte sie unter „Anfragen“ oder im Brief. Abweisen ist kostenlos. Niemand kommt, wenn alle Patientenbetten belegt sind oder Gefahr auf der Karte ist.</RimWard.Guide.3.Text>
+    <RimWard.Guide.4.Title>Geld</RimWard.Guide.4.Title>
+    <RimWard.Guide.4.Text>Jede Behandlung kommt als Zeile auf die Rechnung des Patienten. Bei der Entlassung bestimmen Raum, dein bester Arzt, der Ruf und die Bezahlstufe den Preis, bis zur Obergrenze aus den Einstellungen. Die Seite „Patienten“ zeigt, was jeder voraussichtlich zahlt; die Rechnung listet jede Zeile.</RimWard.Guide.4.Text>
+    <RimWard.Guide.5.Title>Wenn etwas schiefgeht</RimWard.Guide.5.Title>
+    <RimWard.Guide.5.Text>Ein Patient, der durch Vernachlässigung stirbt, kostet Ansehen bei seiner Fraktion. Tod auf dem OP-Tisch, nach der Entlassung oder gleich nach der Ankunft ist nicht deine Schuld. Eine Behandlung, die nicht machbar ist, meldet sich erst per Brief und schickt den Patienten später ohne Nachteil heim.</RimWard.Guide.5.Text>
+    <RimWard.Guide.6.Title>Hearth &amp; Harbor</RimWard.Guide.6.Title>
+    <RimWard.Guide.6.Text>Mit Hearth &amp; Harbor stellt ein einziger Bettknopf ein Bett auf Kolonist, Gast, Patient oder OP-Patient, und Patienten, die schon wieder auf den Beinen sind, dürfen sich in seinem Spa erholen. Ohne die Mod ändert sich nichts.</RimWard.Guide.6.Text>
+    <RimWard.Guide.Settings>Alle Einstellungen (Bezahlung, Behandlungsfehler, Bereiche)</RimWard.Guide.Settings>
+</LanguageData>

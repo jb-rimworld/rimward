@@ -66,7 +66,7 @@
   <RimWard.Setting.rw.chiefMultiplier.Desc>Bezahlfaktor, wenn der Chefarzt-Bonus gilt.</RimWard.Setting.rw.chiefMultiplier.Desc>
   <RimWard.SettingCat.Arrivals>Ankünfte</RimWard.SettingCat.Arrivals>
   <RimWard.Setting.rw.intakeMode>Aufnahmemodus</RimWard.Setting.rw.intakeMode>
-  <RimWard.Setting.rw.intakeMode.Desc>Ansturm: Patienten kommen einfach. Gemischt: Ein Brief fragt vorher bei Operationen und Adligen. Nachfrage: ein Brief für jeden Fall, mit Diagnose und geschätzter Bezahlung.</RimWard.Setting.rw.intakeMode.Desc>
+  <RimWard.Setting.rw.intakeMode.Desc>Feuerwehrschlauch: Patienten kommen einfach. Gemischt: Ein Brief fragt vorher bei Operationen und Adligen. Nachfrage: ein Brief für jeden Fall, mit Diagnose und geschätzter Bezahlung.</RimWard.Setting.rw.intakeMode.Desc>
   <RimWard.Setting.rw.triageHours>Bedenkzeit für Angebote (Stunden)</RimWard.Setting.rw.triageHours>
   <RimWard.Setting.rw.triageHours.Desc>Ein unbeantworteter Angebotsbrief verfällt nach dieser Zeit. Ablehnen kostet nichts.</RimWard.Setting.rw.triageHours.Desc>
   <RimWard.Setting.rw.contracts>Verletzte Besucher auf der Karte behandeln (Verträge)</RimWard.Setting.rw.contracts>

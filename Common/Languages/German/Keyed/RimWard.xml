@@ -49,7 +49,7 @@
     <RimWard.Offer.Accept>Patient annehmen</RimWard.Offer.Accept>
     <RimWard.Offer.Decline>Abweisen</RimWard.Offer.Decline>
     <RimWard.Alert.Count>{0} offene(s) Patienten-Angebot(e)</RimWard.Alert.Count>
-    <RimWard.Alert.Explanation>Patienten warten auf deine Entscheidung. Klicke ihren Angebots-Brief, um sie anzunehmen oder abzuweisen.</RimWard.Alert.Explanation>
+    <RimWard.Alert.Explanation>Patienten warten auf deine Entscheidung. Klicke hier für die Anfragen im Krankenhaus-Reiter oder beantworte ihre Briefe.</RimWard.Alert.Explanation>
 
     <!-- Aufnahme-Einstellungen -->
 

@@ -379,7 +379,7 @@ namespace RimWard
         }
 
         /// <summary>"Uses from your stock: ..." for a surgery case (the ingredients the operation consumes and their value).</summary>
-        private static string OfferStockNote(PatientData data)
+        internal static string OfferStockNote(PatientData data)
         {
             RecipeDef r = data?.CureRecipe;
             if (r?.ingredients == null || r.ingredients.Count == 0) return null;

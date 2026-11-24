@@ -49,7 +49,7 @@
     <RimWard.Offer.Accept>Accept patient</RimWard.Offer.Accept>
     <RimWard.Offer.Decline>Turn away</RimWard.Offer.Decline>
     <RimWard.Alert.Count>{0} open patient offer(s)</RimWard.Alert.Count>
-    <RimWard.Alert.Explanation>Patients are waiting for your decision. Click their offer letter to accept or turn them away.</RimWard.Alert.Explanation>
+    <RimWard.Alert.Explanation>Patients are waiting for your decision. Click here for the Inbox of the Hospital tab, or answer their offer letters.</RimWard.Alert.Explanation>
 
     <!-- intake settings -->
 

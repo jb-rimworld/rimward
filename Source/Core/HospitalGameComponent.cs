@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -21,6 +22,15 @@ namespace RimWard
         public bool policyMigrated;
         public List<Invoice> recentInvoices = new List<Invoice>();
         public const int RecentInvoiceCount = 10;
+
+        // Payouts of the last 60 days (absolute tick, silver) for "income this quadrum" on the Hospital tab. Saves from before 2.0
+        // start empty: the tab then counts from the first payout after the update.
+        private List<int> payoutTicksAbs = new List<int>();
+        private List<int> payoutSilver = new List<int>();
+        public const int PayoutKeepDays = 60;
+
+        /// <summary>The hospital start card on the Hospital tab was answered (per save).</summary>
+        public bool startCardDone;
 
         public HospitalGameComponent(Game game)
         {
@@ -78,9 +88,41 @@ namespace RimWard
         {
             if (alive) patientsTreated++; else patientsDied++;
             silverEarned += (long)silver;
+            if (silver >= 1f) this.RecordPayout((int)silver);
             // renown rises with good outcomes, dips a little on bad ones; never below 0
             renown = Mathf.Max(0f, renown + (score - 40f) * 0.05f);
         }
+
+        public void RecordPayout(int silver)
+        {
+            if (this.payoutTicksAbs == null || this.payoutSilver == null || this.payoutTicksAbs.Count != this.payoutSilver.Count)
+            {
+                this.payoutTicksAbs = new List<int>();
+                this.payoutSilver = new List<int>();
+            }
+            int now = Find.TickManager?.TicksAbs ?? 0;
+            this.payoutTicksAbs.Add(now);
+            this.payoutSilver.Add(silver);
+            int keepFrom = now - PayoutKeepDays * GenDate.TicksPerDay;
+            while (this.payoutTicksAbs.Count > 0 && this.payoutTicksAbs[0] < keepFrom)
+            {
+                this.payoutTicksAbs.RemoveAt(0);
+                this.payoutSilver.RemoveAt(0);
+            }
+        }
+
+        /// <summary>Silver paid out by patients in the current quadrum, at the given longitude (the current map's).</summary>
+        public int IncomeThisQuadrum(float longitude)
+        {
+            if (this.payoutTicksAbs == null || this.payoutSilver == null) return 0;
+            long now = Find.TickManager?.TicksAbs ?? 0;
+            int want = QuadrumIndex(now, longitude), sum = 0;
+            for (int i = 0; i < this.payoutTicksAbs.Count && i < this.payoutSilver.Count; i++)
+                if (QuadrumIndex(this.payoutTicksAbs[i], longitude) == want) sum += this.payoutSilver[i];
+            return sum;
+        }
+
+        private static int QuadrumIndex(long absTicks, float longitude) => GenDate.Year(absTicks, longitude) * 4 + (int)GenDate.Quadrum(absTicks, longitude);
 
         public void RecordInvoice(Invoice inv)
         {
@@ -103,8 +145,16 @@ namespace RimWard
             Scribe_Deep.Look(ref this.policy, "policy");
             Scribe_Values.Look(ref this.policyMigrated, "policyMigrated", false);
             Scribe_Collections.Look(ref this.recentInvoices, "recentInvoices", LookMode.Deep);
+            Scribe_Collections.Look(ref this.payoutTicksAbs, "payoutTicksAbs", LookMode.Value);
+            Scribe_Collections.Look(ref this.payoutSilver, "payoutSilver", LookMode.Value);
+            Scribe_Values.Look(ref this.startCardDone, "startCardDone", false);
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
+                if (this.payoutTicksAbs == null || this.payoutSilver == null || this.payoutTicksAbs.Count != this.payoutSilver.Count)
+                {
+                    this.payoutTicksAbs = new List<int>();
+                    this.payoutSilver = new List<int>();
+                }
                 if (this.recentInvoices == null) this.recentInvoices = new List<Invoice>();
                 this.recentInvoices.RemoveAll(i => i == null);
                 // a save written by 2.0+ already has its policy; only older saves migrate from their maps

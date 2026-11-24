@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+    <!-- Hospital tab: frame -->
+    <RimWard.Tab.Title>RimWard Hospital</RimWard.Tab.Title>
+    <RimWard.Tab.Settings>Mod settings</RimWard.Tab.Settings>
+    <RimWard.Tab.OpenChip>OPEN</RimWard.Tab.OpenChip>
+    <RimWard.Tab.ClosedChip>CLOSED</RimWard.Tab.ClosedChip>
+    <RimWard.Tab.OpenChipTip>The hospital takes new patients during its opening hours. Click to close it.</RimWard.Tab.OpenChipTip>
+    <RimWard.Tab.ClosedChipTip>No new patients come. Patients already here are treated and leave as usual. Click to open the hospital.</RimWard.Tab.ClosedChipTip>
+    <RimWard.Tab.NoMap>No map is shown. The hospital belongs to the map you are looking at.</RimWard.Tab.NoMap>
+    <RimWard.Tab.Page.Overview>Overview</RimWard.Tab.Page.Overview>
+    <RimWard.Tab.Page.Patients>Patients</RimWard.Tab.Page.Patients>
+    <RimWard.Tab.Page.Inbox>Inbox</RimWard.Tab.Page.Inbox>
+    <RimWard.Tab.Page.Policies>Policies</RimWard.Tab.Page.Policies>
+    <RimWard.Tab.Page.Guide>Guide</RimWard.Tab.Page.Guide>
+    <RimWard.Tab.Sub.Overview>Is the hospital open, is it ready, who is in which state, and what it earns.</RimWard.Tab.Sub.Overview>
+    <RimWard.Tab.Sub.Patients>{0} patients in {1} patient beds. Click a name to find the patient on the map.</RimWard.Tab.Sub.Patients>
+    <RimWard.Tab.Sub.Inbox>Patients who asked to be treated. Accept or decline here or in their letter; declining never costs goodwill.</RimWard.Tab.Sub.Inbox>
+    <RimWard.Tab.Sub.Policies>Who gets in, when, and how patients are cared for. These rules belong to this colony and follow it to new maps.</RimWard.Tab.Sub.Policies>
+    <RimWard.Tab.Sub.Guide>The hospital in six short cards.</RimWard.Tab.Sub.Guide>
+
+    <!-- start card -->
+    <RimWard.Start.Title>Your hospital, ready in two clicks</RimWard.Start.Title>
+    <RimWard.Start.Text>Strangers drop in by pod, your doctors treat them in medical beds, and they pay when they leave. Open the hospital and choose which medical beds take patients. Every medical bed also has its own switch.</RimWard.Start.Text>
+    <RimWard.Start.OpenNow>Open the hospital now</RimWard.Start.OpenNow>
+    <RimWard.Start.IsOpen>The hospital is open</RimWard.Start.IsOpen>
+    <RimWard.Start.UseBeds>Use all {0} medical beds for patients</RimWard.Start.UseBeds>
+    <RimWard.Start.UseBedsTip>Every medical bed of this colony takes patients. You can switch single beds back with their "Hospital Bed" button.</RimWard.Start.UseBedsTip>
+    <RimWard.Start.BedsDone>All {0} medical beds take patients</RimWard.Start.BedsDone>
+    <RimWard.Start.NoBeds>No medical bed yet</RimWard.Start.NoBeds>
+    <RimWard.Start.BedsMsg>{0} medical beds now take patients.</RimWard.Start.BedsMsg>
+    <RimWard.Start.Done>Done</RimWard.Start.Done>
+    <RimWard.Start.Hint>The checklist below says what is still missing. This card shows once per colony.</RimWard.Start.Hint>
+
+    <!-- status band -->
+    <RimWard.Band.IntakeOff>Patient intake is switched off</RimWard.Band.IntakeOff>
+    <RimWard.Band.IntakeOffSub>The "Patient intake" area is off in the mod settings, so nobody new comes. Patients already here are treated as usual.</RimWard.Band.IntakeOffSub>
+    <RimWard.Band.Closed>The hospital is CLOSED</RimWard.Band.Closed>
+    <RimWard.Band.ClosedSub>No new patients come. Patients already here stay until they are done.</RimWard.Band.ClosedSub>
+    <RimWard.Band.Open>The hospital is OPEN</RimWard.Band.Open>
+    <RimWard.Band.OpenNow>Patients can arrive right now.</RimWard.Band.OpenNow>
+    <RimWard.Band.OpenLater>Open, but nobody comes right now: {0}.</RimWard.Band.OpenLater>
+    <RimWard.Band.OpenBlocked>Open, but no patient can come: {0}.</RimWard.Band.OpenBlocked>
+    <RimWard.Band.OpenButton>Open the hospital</RimWard.Band.OpenButton>
+    <RimWard.Band.CloseButton>Close the hospital</RimWard.Band.CloseButton>
+
+    <!-- tiles -->
+    <RimWard.Tile.Beds>Patient beds free</RimWard.Tile.Beds>
+    <RimWard.Tile.BedsValue>{0} of {1}</RimWard.Tile.BedsValue>
+    <RimWard.Tile.BedsTip>{0} free, {1} taken. {2} of them are surgery beds. A patient bed is a medical bed whose "Hospital Bed" switch is on.</RimWard.Tile.BedsTip>
+    <RimWard.Tile.Patients>Patients now</RimWard.Tile.Patients>
+    <RimWard.Tile.PatientsTip>Patients on this map who are still being treated. Click for the list.</RimWard.Tile.PatientsTip>
+    <RimWard.Tile.Offers>Waiting for your answer</RimWard.Tile.Offers>
+    <RimWard.Tile.OffersTip>Patients who asked to be treated. Click for the inbox.</RimWard.Tile.OffersTip>
+    <RimWard.Tile.Income>Income this quadrum</RimWard.Tile.Income>
+    <RimWard.Tile.IncomeTip>Silver patients paid this quadrum. Since the hospital opened: {0}.</RimWard.Tile.IncomeTip>
+
+    <!-- readiness -->
+    <RimWard.Ready.Head>Before patients come</RimWard.Ready.Head>
+    <RimWard.Ready.AllGood>Everything is ready.</RimWard.Ready.AllGood>
+    <RimWard.Ready.Missing>{0} things are still missing. Each line says what to do; most have a button that does it.</RimWard.Ready.Missing>
+    <RimWard.Ready.ShowAll>Show the checklist</RimWard.Ready.ShowAll>
+    <RimWard.Ready.Hide>Hide the checklist</RimWard.Ready.Hide>
+    <RimWard.Ready.ShowMe>Show me</RimWard.Ready.ShowMe>
+    <RimWard.Ready.IntakeOff>the "Patient intake" area is switched off in the mod settings</RimWard.Ready.IntakeOff>
+    <RimWard.Ready.Closed>the hospital is closed</RimWard.Ready.Closed>
+    <RimWard.Ready.NoHours>no opening hour is set</RimWard.Ready.NoHours>
+    <RimWard.Ready.HoursCount>{0} opening hours a day</RimWard.Ready.HoursCount>
+    <RimWard.Ready.BedsCount>{0} indoors</RimWard.Ready.BedsCount>
+    <RimWard.Ready.BedsNotPatient>{0} medical beds have their "Hospital Bed" switch off</RimWard.Ready.BedsNotPatient>
+    <RimWard.Ready.BedsOutdoors>the patient beds stand outdoors</RimWard.Ready.BedsOutdoors>
+    <RimWard.Ready.BedsOutdoorsHow>Build walls and a roof around them, or move them into a room</RimWard.Ready.BedsOutdoorsHow>
+    <RimWard.Ready.NoMedicalBed>no medical bed</RimWard.Ready.NoMedicalBed>
+    <RimWard.Ready.NoMedicalBedHow>Build a bed in a room, select it and switch on "Medical"</RimWard.Ready.NoMedicalBedHow>
+    <RimWard.Ready.SurgeryBedHow>Set up a patient bed first, then switch on its "Surgery Bed" button</RimWard.Ready.SurgeryBedHow>
+    <RimWard.Ready.DoctorNames>{0}</RimWard.Ready.DoctorNames>
+    <RimWard.Ready.NoDoctor>nobody does Doctor work</RimWard.Ready.NoDoctor>
+    <RimWard.Ready.NoDoctorHow>No colonist can do Doctor work right now (incapable, downed or unable to walk)</RimWard.Ready.NoDoctorHow>
+    <RimWard.Ready.MedicineCount>{0} in stock</RimWard.Ready.MedicineCount>
+    <RimWard.Ready.MedicineHow>Buy medicine from traders, grow healroot or make herbal medicine</RimWard.Ready.MedicineHow>
+    <RimWard.Ready.SafeHow>Patients come again once it is over</RimWard.Ready.SafeHow>
+    <RimWard.Fix.IntakeOn>Switch intake on</RimWard.Fix.IntakeOn>
+    <RimWard.Fix.OpenNow>Open now</RimWard.Fix.OpenNow>
+    <RimWard.Fix.DefaultHours>Open at 7, 11, 15 and 19</RimWard.Fix.DefaultHours>
+    <RimWard.Fix.UseMedicalBeds>Use all {0} for patients</RimWard.Fix.UseMedicalBeds>
+    <RimWard.Fix.SpareBed>Make a spare bed medical</RimWard.Fix.SpareBed>
+    <RimWard.Fix.SurgeryBed>Use one patient bed for surgery</RimWard.Fix.SurgeryBed>
+    <RimWard.Fix.Doctor>Let {0} do Doctor work</RimWard.Fix.Doctor>
+    <RimWard.Fix.Unforbid>Allow {0} forbidden medicine</RimWard.Fix.Unforbid>
+    <RimWard.Fix.LandingSpot>Place a landing spot</RimWard.Fix.LandingSpot>
+
+    <!-- patients -->
+    <RimWard.Tab.PatientsHead>Patients</RimWard.Tab.PatientsHead>
+    <RimWard.Tab.NoPatients>No patients right now.</RimWard.Tab.NoPatients>
+    <RimWard.Tab.WhyNoPatients>Why nobody comes: {0}.</RimWard.Tab.WhyNoPatients>
+    <RimWard.Tab.AllPatients>All {0} patients</RimWard.Tab.AllPatients>
+    <RimWard.Tab.RowTip>Click to find {0} on the map.</RimWard.Tab.RowTip>
+    <RimWard.Tab.RowFacts>{0} · treatment: {1} · here for {2} · expected bill {3}</RimWard.Tab.RowFacts>
+    <RimWard.Tab.DismissTip>Send the patient home now. They pay for what was done so far, as set under Billing extras.</RimWard.Tab.DismissTip>
+    <RimWard.Tab.RefuseTip>Refuse {0} from now on (for every patient) and send this patient home. Undo it on the Policies page.</RimWard.Tab.RefuseTip>
+    <RimWard.Status.None>Unknown</RimWard.Status.None>
+    <RimWard.Status.Arriving>Arriving</RimWard.Status.Arriving>
+    <RimWard.Status.Acute>Acute</RimWard.Status.Acute>
+    <RimWard.Status.NeedsTending>Needs tending</RimWard.Status.NeedsTending>
+    <RimWard.Status.Resting>Bed rest</RimWard.Status.Resting>
+    <RimWard.Status.WaitingForSurgery>Waiting for surgery</RimWard.Status.WaitingForSurgery>
+    <RimWard.Status.SurgeryRetry>Surgery retry</RimWard.Status.SurgeryRetry>
+    <RimWard.Status.SurgerySuspended>Surgery suspended</RimWard.Status.SurgerySuspended>
+    <RimWard.Status.TreatmentImpossible>Treatment impossible</RimWard.Status.TreatmentImpossible>
+    <RimWard.Status.HeldByDanger>Held by danger</RimWard.Status.HeldByDanger>
+    <RimWard.Status.ReadyToLeave>Cured</RimWard.Status.ReadyToLeave>
+    <RimWard.Status.Leaving>Leaving</RimWard.Status.Leaving>
+
+    <!-- inbox -->
+    <RimWard.Tab.InboxMode>Intake mode: {0} (Mod settings, Patient intake).</RimWard.Tab.InboxMode>
+    <RimWard.Tab.InboxEmpty>Nobody is waiting for an answer.</RimWard.Tab.InboxEmpty>
+    <RimWard.Tab.InboxFull>All patient beds are taken: you can accept again once a bed is free. Offers you do not answer expire without a penalty.</RimWard.Tab.InboxFull>
+    <RimWard.Tab.OfferPod>comes by drop pod</RimWard.Tab.OfferPod>
+    <RimWard.Tab.OfferAmbient>already on your map</RimWard.Tab.OfferAmbient>
+    <RimWard.Tab.OfferFacts>{0} · {1} · expected pay {2} · expires in {3}</RimWard.Tab.OfferFacts>
+    <RimWard.Tab.DeclineTip>Turn the patient away. Declining never costs goodwill.</RimWard.Tab.DeclineTip>
+
+    <!-- renown and money -->
+    <RimWard.Tab.RenownHead>Renown</RimWard.Tab.RenownHead>
+    <RimWard.Tab.RenownOff>Renown is switched off in the mod settings: every patient pays the same.</RimWard.Tab.RenownOff>
+    <RimWard.Tab.RenownTip>The hospital's renown and its tier. The bar shows the way to the next tier.</RimWard.Tab.RenownTip>
+    <RimWard.Tab.RenownWhat>Renown raises every bill: now {0} of the normal pay.</RimWard.Tab.RenownWhat>
+    <RimWard.Tab.RenownNext>Next tier: {0} at {1} renown ({2}).</RimWard.Tab.RenownNext>
+    <RimWard.Tab.RenownTop>This is the top tier.</RimWard.Tab.RenownTop>
+    <RimWard.Tab.RenownHow>Patients who leave healthy and happy raise it; deaths and bad stays lower it a little.</RimWard.Tab.RenownHow>
+    <RimWard.Tab.MoneyHead>Money</RimWard.Tab.MoneyHead>
+    <RimWard.Tab.Money.Charity>Charity ward: patients pay nothing (mod settings, "Patients pay").</RimWard.Tab.Money.Charity>
+    <RimWard.Tab.Money.Quadrum>Income in {0}</RimWard.Tab.Money.Quadrum>
+    <RimWard.Tab.Money.Total>Income since the hospital opened</RimWard.Tab.Money.Total>
+    <RimWard.Tab.Money.Treated>Patients sent home</RimWard.Tab.Money.Treated>
+    <RimWard.Tab.Money.Died>Patients who died</RimWard.Tab.Money.Died>
+    <RimWard.Tab.Money.DiedValue>{0} ({1} through your fault)</RimWard.Tab.Money.DiedValue>
+    <RimWard.Tab.LastDischarges>Last discharges (click for the invoice)</RimWard.Tab.LastDischarges>
+    <RimWard.Tab.NoDischarges>Nobody has left yet.</RimWard.Tab.NoDischarges>
+    <RimWard.Tab.Reason.Estimate>estimate</RimWard.Tab.Reason.Estimate>
+    <RimWard.Tab.Reason.Cured>cured</RimWard.Tab.Reason.Cured>
+    <RimWard.Tab.Reason.Dismissed>sent home early</RimWard.Tab.Reason.Dismissed>
+    <RimWard.Tab.Reason.TreatmentImpossible>treatment impossible</RimWard.Tab.Reason.TreatmentImpossible>
+    <RimWard.Tab.Reason.MaxStay>maximum stay reached</RimWard.Tab.Reason.MaxStay>
+    <RimWard.Tab.Reason.DiedNoFault>died, not your fault</RimWard.Tab.Reason.DiedNoFault>
+    <RimWard.Invoice.Title>Invoice: {0}</RimWard.Invoice.Title>
+
+    <!-- policies -->
+    <RimWard.Policy.Who>Who gets in</RimWard.Policy.Who>
+    <RimWard.Policy.OpenTip>Off: no new patients come. Patients already here are treated and leave as usual.</RimWard.Policy.OpenTip>
+    <RimWard.Policy.Hours>Opening hours</RimWard.Policy.Hours>
+    <RimWard.Policy.HoursHelp>Olive hours are open, blue hours closed (local time of this map). Click or drag across the hours to change them.</RimWard.Policy.HoursHelp>
+    <RimWard.Policy.AllDay>Open all day</RimWard.Policy.AllDay>
+    <RimWard.Policy.DefaultHours>7, 11, 15 and 19 (default)</RimWard.Policy.DefaultHours>
+    <RimWard.Policy.Care>Care</RimWard.Policy.Care>
+    <RimWard.Policy.Unrefuse>Accept {0} again</RimWard.Policy.Unrefuse>
+    <RimWard.Policy.MoreInSettings>More in Mod settings (intake mode, contracts)</RimWard.Policy.MoreInSettings>
+
+    <!-- guide -->
+    <RimWard.Guide.1.Title>Open the hospital</RimWard.Guide.1.Title>
+    <RimWard.Guide.1.Text>The switch at the top of this tab opens and closes the hospital. While it is open, patients arrive by drop pod during the opening hours (Policies page). Closing it never sends anyone away who is already here.</RimWard.Guide.1.Text>
+    <RimWard.Guide.2.Title>Beds and rooms</RimWard.Guide.2.Title>
+    <RimWard.Guide.2.Text>A patient bed is a medical bed with its "Hospital Bed" switch on; surgery cases need a bed with "Surgery Bed" on. A room of their own pays most, a two-bed room a little more than usual, a ward and a hallway less.</RimWard.Guide.2.Text>
+    <RimWard.Guide.3.Title>Who gets in</RimWard.Guide.3.Title>
+    <RimWard.Guide.3.Text>In the Firehose intake mode patients just arrive. Hybrid and Prompt send an offer first: answer it in the Inbox or in its letter. Declining is free. Nobody comes when all patient beds are taken or danger is on the map.</RimWard.Guide.3.Text>
+    <RimWard.Guide.4.Title>Money</RimWard.Guide.4.Title>
+    <RimWard.Guide.4.Text>Every treatment adds a line to the patient's bill. On discharge the room, your best doctor, renown and the payment scale set the price, up to the cap in the settings. The Patients page shows what each patient is expected to pay; the invoice lists every line.</RimWard.Guide.4.Text>
+    <RimWard.Guide.5.Title>When things go wrong</RimWard.Guide.5.Title>
+    <RimWard.Guide.5.Text>A patient who dies through neglect costs goodwill with their faction. Deaths on the operating table, after you sent them home or right after arrival are not your fault. A treatment that cannot be done sends a letter first and the patient home later, without a penalty.</RimWard.Guide.5.Text>
+    <RimWard.Guide.6.Title>Hearth &amp; Harbor</RimWard.Guide.6.Title>
+    <RimWard.Guide.6.Text>With Hearth &amp; Harbor loaded, one bed button sets a bed to colonist, guest, patient or surgery patient, and patients who are up and about may use its spa while they recover. Without it nothing changes.</RimWard.Guide.6.Text>
+    <RimWard.Guide.Settings>All settings (payment, malpractice, areas)</RimWard.Guide.Settings>
+</LanguageData>

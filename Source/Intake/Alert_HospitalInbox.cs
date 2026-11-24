@@ -26,6 +26,8 @@ namespace RimWard
 
         public override TaggedString GetExplanation() => "RimWard.Alert.Explanation".Translate();
 
+        protected override void OnClick() => MainTab.MainTabWindow_Hospital.OpenOn("inbox");
+
         public override AlertReport GetReport() => Count() > 0 ? AlertReport.Active : AlertReport.Inactive;
     }
 }
