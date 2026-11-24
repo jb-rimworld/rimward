@@ -1,6 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project>
+    <!-- BaseIntermediateOutputPath must be set before the SDK props are imported (else MSB3539). -->
+    <PropertyGroup><BaseIntermediateOutputPath>obj17/</BaseIntermediateOutputPath></PropertyGroup>
+    <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
     <PropertyGroup>
-        <BaseIntermediateOutputPath>obj17/</BaseIntermediateOutputPath>
         <DefineConstants>$(DefineConstants);RW17</DefineConstants>
         <OutputType>Library</OutputType>
         <RootNamespace>RimWard</RootNamespace>
@@ -33,4 +35,5 @@
         <Reference Include="0Harmony"><HintPath>$(HOME)/Library/Application Support/Steam/steamapps/workshop/content/294100/2009463077/1.7/Assemblies/0Harmony.dll</HintPath><Private>False</Private></Reference>
     </ItemGroup>
     <ItemGroup><Compile Remove="obj17/**" /><Compile Remove="obj/**" /></ItemGroup>
+    <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>
