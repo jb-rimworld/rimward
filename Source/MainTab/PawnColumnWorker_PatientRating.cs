@@ -16,7 +16,7 @@ namespace RimWard.MainTab
             if (this.hospital == null || Time.unscaledTime > this.lastTimeCached + 2f || Find.CurrentMap != this.hospital.map)
             {
                 this.lastTimeCached = Time.unscaledTime;
-                this.hospital = Find.CurrentMap.GetComponent<HospitalMapComponent>();
+                this.hospital = HospitalMapComponent.For(Find.CurrentMap);
             }
             return pawn.GetPatientRating(out this.score, this.hospital) ? Mathf.Clamp01(this.score).ToStringPercent() : string.Empty;
         }

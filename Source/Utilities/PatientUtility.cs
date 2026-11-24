@@ -12,17 +12,20 @@ namespace RimWard.Utilities
         public static bool IsPatient(this Pawn pawn, out HospitalMapComponent hospital, bool includeDismissed = false)
         {
             hospital = null;
-            if (pawn?.Map == null) return false;
-            hospital = pawn.Map.GetComponent<HospitalMapComponent>();
+            if (pawn == null) return false;
+            Map map = pawn.Map;
+            if (map == null) return false;
+            // cheap early-out for the hot paths (work giver, bed finder): colonists are never patients
+            if (pawn.Faction != null && pawn.Faction.IsPlayer) return false;
+            hospital = HospitalMapComponent.For(map);
             return hospital != null && hospital.GetPatientData(pawn, out PatientData patientData) && (includeDismissed || !patientData.Dismissed);
         }
 
         public static void AddToBill(this Pawn pawn, HospitalMapComponent hospital, float silver)
         {
-            if (pawn == null) return;
+            if (pawn == null || hospital == null) return;
             if (!hospital.GetPatientData(pawn, out PatientData patientData)) return;
-            patientData.Bill += silver;
-            patientData.Bill = Mathf.Clamp(patientData.Bill, 0f, HospitalMapComponent.BillCap);
+            patientData.AddLine(InvoiceLineKind.Tend, null, silver);
         }
 
         private static StatDef medPotencyStat;
@@ -83,7 +86,7 @@ namespace RimWard.Utilities
                     failed = DiseaseUtility.AddRandomDisease(pawn, patientData);
                     break;
                 case PatientType.Surgery:
-                    failed = SurgeryUtility.AddRandomSurgeryBill(pawn, patientData, hospital);
+                    failed = SurgeryUtility.AddRandomSurgeryBill(pawn, patientData, hospital, hospital.map);
                     break;
             }
             if (failed)
@@ -114,8 +117,8 @@ namespace RimWard.Utilities
 
         public static float CalculateSilverToReceive(Pawn pawn, PatientData patientData)
         {
-            // Base estimate: bill x payment scale. PatientLeaves applies room/chief/outcome multipliers on top.
-            return patientData.Bill * HospitalMod.Settings.PaymentMultiplier;
+            // The same number the patient will pay if discharged cured now (one invoice for table, letter and payout).
+            return Invoice.Build(pawn, patientData, DischargeReason.Estimate).TotalSilver;
         }
 
         public static int CalculateGoodwillToGain(Pawn pawn, PatientData patientData)
@@ -137,36 +140,13 @@ namespace RimWard.Utilities
             return Math.Min((pawn.needs.mood.CurInstantLevel - patientData.InitialMood) * 3.5f, 100f);
         }
 
+        /// <summary>Active danger for patients on this map (see <see cref="Threats"/>). Weather is listed too; it only stops arrivals.</summary>
         public static bool DangersOnMap(Map map, out TaggedString reasons)
         {
-            reasons = null;
-            if (map.GetComponent<HospitalMapComponent>().AcceptDanger) return false;
-            bool toxic = map.GameConditionManager.ConditionIsActive(GameConditionDefOf.ToxicFallout);
-            Pawn[] active = map.mapPawns.AllPawnsSpawned.Where(p => !p.Dead && !p.IsPrisoner && !p.Downed && !IsFogged(p) && !p.InContainerEnclosed).ToArray();
-            Faction[] hostiles = active.Where(p => p.Faction != null).Select(p => p.Faction).Where(f => f.HostileTo(Faction.OfPlayer)).Distinct().ToArray();
-            bool volcanic = map.GameConditionManager.ConditionIsActive(GameConditionDefOf.VolcanicWinter);
-            IEnumerable<Pawn> manhunters = active.Where(p => p.InAggroMentalState);
-            if (!toxic && !volcanic && !hostiles.Any() && !manhunters.Any()) return false;
-            List<string> list = new List<string>();
-            if (toxic) list.Add("!!! " + GameConditionDefOf.ToxicFallout.LabelCap);
-            if (volcanic) list.Add("!!! " + GameConditionDefOf.VolcanicWinter.LabelCap);
-            foreach (Faction faction in hostiles)
-            {
-                list.Add("!!! " + faction.def.pawnsPlural.CapitalizeFirst());
-            }
-            foreach (IGrouping<MentalStateDef, Pawn> grouping in manhunters.GroupBy(p => p.MentalStateDef))
-            {
-                if (grouping.Count() > 1)
-                {
-                    list.Add("!!! " + grouping.First().GetKindLabelPlural() + " (" + grouping.First().MentalStateDef.label + ")");
-                }
-                else if (grouping.Count() == 1)
-                {
-                    list.Add("!!! " + grouping.First().LabelShort + " (" + grouping.First().MentalStateDef.label + ")");
-                }
-            }
-            reasons = list.Distinct().Aggregate((a, b) => a + " " + b);
-            return true;
+            HospitalMapComponent comp = HospitalMapComponent.For(map);
+            string r = Threats.ArrivalBlock(map, comp?.Policy);
+            reasons = r != null ? new TaggedString(r) : default(TaggedString);
+            return r != null;
         }
 
         public static bool IsFogged(Pawn pawn)

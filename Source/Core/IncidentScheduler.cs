@@ -25,7 +25,7 @@ namespace RimWard
             base.MapComponentTick();
             if (GenTicks.TicksGame % 42 != 0) return;
 
-            int free = this.map.GetComponent<HospitalMapComponent>().FreeMedicalBeds();
+            int free = HospitalMapComponent.For(this.map).FreeMedicalBeds();
             float chance = (GenDate.DaysPassed % 2 == 0) ? 0.008f : 0.004f;
             chance *= Mathf.InverseLerp(0f, 20f, free);
             if (Rand.Chance(chance))

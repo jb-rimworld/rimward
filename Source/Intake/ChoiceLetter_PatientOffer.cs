@@ -35,8 +35,10 @@ namespace RimWard
         private void Resolve(bool accept)
         {
             Map map = Find.Maps.FirstOrDefault(m => m.uniqueID == this.mapId);
-            map?.GetComponent<HospitalMapComponent>()?.ResolveOffer(this.offerId, accept);
-            Find.LetterStack.RemoveLetter(this);
+            HospitalMapComponent comp = HospitalMapComponent.For(map);
+            // an accept that cannot be honoured right now (no free bed) keeps the letter, so the offer can still be taken later
+            bool done = comp == null || comp.ResolveOffer(this.offerId, accept);
+            if (done) Find.LetterStack.RemoveLetter(this);
         }
 
         public override void ExposeData()

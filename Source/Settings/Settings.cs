@@ -51,15 +51,30 @@ namespace RimWard
         public bool RenownEnabled = true;
         public bool RoyalRoomDemand = true;
         public bool IdeologyGuilty = true;
-        public bool SoftCompatEnabled = true;
-        public bool ZombieContractsEnabled = false;       // opt-in, per the user
-        public bool NoFaultDeathCanProfit = true;          // the black-comedy lever
+        public bool NoFaultDeathCanProfit = true;          // a no-fault death still pays the bill so far x EarlyDischargePayFraction
+
+        // Billing (M3/M9)
+        public bool ChargePatients = true;                 // master switch of the money area; off = charity ward (no silver, goodwill still counts)
+        public float EarlyDischargePayFraction = 0.5f;     // share of the bill paid when a patient leaves uncured (dismissed, impossible treatment, no-fault death)
+        public float InvoiceLetterThreshold = 500f;        // discharges paying at least this much get a letter with the itemised invoice; smaller ones a message
+
+        // Caretaker (M5)
+        public float MaxStayDays = 15f;                    // 0 = no limit; after this the patient is discharged with the bill so far
+        public float ImpossibleTreatmentHours = 24f;       // a pending treatment that cannot be done this long sends a letter; the same time again discharges
+        public float MaxDangerHoldHours = 24f;             // a cured patient waits this long for an active threat to pass, then leaves anyway
+
+        // Intake (M6/M10)
+        public bool OpenInNewColonies = true;              // a new colony starts with the hospital open (it still needs a patient bed before anyone comes)
+        public bool AllowSpecialNeedsXenotypes = false;    // hemogen and deathrest xenotypes may come as patients
+        public bool ComplicationsEnabled = true;           // extra ailments on arrival (budget follows the difficulty dial)
+        public bool MassCasualtiesEnabled = true;          // master switch; each save still opts in under Hospital policies
 
         // Hearth & Harbor (soft integration; no effect without that mod)
         public bool CombinedBedButton = true;
         public bool PatientLeisure = true;
 
         private Vector2 scrollPos;
+        private float viewHeight = 1900f;
 
         public float PaymentMultiplier
         {
@@ -109,16 +124,24 @@ namespace RimWard
             Scribe_Values.Look(ref this.RenownEnabled, "RenownEnabled", true);
             Scribe_Values.Look(ref this.RoyalRoomDemand, "RoyalRoomDemand", true);
             Scribe_Values.Look(ref this.IdeologyGuilty, "IdeologyGuilty", true);
-            Scribe_Values.Look(ref this.SoftCompatEnabled, "SoftCompatEnabled", true);
-            Scribe_Values.Look(ref this.ZombieContractsEnabled, "ZombieContractsEnabled", false);
             Scribe_Values.Look(ref this.NoFaultDeathCanProfit, "NoFaultDeathCanProfit", true);
+            Scribe_Values.Look(ref this.ChargePatients, "ChargePatients", true);
+            Scribe_Values.Look(ref this.EarlyDischargePayFraction, "EarlyDischargePayFraction", 0.5f);
+            Scribe_Values.Look(ref this.InvoiceLetterThreshold, "InvoiceLetterThreshold", 500f);
+            Scribe_Values.Look(ref this.MaxStayDays, "MaxStayDays", 15f);
+            Scribe_Values.Look(ref this.ImpossibleTreatmentHours, "ImpossibleTreatmentHours", 24f);
+            Scribe_Values.Look(ref this.MaxDangerHoldHours, "MaxDangerHoldHours", 24f);
+            Scribe_Values.Look(ref this.OpenInNewColonies, "OpenInNewColonies", true);
+            Scribe_Values.Look(ref this.AllowSpecialNeedsXenotypes, "AllowSpecialNeedsXenotypes", false);
+            Scribe_Values.Look(ref this.ComplicationsEnabled, "ComplicationsEnabled", true);
+            Scribe_Values.Look(ref this.MassCasualtiesEnabled, "MassCasualtiesEnabled", true);
             Scribe_Values.Look(ref this.CombinedBedButton, "CombinedBedButton", true);
             Scribe_Values.Look(ref this.PatientLeisure, "PatientLeisure", true);
         }
 
         public void DoWindowContents(Rect inRect)
         {
-            Rect view = new Rect(0f, 0f, inRect.width - 24f, 1450f);
+            Rect view = new Rect(0f, 0f, inRect.width - 24f, this.viewHeight);
             Widgets.BeginScrollView(inRect, ref this.scrollPos, view);
             Listing_Standard l = new Listing_Standard { maxOneColumn = true };
             l.Begin(view);
@@ -129,22 +152,34 @@ namespace RimWard
             if (this.Intake != IntakeMode.Firehose)
                 l.SliderLabeled("RimWard.Set.TriageHours".Translate(), ref this.TriageDecisionHours, this.TriageDecisionHours.ToString("0") + " h", 1f, 24f);
             l.CheckboxLabeled("RimWard.Set.Ambient".Translate(), ref this.AmbientContractsEnabled, "RimWard.Set.AmbientTip".Translate());
+            l.CheckboxLabeled("RimWard.Set.OpenInNew".Translate(), ref this.OpenInNewColonies, "RimWard.Set.OpenInNewTip".Translate());
+            l.CheckboxLabeled("RimWard.Set.SpecialNeeds".Translate(), ref this.AllowSpecialNeedsXenotypes, "RimWard.Set.SpecialNeedsTip".Translate());
+            l.CheckboxLabeled("RimWard.Set.MCEMaster".Translate(), ref this.MassCasualtiesEnabled, "RimWard.Set.MCEMasterTip".Translate());
 
             Header(l, "RimWard.Set.Difficulty".Translate());
             l.SliderLabeled("RimWard.Set.DifficultyDial".Translate(), ref this.Difficulty, this.Difficulty.ToString("0.0") + "x", 0.5f, 2.0f, "RimWard.Set.DifficultyDialTip".Translate());
+            l.CheckboxLabeled("RimWard.Set.Complications".Translate(), ref this.ComplicationsEnabled, "RimWard.Set.ComplicationsTip".Translate());
 
             Header(l, "RimWard.Set.Economy".Translate());
+            l.CheckboxLabeled("RimWard.Set.Charge".Translate(), ref this.ChargePatients, "RimWard.Set.ChargeTip".Translate());
             EnumRow(l, "RimWard.Set.PaymentPreset".Translate(), this.Payment, v => this.Payment = v);
             if (this.Payment == PaymentPreset.Custom)
                 l.SliderLabeled("RimWard.Set.CustomMult".Translate(), ref this.CustomPaymentMultiplier, this.CustomPaymentMultiplier.ToString("0%"), 0.05f, 15f);
             l.Label("RimWard.Set.EffMult".Translate(this.PaymentMultiplier.ToString("0%")));
             l.SliderLabeled("RimWard.Set.BillCap".Translate(), ref this.BillCap, this.BillCap.ToString("0"), 1000f, 50000f);
+            l.SliderLabeled("RimWard.Set.EarlyPay".Translate(), ref this.EarlyDischargePayFraction, this.EarlyDischargePayFraction.ToStringPercent(), 0f, 1f, "RimWard.Set.EarlyPayTip".Translate());
+            l.SliderLabeled("RimWard.Set.InvoiceLetter".Translate(), ref this.InvoiceLetterThreshold, this.InvoiceLetterThreshold.ToString("0"), 0f, 5000f, "RimWard.Set.InvoiceLetterTip".Translate());
 
             Header(l, "RimWard.Set.Surgery".Translate());
             l.CheckboxLabeled("RimWard.Set.AutoRetry".Translate(), ref this.AutoRetryEnabled, "RimWard.Set.AutoRetryTip".Translate());
             l.SliderLabeled("RimWard.Set.MaxRetries".Translate(), ref this.MaxSurgeryRetries, this.MaxSurgeryRetries.ToString(), 0f, 3f);
-            l.CheckboxLabeled("RimWard.Set.ReimburseMed".Translate(), ref this.ReimburseMedicineOnFailure);
-            l.CheckboxLabeled("RimWard.Set.ReimburseProsth".Translate(), ref this.ReimburseProstheticsOnFailure);
+            l.CheckboxLabeled("RimWard.Set.ReimburseMed".Translate(), ref this.ReimburseMedicineOnFailure, "RimWard.Set.ReimburseMedTip".Translate());
+            l.CheckboxLabeled("RimWard.Set.ReimburseProsth".Translate(), ref this.ReimburseProstheticsOnFailure, "RimWard.Set.ReimburseProsthTip".Translate());
+
+            Header(l, "RimWard.Set.Caretaker".Translate());
+            l.SliderLabeled("RimWard.Set.MaxStay".Translate(), ref this.MaxStayDays, this.MaxStayDays < 0.5f ? (string)"RimWard.Set.Off".Translate() : this.MaxStayDays.ToString("0") + " d", 0f, 60f, "RimWard.Set.MaxStayTip".Translate());
+            l.SliderLabeled("RimWard.Set.Impossible".Translate(), ref this.ImpossibleTreatmentHours, this.ImpossibleTreatmentHours.ToString("0") + " h", 6f, 96f, "RimWard.Set.ImpossibleTip".Translate());
+            l.SliderLabeled("RimWard.Set.DangerHold".Translate(), ref this.MaxDangerHoldHours, this.MaxDangerHoldHours.ToString("0") + " h", 0f, 72f, "RimWard.Set.DangerHoldTip".Translate());
 
             Header(l, "RimWard.Set.Death".Translate());
             l.CheckboxLabeled("RimWard.Set.DeathPenalty".Translate(), ref this.DeathPenaltyEnabled);
@@ -171,16 +206,22 @@ namespace RimWard
             l.CheckboxLabeled("RimWard.Set.Renown".Translate(), ref this.RenownEnabled);
             l.CheckboxLabeled("RimWard.Set.RoyalRoom".Translate(), ref this.RoyalRoomDemand);
             l.CheckboxLabeled("RimWard.Set.IdeoGuilty".Translate(), ref this.IdeologyGuilty);
-            l.CheckboxLabeled("RimWard.Set.SoftCompat".Translate(), ref this.SoftCompatEnabled, "RimWard.Set.SoftCompatTip".Translate());
-            l.CheckboxLabeled("RimWard.Set.Zombie".Translate(), ref this.ZombieContractsEnabled, "RimWard.Set.ZombieTip".Translate());
 
             Header(l, "RimWard.Set.Hearth".Translate());
             l.Label("RimWard.Set.HearthNote".Translate());
             l.CheckboxLabeled("RimWard.Set.CombinedBed".Translate(), ref this.CombinedBedButton, "RimWard.Set.CombinedBedTip".Translate());
             l.CheckboxLabeled("RimWard.Set.Leisure".Translate(), ref this.PatientLeisure, "RimWard.Set.LeisureTip".Translate());
 
+            this.viewHeight = Mathf.Max(600f, l.CurHeight + 40f);
             l.End();
             Widgets.EndScrollView();
+        }
+
+        /// <summary>Translated name of a settings enum value: key RimWard.Enum.&lt;Type&gt;.&lt;Value&gt;, falling back to the C# name.</summary>
+        public static string EnumLabel<T>(T value) where T : struct, Enum
+        {
+            string key = "RimWard.Enum." + typeof(T).Name + "." + value;
+            return key.CanTranslate() ? key.Translate().ToString() : value.ToString();
         }
 
         private static void Header(Listing_Standard l, string label)
@@ -196,13 +237,13 @@ namespace RimWard
         {
             Rect r = l.GetRect(28f);
             Widgets.Label(r.LeftHalf(), label);
-            if (Widgets.ButtonText(r.RightHalf(), value.ToString()))
+            if (Widgets.ButtonText(r.RightHalf(), EnumLabel(value)))
             {
                 List<FloatMenuOption> opts = new List<FloatMenuOption>();
                 foreach (T v in Enum.GetValues(typeof(T)))
                 {
                     T captured = v;
-                    opts.Add(new FloatMenuOption(captured.ToString(), () => setter(captured)));
+                    opts.Add(new FloatMenuOption(EnumLabel(captured), () => setter(captured)));
                 }
                 Find.WindowStack.Add(new FloatMenu(opts));
             }

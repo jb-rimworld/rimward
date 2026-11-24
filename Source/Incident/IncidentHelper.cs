@@ -25,7 +25,8 @@ namespace RimWard
             for (int i = 0; i < maxTries; i++)
             {
                 Pawn p = GeneratePawn(faction);
-                if (!IsWeirdPawn(p)) return p;
+                if (!IsWeirdPawn(p) && !CompatGen.IsUnservableXenotype(p)) return p;
+                if (p != null && !p.Destroyed) p.Discard(true);
             }
             return null;
         }
@@ -62,11 +63,24 @@ namespace RimWard
 
         public static bool CanSpawnPatient(Map map)
         {
-            HospitalMapComponent component = map.GetComponent<HospitalMapComponent>();
-            return component.IsOpen() && !component.IsFull()
-                && (!map.GameConditionManager.ConditionIsActive(GameConditionDefOf.ToxicFallout) || component.AcceptDanger)
-                && (!map.GameConditionManager.ConditionIsActive(GameConditionDefOf.VolcanicWinter) || component.AcceptDanger)
-                && TryFindEntryCell(map, out _);
+            return ArrivalBlockReason(map) == null;
+        }
+
+        /// <summary>Why no patient can arrive on this map right now (translated), or null when one can. Plain accessor for the overview.</summary>
+        public static string ArrivalBlockReason(Map map)
+        {
+            HospitalMapComponent component = HospitalMapComponent.For(map);
+            if (component == null) return "RimWard.Block.NoHospital".Translate();
+            HospitalPolicy pol = component.Policy;
+            if (!pol.open) return "RimWard.Block.Closed".Translate();
+            if (pol.OpenHourCount == 0) return "RimWard.Block.NoHours".Translate();
+            if (!component.IsOpen()) return "RimWard.Block.OutsideHours".Translate(pol.NextOpenHour(GenLocalDate.HourOfDay(map)));
+            if (component.BedCount() == 0) return "RimWard.Block.NoBeds".Translate();
+            if (component.IsFull()) return "RimWard.Block.Full".Translate();
+            string danger = Threats.ArrivalBlock(map, pol);
+            if (danger != null) return "RimWard.Block.Danger".Translate(danger);
+            if (!TryFindEntryCell(map, out _)) return "RimWard.Block.NoEntry".Translate();
+            return null;
         }
 
         private static bool TryFindEntryCell(Map map, out IntVec3 cell)
@@ -77,7 +91,7 @@ namespace RimWard
         public static void SetUpNewPatient(Pawn pawn)
         {
             pawn.guest.SetGuestStatus(Faction.OfPlayer, GuestStatus.Guest);
-            pawn.playerSettings.selfTend = false;
+            if (pawn.playerSettings != null) pawn.playerSettings.selfTend = false;
             pawn.equipment.DestroyAllEquipment();
             pawn.inventory.DestroyAll();
         }

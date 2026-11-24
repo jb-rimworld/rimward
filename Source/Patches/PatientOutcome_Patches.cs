@@ -21,18 +21,7 @@ namespace RimWard.Patches
             }
         }
 
-        [HarmonyPatch(typeof(SurgeryOutcome_Failure), "TryGainBotchedSurgeryThought")]
-        public static class TryGainBotchedSurgeryThought
-        {
-            [HarmonyPrefix]
-            public static void Prefix(Pawn patient, Pawn surgeon)
-            {
-                if (patient.IsPatient(out HospitalMapComponent hospital, false))
-                {
-                    hospital.OnSurgeryBotched(patient);
-                }
-            }
-        }
+        // A botched operation is detected in Billing_Surgery_Patch.SurgeryFail (Recipe_Surgery.CheckSurgeryFail), for every outcome.
 
         [HarmonyPatch(typeof(Faction), "Notify_MemberExitedMap")]
         public static class Notify_MemberExitedMap
@@ -40,7 +29,7 @@ namespace RimWard.Patches
             [HarmonyPrefix]
             public static bool Prefix(Pawn member, bool freed)
             {
-                HospitalMapComponent hospital = member?.Map?.GetComponent<HospitalMapComponent>();
+                HospitalMapComponent hospital = HospitalMapComponent.For(member?.Map);
                 if (hospital != null && hospital.GetPatientData(member, out _))
                 {
                     hospital.PatientLeftTheMap(member);

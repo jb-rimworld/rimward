@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using RimWard.Utilities;
 using RimWorld;
 using UnityEngine;
@@ -9,31 +10,53 @@ namespace RimWard
     // faction medicine preference, renown, and patient health outcome.
     public static class OutcomeUtility
     {
+        /// <summary>Product of all outcome factors (room, chief physician, medicine preference, royal demand, renown). Not the payment dial.</summary>
         public static float PaymentMultiplier(Pawn pawn, PatientData data)
         {
+            List<InvoiceFactor> f = new List<InvoiceFactor>();
+            AddPaymentFactors(pawn, data, f);
+            float m = 1f;
+            foreach (InvoiceFactor x in f) m *= x.mult;
+            return m;
+        }
+
+        /// <summary>The room tier that counts for pay: the best room the patient rested in, or the bed they lie in now if better.</summary>
+        public static RoomTier EffectiveRoomTier(Pawn pawn, PatientData data)
+        {
+            RoomTier tier = data.BestRoomTier;
+            if (pawn != null && pawn.Spawned && pawn.InBed())
+            {
+                RoomTier now = RoomTierUtility.Classify(pawn.CurrentBed(), pawn);
+                if ((int)now > (int)tier) tier = now;
+            }
+            return tier;
+        }
+
+        /// <summary>Adds every outcome factor that applies to this patient (factors of 1.0 are left out except the room).</summary>
+        public static void AddPaymentFactors(Pawn pawn, PatientData data, List<InvoiceFactor> into)
+        {
             Settings s = HospitalMod.Settings;
-            RoomTier tier = data.BestRoomTier; // best room the patient actually rested in
-            float mult = RoomTierUtility.Multiplier(tier);
+            RoomTier tier = EffectiveRoomTier(pawn, data);
+            into.Add(new InvoiceFactor { key = "RimWard.Invoice.Factor.Room", detail = ("RimWard.RoomTier." + tier).Translate().ToString(), mult = RoomTierUtility.Multiplier(tier) });
 
             if (s.ChiefPhysicianEnabled && data.BestDoctorSkill >= s.ChiefPhysicianMinSkill)
-            {
-                mult *= s.ChiefPhysicianMultiplier;
-            }
-            mult *= MedicinePrefMultiplier(pawn, data);
+                into.Add(new InvoiceFactor { key = "RimWard.Invoice.Factor.Chief", mult = s.ChiefPhysicianMultiplier });
+
+            float med = MedicinePrefMultiplier(pawn, data);
+            if (Mathf.Abs(med - 1f) > 0.001f) into.Add(new InvoiceFactor { key = "RimWard.Invoice.Factor.MedPref", mult = med });
 
             // Royal / demanding patients: pay handsomely for a private suite, insulted by a shared ward.
             bool wantsPrivate = data.RequiresPrivateRoom
                 || (ModsConfig.RoyaltyActive && pawn.royalty != null && pawn.royalty.AllTitlesForReading.Count > 0);
             if (s.RoyalRoomDemand && wantsPrivate)
-            {
-                mult *= (tier == RoomTier.Single) ? 1.4f : 0.75f;
-            }
+                into.Add(new InvoiceFactor { key = "RimWard.Invoice.Factor.Royal", mult = (tier == RoomTier.Single) ? 1.4f : 0.75f });
+
             if (s.RenownEnabled)
             {
                 HospitalGameComponent gc = HospitalGameComponent.Get;
-                if (gc != null) mult *= gc.RenownPaymentMultiplier;
+                if (gc != null && gc.RenownPaymentMultiplier > 1.0001f)
+                    into.Add(new InvoiceFactor { key = "RimWard.Invoice.Factor.Renown", detail = gc.TierLabel, mult = gc.RenownPaymentMultiplier });
             }
-            return mult;
         }
 
         private static float MedicinePrefMultiplier(Pawn pawn, PatientData data)

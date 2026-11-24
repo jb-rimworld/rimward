@@ -5,21 +5,25 @@ using Verse;
 
 namespace RimWard.MainTab
 {
+    /// <summary>Expected payout if the patient were discharged cured now: the same <see cref="Invoice"/> the payout uses. Tooltip lists every factor.</summary>
     public class PawnColumnWorker_Bill : PawnColumnWorker_Text
     {
-        private float lastTimeCached;
-        private HospitalMapComponent hospital;
+        private HospitalMapComponent Hospital => HospitalMapComponent.For(Find.CurrentMap);
 
         protected override string GetTextFor(Pawn pawn)
         {
-            if (this.hospital == null || Time.unscaledTime > this.lastTimeCached + 2f || Find.CurrentMap != this.hospital.map)
-            {
-                this.lastTimeCached = Time.unscaledTime;
-                this.hospital = Find.CurrentMap.GetComponent<HospitalMapComponent>();
-            }
-            return this.hospital.GetPatientData(pawn, out PatientData patientData)
-                ? PatientUtility.CalculateSilverToReceive(pawn, patientData).ToStringMoney()
+            HospitalMapComponent h = this.Hospital;
+            return h != null && h.GetPatientData(pawn, out PatientData patientData)
+                ? ((float)Invoice.Build(pawn, patientData, DischargeReason.Estimate).TotalSilver).ToStringMoney()
                 : string.Empty;
+        }
+
+        protected override string GetTip(Pawn pawn)
+        {
+            HospitalMapComponent h = this.Hospital;
+            return h != null && h.GetPatientData(pawn, out PatientData patientData)
+                ? Invoice.Build(pawn, patientData, DischargeReason.Estimate).ToText()
+                : null;
         }
     }
 }

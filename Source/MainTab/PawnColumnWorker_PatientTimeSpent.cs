@@ -17,10 +17,10 @@ namespace RimWard.MainTab
             if (this.hospital == null || Time.unscaledTime > this.lastTimeCached + 2f || Find.CurrentMap != this.hospital.map)
             {
                 this.lastTimeCached = Time.unscaledTime;
-                this.hospital = Find.CurrentMap.GetComponent<HospitalMapComponent>();
+                this.hospital = HospitalMapComponent.For(Find.CurrentMap);
             }
             return pawn.GetPatientTimeInHospital(out this.ticks, this.hospital)
-                ? Math.Truncate(this.ticks / 2500.0) + " h"
+                ? this.ticks.ToStringTicksToPeriod(allowSeconds: false, shortForm: true)
                 : string.Empty;
         }
     }

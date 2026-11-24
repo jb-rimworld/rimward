@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using RimWorld;
 using Verse;
 
@@ -27,6 +29,38 @@ namespace RimWard
         public int RetryAfterTick = -1;
         public RoomTier BestRoomTier = RoomTier.Hallway;
         public bool RequiresPrivateRoom;
+
+        // Itemised bill (M3/M9). Bill above stays the running subtotal (sum of the lines) for older code and saves.
+        public List<InvoiceLine> Lines = new List<InvoiceLine>();
+
+        // Caretaker (M5)
+        public int ImpossibleSinceTick = -1;
+        public bool ImpossibleLetterSent;
+        public int DangerHoldSinceTick = -1;
+        public bool PaidOnDischarge;
+
+        /// <summary>Adds a charge and keeps <see cref="Bill"/> equal to the sum of all lines.</summary>
+        public void AddLine(InvoiceLineKind kind, string detail, float amount)
+        {
+            this.EnsureLines(false);
+            if (amount <= 0f) return;
+            this.Lines.Add(new InvoiceLine { kind = kind, detail = detail, amount = amount, tick = Find.TickManager?.TicksGame ?? 0 });
+            this.Bill = this.Lines.Sum(l => l.amount);
+        }
+
+        /// <summary>
+        /// Turns a bare <see cref="Bill"/> into lines: the admission fee set when the case is generated, or (fromSave) the total
+        /// of an older save that had no lines yet.
+        /// </summary>
+        public void EnsureLines(bool fromSave)
+        {
+            if (this.Lines == null) this.Lines = new List<InvoiceLine>();
+            this.Lines.RemoveAll(l => l == null);
+            if (this.Lines.Count == 0 && this.Bill > 0f)
+            {
+                this.Lines.Add(new InvoiceLine { kind = fromSave ? InvoiceLineKind.Legacy : InvoiceLineKind.Admission, detail = this.Diagnosis, amount = this.Bill, tick = this.ArrivedAtTick });
+            }
+        }
 
         public PatientData()
         {
@@ -60,6 +94,12 @@ namespace RimWard
             Scribe_Values.Look(ref this.RetryAfterTick, "RetryAfterTick", -1);
             Scribe_Values.Look(ref this.BestRoomTier, "BestRoomTier", RoomTier.Hallway);
             Scribe_Values.Look(ref this.RequiresPrivateRoom, "RequiresPrivateRoom", false);
+            Scribe_Collections.Look(ref this.Lines, "invoiceLines", LookMode.Deep);
+            Scribe_Values.Look(ref this.ImpossibleSinceTick, "ImpossibleSinceTick", -1);
+            Scribe_Values.Look(ref this.ImpossibleLetterSent, "ImpossibleLetterSent", false);
+            Scribe_Values.Look(ref this.DangerHoldSinceTick, "DangerHoldSinceTick", -1);
+            Scribe_Values.Look(ref this.PaidOnDischarge, "PaidOnDischarge", false);
+            if (Scribe.mode == LoadSaveMode.PostLoadInit) this.EnsureLines(true);
         }
     }
 }

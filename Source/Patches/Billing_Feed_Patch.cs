@@ -20,9 +20,11 @@ namespace RimWard.Patches
                 {
                     Pawn deliveree = __instance.job.GetTarget(TargetIndex.B).Thing as Pawn;
                     Thing food = __instance.job.GetTarget(TargetIndex.A).Thing;
-                    if (deliveree != null && food != null && deliveree.IsPatient(out HospitalMapComponent hospital, false))
+                    // billed only when the meal was actually fed (the job succeeded)
+                    if (x == JobCondition.Succeeded && deliveree != null && food != null && deliveree.IsPatient(out HospitalMapComponent hospital, false)
+                        && hospital.GetPatientData(deliveree, out PatientData data))
                     {
-                        deliveree.AddToBill(hospital, Mathf.Clamp(food.MarketValue * 1.1f, 0f, 70f));
+                        data.AddLine(InvoiceLineKind.Food, food.def.label, Mathf.Clamp(food.MarketValue * 1.1f, 0f, 70f));
                     }
                 });
             }

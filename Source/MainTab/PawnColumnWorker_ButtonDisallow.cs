@@ -15,7 +15,7 @@ namespace RimWard.MainTab
             if (this.hospital == null || Time.unscaledTime > this.lastTimeCached + 2f || Find.CurrentMap != this.hospital.map)
             {
                 this.lastTimeCached = Time.unscaledTime;
-                this.hospital = Find.CurrentMap.GetComponent<HospitalMapComponent>();
+                this.hospital = HospitalMapComponent.For(Find.CurrentMap);
             }
             if (this.hospital.GetPatientData(pawn, out PatientData patientData) && patientData.CureRecipe != null
                 && Widgets.ButtonText(rect, "Disallow".Translate()))

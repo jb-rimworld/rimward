@@ -40,7 +40,23 @@ namespace RimWard
 
         public override void Notify_PawnLost(Pawn pawn, PawnLostCondition condition)
         {
-            this.lord?.Map?.GetComponent<HospitalMapComponent>()?.DismissPatient(pawn);
+            HospitalMapComponent hospital = HospitalMapComponent.For(this.lord?.Map) ?? HospitalMapComponent.For(pawn?.MapHeld);
+            if (hospital == null || pawn == null) return;
+            switch (condition)
+            {
+                case PawnLostCondition.MadePrisoner:
+                case PawnLostCondition.MadeSlave:
+                case PawnLostCondition.ChangedFaction:
+                    // arrested, enslaved, recruited: forget the patient without touching the new status
+                    hospital.ForgetPatient(pawn);
+                    break;
+                case PawnLostCondition.Killed:
+                    break; // handled by the Kill patch (fault classification)
+                default:
+                    // vanished, left, taken over by another lord: the stay ends quietly (no pay, no message)
+                    if (hospital.GetPatientData(pawn, out PatientData d) && !d.Dismissed) hospital.RemoveFromPatientList(pawn, true);
+                    break;
+            }
         }
     }
 }

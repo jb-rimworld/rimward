@@ -65,7 +65,7 @@ namespace RimWard
             PatientData data = null;
             try
             {
-                hospital = pawn.Map?.GetComponent<HospitalMapComponent>();
+                hospital = HospitalMapComponent.For(pawn.Map);
                 if (hospital == null || !hospital.GetPatientData(pawn, out data)) return PatientStage.None;
             }
             catch (Exception) { return PatientStage.None; }

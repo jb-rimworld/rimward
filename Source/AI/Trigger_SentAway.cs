@@ -28,28 +28,35 @@ namespace RimWard
             {
                 return false;
             }
-            bool pendingSurgery = false;
-            if (pawn.IsPatient(out HospitalMapComponent hospital, false) && hospital.GetPatientData(pawn, out PatientData patientData))
+            HospitalMapComponent hospital = HospitalMapComponent.For(pawn.Map);
+            if (hospital == null || !hospital.GetPatientData(pawn, out PatientData data))
             {
-                pendingSurgery = patientData.HasPendingSurgeryBill;
+                return true; // no longer our patient (forgotten by the caretaker): let the lord walk them out
             }
+            if (data.Dismissed)
+            {
+                return true; // dismissed, discharged early, maximum stay: leave now (fixes "dismissed patients never leave")
+            }
+
+            bool pendingSurgery = data.HasPendingSurgeryBill || data.RetryAfterTick >= 0; // no walking out between a botch and the retry
             bool canBeDismissed = !pawn.health.HasHediffsNeedingTend(false)
                 && !HealthAIUtility.ShouldSeekMedicalRest(pawn)
                 && pawn.health.surgeryBills.Count == 0
                 && !pendingSurgery
                 && pawn.health.State == PawnHealthState.Mobile;
 
-            if (pawn.IsPatient(out _, false) && !canBeDismissed
-                && (pawn.mindState.duty == null || !pawn.mindState.duty.def.defName.Equals("RimWard_Patient")))
+            if (!canBeDismissed)
             {
-                pawn.mindState.duty = new PawnDuty(DefDatabase<DutyDef>.GetNamed("RimWard_Patient"), pawn.Position, 100f);
+                data.DangerHoldSinceTick = -1;
+                if (pawn.mindState.duty == null || !pawn.mindState.duty.def.defName.Equals("RimWard_Patient"))
+                {
+                    pawn.mindState.duty = new PawnDuty(DefDatabase<DutyDef>.GetNamed("RimWard_Patient"), pawn.Position, 100f);
+                }
+                return false;
             }
 
-            if (PatientUtility.DangersOnMap(pawn.Map, out _) && pawn.IsPatient(out _, false))
-            {
-                return false; // do not send cured patients into a dangerous map
-            }
-            return canBeDismissed || !pawn.IsPatient(out _, true);
+            // cured: wait for an active threat to pass, but never longer than the setting (dormant clusters and weather never hold anyone)
+            return Caretaker.MayLeaveDespiteDanger(hospital, pawn, data);
         }
     }
 }

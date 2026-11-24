@@ -21,7 +21,7 @@ namespace RimWard
 
         public override void Cleanup()
         {
-            HospitalMapComponent component = base.Map.GetComponent<HospitalMapComponent>();
+            HospitalMapComponent component = HospitalMapComponent.For(base.Map);
             foreach (Pawn pawn in this.lord.ownedPawns.ToArray())
             {
                 component.PatientLeaves(pawn);

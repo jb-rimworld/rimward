@@ -22,20 +22,22 @@ namespace RimWard
         {
             if (!base.CanFireNowSub(parms)) return false;
             Map map = (Map)parms.target;
-            return map.GetComponent<HospitalMapComponent>().MassCasualties && IncidentHelper.CanSpawnPatient(map);
+            HospitalMapComponent c = HospitalMapComponent.For(map);
+            return c != null && c.MassCasualties && IncidentHelper.CanSpawnPatient(map);
         }
 
         protected override bool TryExecuteWorker(IncidentParms parms)
         {
             Map map = (Map)parms.target;
-            HospitalMapComponent component = map.GetComponent<HospitalMapComponent>();
-            if (!component.MassCasualties) return false;
+            HospitalMapComponent component = HospitalMapComponent.For(map);
+            if (component == null || !component.MassCasualties) return false;
             if (!IncidentHelper.CanSpawnPatient(map)) return false;
 
-            if (parms.pawnCount == 0)
-            {
-                parms.pawnCount = component.BedCount() + Rand.Range(-component.BedCount() / 5, 1);
-            }
+            // sized on FREE patient beds (occupied ones do not count), so the event never overfills the hospital
+            int free = component.FreeMedicalBeds();
+            if (free <= 0) return false;
+            if (parms.pawnCount <= 0) parms.pawnCount = free + Rand.Range(-free / 5, 1);
+            parms.pawnCount = UnityEngine.Mathf.Clamp(parms.pawnCount, 1, free);
             List<Faction> factions = Find.FactionManager.AllFactions.Where(f =>
                 !f.IsPlayer && !f.defeated && !f.def.hidden && !f.HostileTo(Faction.OfPlayer)
                 && f.def.humanlikeFaction && !f.def.defName.ToUpper().Contains("VREA")).ToList();
@@ -60,7 +62,7 @@ namespace RimWard
                 LordMaker.MakeNewLord(parms.faction, this.CreateLordJob(parms, pawns), map, new List<Pawn> { pawn });
             }
 
-            TaggedString text = this.def.letterText.Formatted(("MCE_" + type).Translate(), parms.pawnCount);
+            TaggedString text = this.def.letterText.Formatted(("MCE_" + type).Translate(), pawns.Count);
             TaggedString label = this.def.letterLabel;
             this.SendStandardLetter(label, text, LetterDefOf.ThreatSmall, parms, pawns);
             return true;
@@ -84,12 +86,11 @@ namespace RimWard
             info.spawnWipeMode = WipeMode.Vanish;
             DropPodUtility.MakeDropPodAt(cell, map, info);
 
-            HospitalMapComponent component = map.GetComponent<HospitalMapComponent>();
+            HospitalMapComponent component = HospitalMapComponent.For(map);
             PatientUtility.DamagePawn(pawn, patientData, component, type);
             component.PatientArrived(pawn, patientData);
             pawn.jobs.StopAll();
             pawn.jobs.JobTrackerTick();
-            pawn.foodRestriction = new Pawn_FoodRestrictionTracker(pawn) { CurrentFoodPolicy = component.PatientFoodPolicy };
             return patientData;
         }
 

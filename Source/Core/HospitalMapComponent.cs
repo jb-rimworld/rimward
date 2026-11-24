@@ -10,71 +10,154 @@ using Verse.AI.Group;
 
 namespace RimWard
 {
-    // Central per-map hospital state (parity fork). Payment/goodwill logic here is replaced by the
-    // unified Outcome Score in Step 4/10; payout caps are raised to 20000 (HospitalTweak fix folded in)
-    // and faction calls are null-guarded so faction-independent patients never NRE.
+    // Central per-map hospital state: the patients on this map, pending offers and (optionally) a map-only policy override.
+    // The policies themselves live per save in HospitalGameComponent, so a new map (gravship landing) keeps them.
     public class HospitalMapComponent : MapComponent
     {
-        public const float BillCap = 20000f;
-
         public Dictionary<Pawn, PatientData> Patients;
         private List<Pawn> _patientsKeysWorkingList;
         private List<PatientData> _patientsValuesWorkingList;
 
-        public bool openForBusiness;
-        public List<bool> openingHours = DefaultOpeningHours();
-        public List<RecipeDef> refusedOperations = new List<RecipeDef>();
-        public FoodPolicy PatientFoodPolicy;
-        public bool MassCasualties;
-        public bool AcceptSurgery;
-        public bool AcceptDanger;
+        /// <summary>Map-only policy; null = this map uses the save's policy.</summary>
+        private HospitalPolicy ownPolicy;
 
         public List<PatientOffer> pendingOffers = new List<PatientOffer>();
         private int nextOfferId = 1;
         public int PendingOfferCount => this.pendingOffers.Count;
 
+        // pre-2.0 per-map fields, read only while loading an older save and then migrated
+        private HospitalPolicy legacyPolicy;
+
+        private static readonly Dictionary<Map, HospitalMapComponent> cache = new Dictionary<Map, HospitalMapComponent>();
+
         public HospitalMapComponent(Map map) : base(map)
         {
             this.Patients = new Dictionary<Pawn, PatientData>();
-            this.PatientFoodPolicy = Current.Game.foodRestrictionDatabase.DefaultFoodRestriction();
+            if (map != null) cache[map] = this;
         }
 
-        private static List<bool> DefaultOpeningHours()
+        /// <summary>The hospital of a map without the linear component search (hot paths).</summary>
+        public static HospitalMapComponent For(Map map)
         {
-            return new List<bool>
-            {
-                false, false, false, false, false, false, false, true, false, false,
-                false, true, false, false, false, true, false, false, false, true,
-                false, false, false, false
-            };
+            if (map == null) return null;
+            if (cache.TryGetValue(map, out HospitalMapComponent c) && c != null && c.map == map) return c;
+            c = map.GetComponent<HospitalMapComponent>();
+            if (c != null) cache[map] = c;
+            return c;
+        }
+
+        public static void ClearCache()
+        {
+            cache.Clear();
+            Threats.ClearCache();
+        }
+
+        // ---------------------------------------------------------------- policy
+
+        /// <summary>The policy in force on this map: its own override, else the save's policy.</summary>
+        public HospitalPolicy Policy => this.ownPolicy ?? HospitalGameComponent.Get?.Policy ?? (this.ownPolicy = HospitalPolicy.NewDefault(false));
+
+        public bool HasOwnPolicy => this.ownPolicy != null;
+
+        /// <summary>Give this map its own copy of the policy (true) or go back to the save's policy (false).</summary>
+        public void SetOwnPolicy(bool own)
+        {
+            if (own && this.ownPolicy == null) this.ownPolicy = (HospitalGameComponent.Get?.Policy ?? HospitalPolicy.NewDefault(false)).Copy();
+            else if (!own) this.ownPolicy = null;
         }
 
         public override void ExposeData()
         {
             base.ExposeData();
-            if (this.openingHours == null) this.openingHours = DefaultOpeningHours();
-            if (this.refusedOperations == null) this.refusedOperations = new List<RecipeDef>();
-            Scribe_Collections.Look(ref this.openingHours, "openingHours", LookMode.Undefined);
-            Scribe_Collections.Look(ref this.refusedOperations, "refusedOperations", LookMode.Def);
-            if (Scribe.mode == LoadSaveMode.PostLoadInit)
-            {
-                this.refusedOperations?.RemoveAll(r => r == null);
-            }
-            Scribe_Values.Look(ref this.openForBusiness, "openForBusiness", false);
+            if (Scribe.mode == LoadSaveMode.Saving) this.CleanForSave();
             if (this.Patients == null) this.Patients = new Dictionary<Pawn, PatientData>();
             Scribe_Collections.Look(ref this.Patients, "patients", LookMode.Reference, LookMode.Deep, ref this._patientsKeysWorkingList, ref this._patientsValuesWorkingList);
-            Scribe_References.Look(ref this.PatientFoodPolicy, "PatientFoodPolicy");
-            if (this.PatientFoodPolicy == null && Current.Game != null)
-            {
-                this.PatientFoodPolicy = Current.Game.foodRestrictionDatabase.DefaultFoodRestriction();
-            }
-            Scribe_Values.Look(ref this.MassCasualties, "massCasualties", false);
-            Scribe_Values.Look(ref this.AcceptSurgery, "acceptSurgery", true);
-            Scribe_Values.Look(ref this.AcceptDanger, "AcceptDanger", false);
+            Scribe_Deep.Look(ref this.ownPolicy, "ownPolicy");
             Scribe_Collections.Look(ref this.pendingOffers, "pendingOffers", LookMode.Deep);
             Scribe_Values.Look(ref this.nextOfferId, "nextOfferId", 1);
-            if (this.pendingOffers == null) this.pendingOffers = new List<PatientOffer>();
+
+            if (Scribe.mode == LoadSaveMode.LoadingVars) this.ReadLegacyPolicy();
+            if (Scribe.mode == LoadSaveMode.ResolvingCrossRefs && this.legacyPolicy != null)
+                Scribe_References.Look(ref this.legacyPolicy.foodPolicy, "PatientFoodPolicy");
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            {
+                if (this.Patients == null) this.Patients = new Dictionary<Pawn, PatientData>();
+                List<Pawn> bad = this.Patients.Where(kv => kv.Key == null || kv.Value == null).Select(kv => kv.Key).ToList();
+                foreach (Pawn p in bad) if (p != null) this.Patients.Remove(p);
+                if (this.pendingOffers == null) this.pendingOffers = new List<PatientOffer>();
+                this.pendingOffers.RemoveAll(o => o == null || o.pawn == null || o.pawn.Discarded);
+                cache[this.map] = this;
+            }
         }
+
+        /// <summary>Saves written before 2.0 kept the policies per map. Read them once so behaviour does not change.</summary>
+        private void ReadLegacyPolicy()
+        {
+            System.Xml.XmlNode node = Scribe.loader?.curXmlParent;
+            if (node == null || node["openingHours"] == null && node["openForBusiness"] == null) return;
+            HospitalPolicy p = new HospitalPolicy();
+            Scribe_Values.Look(ref p.open, "openForBusiness", false);
+            Scribe_Collections.Look(ref p.openingHours, "openingHours", LookMode.Undefined);
+            Scribe_Collections.Look(ref p.refusedOperations, "refusedOperations", LookMode.Def);
+            Scribe_References.Look(ref p.foodPolicy, "PatientFoodPolicy");
+            Scribe_Values.Look(ref p.massCasualties, "massCasualties", false);
+            Scribe_Values.Look(ref p.acceptSurgery, "acceptSurgery", true);
+            Scribe_Values.Look(ref p.acceptDanger, "AcceptDanger", false);
+            this.legacyPolicy = p;
+        }
+
+        public override void FinalizeInit()
+        {
+            base.FinalizeInit();
+            cache[this.map] = this;
+            if (this.legacyPolicy != null)
+            {
+                // Resolve the cross-reference (food policy) read during LoadingVars, then migrate:
+                // the first map's values become the save policy, other maps that differ keep their own.
+                this.legacyPolicy.Repair();
+                HospitalGameComponent gc = HospitalGameComponent.Get;
+                if (gc != null)
+                {
+                    if (!gc.policyMigrated)
+                    {
+                        gc.Policy = this.legacyPolicy;
+                        gc.policyMigrated = true;
+                    }
+                    else if (!gc.Policy.SameAs(this.legacyPolicy))
+                    {
+                        this.ownPolicy = this.legacyPolicy;
+                    }
+                }
+                this.legacyPolicy = null;
+            }
+            foreach (PatientData d in this.Patients.Values) d?.EnsureLines(true);
+        }
+
+        public override void MapRemoved()
+        {
+            base.MapRemoved();
+            cache.Remove(this.map);
+        }
+
+        /// <summary>Drops entries that would come back as null keys ("Null key while loading dictionary"): gone, discarded, dead or off this map.</summary>
+        private void CleanForSave()
+        {
+            if (this.Patients == null) return;
+            List<Pawn> drop = new List<Pawn>();
+            foreach (KeyValuePair<Pawn, PatientData> kv in this.Patients)
+            {
+                Pawn p = kv.Key;
+                if (kv.Value == null || Caretaker.IsGone(p)) drop.Add(p);
+            }
+            foreach (Pawn p in drop)
+            {
+                if (p != null) this.Patients.Remove(p);
+                Caretaker.Log(this, Caretaker.Fix.StaleEntry, p);
+            }
+            this.pendingOffers.RemoveAll(o => o == null || o.pawn == null || o.pawn.Discarded);
+        }
+
+        // ---------------------------------------------------------------- tick
 
         public override void MapComponentTick()
         {
@@ -86,7 +169,7 @@ namespace RimWard
             for (int i = this.pendingOffers.Count - 1; i >= 0; i--)
             {
                 PatientOffer o = this.pendingOffers[i];
-                if (now >= o.expiresTick || o.pawn == null || o.pawn.Dead || (o.kind == OfferKind.Ambient && !o.pawn.Spawned))
+                if (now >= o.expiresTick || o.pawn == null || o.pawn.Dead || o.pawn.Discarded || (o.kind == OfferKind.Ambient && !o.pawn.Spawned))
                 {
                     this.pendingOffers.RemoveAt(i);
                     DiscardOffer(o);
@@ -94,11 +177,18 @@ namespace RimWard
             }
             if (HospitalMod.Settings.AmbientContractsEnabled && now % 1000 == 0) AmbientScan();
 
-            foreach (KeyValuePair<Pawn, PatientData> kv in this.Patients)
+            Caretaker.Run(this);
+
+            foreach (KeyValuePair<Pawn, PatientData> kv in this.Patients.ToList())
             {
                 Pawn pawn = kv.Key;
                 PatientData data = kv.Value;
-                if (data == null || data.Dismissed || pawn == null || !pawn.Spawned) continue;
+                if (data == null || pawn == null || !pawn.Spawned) continue;
+
+                // Auto-rescue: a downed patient on the floor is carried to a hospital bed by a free doctor, exactly like a downed colonist.
+                // Also for dismissed patients who collapsed before they could leave.
+                if (pawn.Downed && !pawn.InBed()) TryAutoRescue(pawn);
+                if (data.Dismissed) continue;
 
                 // Track the best room the patient actually rested in (used at discharge for pay/goodwill,
                 // since by discharge they may be up and walking, which would read as a hallway).
@@ -107,10 +197,6 @@ namespace RimWard
                     RoomTier t = RoomTierUtility.Classify(pawn.CurrentBed(), pawn);
                     if ((int)t > (int)data.BestRoomTier) data.BestRoomTier = t;
                 }
-
-                // Auto-rescue: a downed patient on the floor is carried to a hospital bed by a free doctor,
-                // exactly like a downed colonist.
-                if (pawn.Downed && !pawn.InBed()) TryAutoRescue(pawn);
 
                 // Scheduled surgery retry: OnSurgeryBotched defers recreation until AFTER vanilla deletes the
                 // failed bill, otherwise the new bill would collide with / be cleaned up alongside the old one.
@@ -122,7 +208,9 @@ namespace RimWard
                     {
                         if (!pawn.health.surgeryBills.Bills.Any(b => b is Bill_Medical bm && bm.recipe == data.CureRecipe))
                         {
-                            HealthCardUtility.CreateSurgeryBill(pawn, data.CureRecipe, ResolveTargetPart(pawn, data.CureRecipe), null, false);
+                            BodyPartRecord part = ResolveTargetPart(pawn, data.CureRecipe);
+                            if (part != null || !data.CureRecipe.targetsBodyPart)
+                                HealthCardUtility.CreateSurgeryBill(pawn, data.CureRecipe, part, null, false);
                         }
                         data.HasPendingSurgeryBill = true;
                     }
@@ -150,7 +238,7 @@ namespace RimWard
             }
         }
 
-        private static bool CureAchieved(Pawn pawn, PatientData data)
+        public static bool CureAchieved(Pawn pawn, PatientData data)
         {
             RecipeDef r = data.CureRecipe;
             if (r == null) return false;
@@ -195,17 +283,44 @@ namespace RimWard
 
         public bool IsOpen()
         {
-            return this.openForBusiness && this.openingHours[GenLocalDate.HourOfDay(this.map)];
+            return this.Policy.IsOpenAtHour(GenLocalDate.HourOfDay(this.map));
         }
+
+        public bool AcceptSurgery => this.Policy.acceptSurgery;
+        public bool AcceptDanger => this.Policy.acceptDanger;
+        public bool MassCasualties => this.Policy.massCasualties && HospitalMod.Settings.MassCasualtiesEnabled;
+        public FoodPolicy PatientFoodPolicy => this.Policy.FoodPolicy;
 
         public void PatientArrived(Pawn pawn, PatientData data)
         {
             data.AdmitHealth = pawn.health.summaryHealth.SummaryHealthPercent;
-            this.Patients.Add(pawn, data);
+            data.EnsureLines(false);
+            this.Patients[pawn] = data;
+            this.ApplyPolicyTo(pawn);
             MainTabWindowUtility.NotifyAllPawnTables_PawnsChanged();
         }
 
-        // === Triage / intake offers ===
+        /// <summary>Food policy and medicine level of the hospital policy, applied to one patient.</summary>
+        public void ApplyPolicyTo(Pawn pawn)
+        {
+            if (pawn == null) return;
+            HospitalPolicy pol = this.Policy;
+            FoodPolicy fp = pol.FoodPolicy;
+            if (fp != null)
+            {
+                if (pawn.foodRestriction == null) pawn.foodRestriction = new Pawn_FoodRestrictionTracker(pawn);
+                pawn.foodRestriction.CurrentFoodPolicy = fp;
+            }
+            if (pawn.playerSettings != null) pawn.playerSettings.medCare = pol.medCare;
+        }
+
+        /// <summary>Re-applies the policy to every current patient (after the policy dialog closes).</summary>
+        public void ApplyPolicyToAll()
+        {
+            foreach (Pawn p in this.ActivePatientsList().ToList()) this.ApplyPolicyTo(p);
+        }
+
+        // ---------------------------------------------------------------- triage / intake offers
 
         // Deliver a (held) patient via drop pod and admit them.
         public void DeliverPatient(Pawn pawn, PatientData data, Faction faction)
@@ -228,7 +343,6 @@ namespace RimWard
             DropPodUtility.MakeDropPodAt(cell, this.map, info);
             this.PatientArrived(pawn, data);
             pawn.jobs.StopAll();
-            pawn.foodRestriction = new Pawn_FoodRestrictionTracker(pawn) { CurrentFoodPolicy = this.PatientFoodPolicy };
             LordMaker.MakeNewLord(faction, new LordJob_VisitColonyAsPatient(faction), this.map, new List<Pawn> { pawn });
         }
 
@@ -236,6 +350,7 @@ namespace RimWard
         public void CreateDropPodOffer(Pawn pawn, PatientData data, Faction faction)
         {
             if (!pawn.IsWorldPawn()) Find.WorldPawns.PassToWorld(pawn, PawnDiscardDecideMode.KeepForever);
+            data.EnsureLines(false);
             PatientOffer offer = new PatientOffer
             {
                 id = this.nextOfferId++,
@@ -251,21 +366,48 @@ namespace RimWard
 
         private void SendOfferLetter(PatientOffer offer)
         {
-            float estPay = PatientUtility.CalculateSilverToReceive(offer.pawn, offer.data);
+            Invoice est = Invoice.Build(offer.pawn, offer.data, DischargeReason.Estimate);
             string faction = offer.faction != null ? offer.faction.Name : "RimWard.NoFaction".Translate().ToString();
-            TaggedString text = "RimWard.Offer.Text".Translate(offer.pawn.LabelShortCap, faction, offer.data.Diagnosis ?? "?", Mathf.RoundToInt(estPay));
+            TaggedString text = "RimWard.Offer.Text".Translate(offer.pawn.LabelShortCap, faction, offer.data.Diagnosis ?? "?", est.TotalSilver);
+            string uses = OfferStockNote(offer.data);
+            if (!uses.NullOrEmpty()) text += "\n\n" + uses;
             ChoiceLetter_PatientOffer letter = (ChoiceLetter_PatientOffer)LetterMaker.MakeLetter("RimWard.Offer.Label".Translate(), text, RimWardDefOf.RimWard_PatientOffer);
             letter.offerId = offer.id;
             letter.mapId = this.map.uniqueID;
             Find.LetterStack.ReceiveLetter(letter);
         }
 
+        /// <summary>"Uses from your stock: ..." for a surgery case (the ingredients the operation consumes and their value).</summary>
+        private static string OfferStockNote(PatientData data)
+        {
+            RecipeDef r = data?.CureRecipe;
+            if (r?.ingredients == null || r.ingredients.Count == 0) return null;
+            List<string> parts = new List<string>();
+            float value = 0f;
+            foreach (IngredientCount ic in r.ingredients)
+            {
+                ThingDef d = ic.IsFixedIngredient ? ic.FixedIngredient : ic.filter?.AllowedThingDefs?.OrderBy(x => x.BaseMarketValue).FirstOrDefault();
+                if (d == null) continue;
+                float n = ic.GetBaseCount();
+                parts.Add(n > 1f ? d.label + " x" + n : d.label);
+                value += d.BaseMarketValue * n;
+            }
+            if (parts.Count == 0) return null;
+            return "RimWard.Offer.UsesStock".Translate(string.Join(", ", parts), value.ToStringMoney());
+        }
+
         public bool ResolveOffer(int id, bool accept)
         {
             PatientOffer offer = this.pendingOffers.FirstOrDefault(o => o.id == id);
             if (offer == null) return false;
+            if (accept && this.IsFull())
+            {
+                // L6: never over capacity. The offer stays open until it expires or a bed frees up.
+                Messages.Message("RimWard.Offer.NoBed".Translate(), MessageTypeDefOf.RejectInput, false);
+                return false;
+            }
             this.pendingOffers.Remove(offer);
-            if (offer.pawn == null) return true;
+            if (offer.pawn == null || offer.pawn.Discarded) return true;
             if (accept)
             {
                 if (offer.kind == OfferKind.Ambient) AcceptAmbient(offer);
@@ -281,7 +423,7 @@ namespace RimWard
         private void DiscardOffer(PatientOffer offer)
         {
             // No goodwill penalty for declining. Discard a held drop-pod pawn; leave ambient pawns be.
-            if (offer.kind == OfferKind.DropPod && offer.pawn != null && !offer.pawn.Spawned)
+            if (offer.kind == OfferKind.DropPod && offer.pawn != null && !offer.pawn.Spawned && !offer.pawn.Discarded)
             {
                 if (offer.pawn.IsWorldPawn()) Find.WorldPawns.RemovePawn(offer.pawn);
                 offer.pawn.Discard(true);
@@ -336,30 +478,70 @@ namespace RimWard
             }
         }
 
+        // ---------------------------------------------------------------- discharge, death, dismissal
+
+        /// <summary>Lord toil cleanup: the patient is on the way out. Cured patients pay here (dismissed ones paid when dismissed).</summary>
         public void PatientLeaves(Pawn pawn)
         {
             if (this.Patients.TryGetValue(pawn, out PatientData patientData) && !patientData.Dismissed)
             {
-                float baseSilver = PatientUtility.CalculateSilverToReceive(pawn, patientData);
-                float num = Mathf.Clamp(baseSilver * OutcomeUtility.PaymentMultiplier(pawn, patientData), 0f, HospitalMod.Settings.BillCap);
-                HospitalGameComponent.Get?.RecordDischarge(true, OutcomeUtility.DischargeScore(pawn, patientData, true), num);
-                if (num > 0f)
-                {
-                    if (pawn.Faction != null && !pawn.Faction.IsPlayer)
-                    {
-                        int num2 = OutcomeUtility.GoodwillFor(pawn, patientData);
-                        Messages.Message($"{pawn.NameFullColored} leaves: +" + num.ToStringMoney() + ", goodwill change: " + num2 + " " + pawn.Faction.Name, MessageTypeDefOf.NeutralEvent, true);
-                        pawn.Faction.TryAffectGoodwillWith(Faction.OfPlayer, num2, false, true, null, null);
-                    }
-                    else
-                    {
-                        Messages.Message($"{pawn.NameFullColored} leaves: +" + num.ToStringMoney(), MessageTypeDefOf.NeutralEvent, true);
-                    }
-                    Thing thing = ThingMaker.MakeThing(ThingDefOf.Silver);
-                    thing.stackCount = (int)num;
-                    GenPlace.TryPlaceThing(thing, pawn.Position, pawn.Map, ThingPlaceMode.Near);
-                }
-                this.RemoveFromPatientList(pawn);
+                this.Discharge(pawn, patientData, DischargeReason.Cured);
+            }
+        }
+
+        /// <summary>
+        /// Ends a stay: builds the invoice, pays, records stats, and sends the patient home. Every way out goes through here
+        /// (cured, dismissed, impossible treatment, maximum stay), so the invoice the player sees is the silver they get.
+        /// </summary>
+        public Invoice Discharge(Pawn pawn, PatientData data, DischargeReason reason)
+        {
+            if (pawn == null || data == null) return null;
+            Invoice inv = Invoice.Build(pawn, data, reason);
+            HospitalGameComponent gc = HospitalGameComponent.Get;
+            float silver = data.PaidOnDischarge ? 0f : inv.TotalSilver;
+            data.PaidOnDischarge = true;
+            bool cured = reason == DischargeReason.Cured;
+            gc?.RecordDischarge(true, cured ? OutcomeUtility.DischargeScore(pawn, data, true) : 40f, silver);
+            if (!cured && gc != null) gc.patientsDischargedEarly++;
+            gc?.RecordInvoice(inv);
+
+            int goodwill = 0;
+            if (cured && pawn.Faction != null && !pawn.Faction.IsPlayer)
+            {
+                goodwill = OutcomeUtility.GoodwillFor(pawn, data);
+                pawn.Faction.TryAffectGoodwillWith(Faction.OfPlayer, goodwill, false, true, null, null);
+            }
+            if (silver > 0f && pawn.Spawned)
+            {
+                Thing thing = ThingMaker.MakeThing(ThingDefOf.Silver);
+                thing.stackCount = (int)silver;
+                GenPlace.TryPlaceThing(thing, pawn.Position, pawn.Map, ThingPlaceMode.Near);
+            }
+            this.AnnounceDischarge(pawn, inv, reason, goodwill);
+
+            if (!cured)
+            {
+                // nothing left to do here: cancel the open operations so the patient is free to go
+                foreach (Bill b in pawn.health.surgeryBills.Bills.ToList()) pawn.health.surgeryBills.Delete(b);
+                data.HasPendingSurgeryBill = false;
+                data.RetryAfterTick = -1;
+            }
+            this.RemoveFromPatientList(pawn, true);
+            return inv;
+        }
+
+        private void AnnounceDischarge(Pawn pawn, Invoice inv, DischargeReason reason, int goodwill)
+        {
+            string factionPart = (pawn.Faction != null && !pawn.Faction.IsPlayer && goodwill != 0)
+                ? " " + "RimWard.Msg.Goodwill".Translate(goodwill.ToStringWithSign(), pawn.Faction.Name).ToString() : string.Empty;
+            string line = ("RimWard.Msg.Discharge." + reason).Translate(pawn.LabelShortCap, ((float)inv.TotalSilver).ToStringMoney()).ToString() + factionPart;
+            if (inv.TotalSilver > 0 && inv.TotalSilver >= HospitalMod.Settings.InvoiceLetterThreshold)
+            {
+                Find.LetterStack.ReceiveLetter("RimWard.Invoice.LetterLabel".Translate(pawn.LabelShortCap), line + "\n\n" + inv.ToText(), LetterDefOf.NeutralEvent, pawn);
+            }
+            else
+            {
+                Messages.Message(line, pawn, MessageTypeDefOf.NeutralEvent, true);
             }
         }
 
@@ -370,7 +552,7 @@ namespace RimWard
             if (!this.Patients.TryGetValue(pawn, out PatientData data)) return;
             Settings s = HospitalMod.Settings;
 
-            bool surgeryContext = data.HasPendingSurgeryBill
+            bool surgeryContext = data.HasPendingSurgeryBill || data.RetryAfterTick >= 0
                 || (data.NoFaultUntilTick >= 0 && Find.TickManager.TicksGame <= data.NoFaultUntilTick);
             bool diedFast = Find.TickManager.TicksGame - data.ArrivedAtTick < 2500; // ~1h: lethal on arrival
 
@@ -380,19 +562,36 @@ namespace RimWard
                 || (s.NoFaultUnwinnable && diedFast);
 
             int penalty = noFault ? 0 : -s.DeathPenaltyAmount;
-            HospitalGameComponent.Get?.RecordDischarge(false, 0f, 0f);
+            HospitalGameComponent gc = HospitalGameComponent.Get;
+            gc?.RecordDischarge(false, 0f, 0f);
+            if (!noFault && gc != null) gc.patientsDiedAtFault++;
+
+            // "The operation was a success; the patient was not": a no-fault death may still pay its share of the bill.
+            if (noFault && s.NoFaultDeathCanProfit && !data.Dismissed && !data.PaidOnDischarge && s.ChargePatients && pawn.Spawned)
+            {
+                Invoice inv = Invoice.Build(pawn, data, DischargeReason.DiedNoFault);
+                data.PaidOnDischarge = true;
+                gc?.RecordInvoice(inv);
+                if (inv.TotalSilver > 0)
+                {
+                    Thing thing = ThingMaker.MakeThing(ThingDefOf.Silver);
+                    thing.stackCount = inv.TotalSilver;
+                    GenPlace.TryPlaceThing(thing, pawn.Position, pawn.Map, ThingPlaceMode.Near);
+                    if (gc != null) gc.silverEarned += inv.TotalSilver;
+                }
+            }
 
             if (penalty != 0 && pawn.Faction != null && !pawn.Faction.IsPlayer)
             {
-                Messages.Message($"{pawn.NameFullColored} died: {penalty} " + pawn.Faction.Name, MessageTypeDefOf.PawnDeath, true);
+                Messages.Message("RimWard.Msg.DiedFault".Translate(pawn.LabelShortCap, penalty.ToString(), pawn.Faction.Name), MessageTypeDefOf.PawnDeath, true);
                 pawn.Faction.TryAffectGoodwillWith(Faction.OfPlayer, penalty, false, true, null, null);
             }
             else
             {
                 string suffix = noFault ? " " + "RimWard.NoGoodwillLost".Translate() : "";
-                Messages.Message($"{pawn.NameFullColored} died." + suffix, MessageTypeDefOf.PawnDeath, true);
+                Messages.Message("RimWard.Msg.Died".Translate(pawn.LabelShortCap) + suffix, MessageTypeDefOf.PawnDeath, true);
             }
-            this.RemoveFromPatientList(pawn);
+            this.RemoveFromPatientList(pawn, true);
             this.PatientLeftTheMap(pawn);
         }
 
@@ -424,28 +623,38 @@ namespace RimWard
             return recipe.Worker.GetPartsToApplyOn(pawn, recipe).FirstOrDefault();
         }
 
+        /// <summary>The player sends a patient home early: they pay their share of the bill so far and leave (fixes "dismissed patients never leave").</summary>
         public void DismissPatient(Pawn pawn)
         {
             if (this.Patients.TryGetValue(pawn, out PatientData patientData) && !patientData.Dismissed)
             {
                 bool uncured = patientData.HasPendingSurgeryBill || pawn.health.surgeryBills.Count > 0
                     || (pawn.Spawned && (pawn.health.HasHediffsNeedingTend(false) || HealthAIUtility.ShouldSeekMedicalRest(pawn)));
-                patientData.HasPendingSurgeryBill = false;
-                Messages.Message($"{pawn.NameFullColored} dismissed.", MessageTypeDefOf.NeutralEvent, true);
                 if (uncured) IdeologyCompat.NotifyPatientTurnedAway(this.map);
-                this.RemoveFromPatientList(pawn);
+                this.Discharge(pawn, patientData, uncured ? DischargeReason.Dismissed : DischargeReason.Cured);
             }
         }
 
-        private void RemoveFromPatientList(Pawn pawn)
+        /// <summary>Marks the entry dismissed (it leaves the table and the lord walks out). resetGuest=false keeps a new prisoner or slave status untouched.</summary>
+        public void RemoveFromPatientList(Pawn pawn, bool resetGuest)
         {
             if (this.Patients.TryGetValue(pawn, out PatientData patientData))
             {
                 patientData.Dismissed = true;
             }
-            if (pawn.playerSettings != null) pawn.playerSettings.selfTend = true;
-            if (pawn.guest != null) pawn.guest.SetGuestStatus(null, GuestStatus.Guest);
+            if (resetGuest && !pawn.IsPrisoner && !pawn.IsSlave && (pawn.Faction == null || !pawn.Faction.IsPlayer))
+            {
+                if (pawn.playerSettings != null) pawn.playerSettings.selfTend = true;
+                if (pawn.guest != null) pawn.guest.SetGuestStatus(null, GuestStatus.Guest);
+            }
             MainTabWindowUtility.NotifyAllPawnTables_PawnsChanged();
+        }
+
+        /// <summary>Forgets a patient completely, without touching their status (arrested, enslaved, recruited, vanished).</summary>
+        public void ForgetPatient(Pawn pawn)
+        {
+            if (pawn == null) return;
+            if (this.Patients.Remove(pawn)) MainTabWindowUtility.NotifyAllPawnTables_PawnsChanged();
         }
 
         public void PatientLeftTheMap(Pawn pawn)
@@ -455,27 +664,29 @@ namespace RimWard
 
         public bool IsSurgeryRecipeAllowed(RecipeDef recipe)
         {
-            return !this.refusedOperations.Any(def => def != null && def == recipe);
+            return !this.Policy.refusedOperations.Any(def => def != null && def == recipe);
         }
 
         public void RefuseOperation(Pawn pawn, RecipeDef recipe)
         {
-            if (!this.refusedOperations.Any(def => def != null && def == recipe))
+            List<RecipeDef> refused = this.Policy.refusedOperations;
+            if (!refused.Any(def => def != null && def == recipe))
             {
-                this.refusedOperations.Add(recipe);
-                Messages.Message($"{recipe.LabelCap} blacklisted.", MessageTypeDefOf.NeutralEvent, true);
+                refused.Add(recipe);
+                Messages.Message("RimWard.Msg.Refused".Translate(recipe.LabelCap), MessageTypeDefOf.NeutralEvent, true);
             }
             this.DismissPatient(pawn);
         }
 
         public void UnRefuseOperation(RecipeDef recipe)
         {
-            this.refusedOperations.RemoveAll(def => def == null || def == recipe);
+            this.Policy.refusedOperations.RemoveAll(def => def == null || def == recipe);
         }
 
         public void SetPatientFoodPolicy(FoodPolicy localRestriction)
         {
-            this.PatientFoodPolicy = localRestriction;
+            this.Policy.FoodPolicy = localRestriction;
+            this.ApplyPolicyToAll();
         }
 
         public bool IsFull()
@@ -495,22 +706,43 @@ namespace RimWard
                 && bed.TryGetComp<CompHospitalBed>() != null && bed.TryGetComp<CompHospitalBed>().Hospital && bed.Map == this.map);
         }
 
+        public int SurgeryBedCount()
+        {
+            return this.map.listerBuildings.AllBuildingsColonistOfClass<Building_Bed>().Count(bed =>
+                bed.Medical && !bed.ForPrisoners && bed.def.building.bed_humanlike && bed.Spawned
+                && (bed.TryGetComp<CompHospitalBed>()?.Surgery ?? false));
+        }
+
         public IEnumerable<Pawn> ActivePatientsList()
         {
-            return this.Patients.Where(pair => !pair.Value.Dismissed).Select(pair => pair.Key);
+            return this.Patients.Where(pair => pair.Key != null && pair.Value != null && !pair.Value.Dismissed).Select(pair => pair.Key);
         }
 
         public bool GetPatientData(Pawn pawn, out PatientData patientData)
         {
-            return this.Patients.TryGetValue(pawn, out patientData);
+            patientData = null;
+            return pawn != null && this.Patients.TryGetValue(pawn, out patientData) && patientData != null;
         }
 
-        public void AddSurgeryBill(Pawn pawn, float amount)
+        /// <summary>Readable "why is this patient still here" (for the Hospital tab column). Empty for unknown pawns.</summary>
+        public string WhyStillHere(Pawn pawn)
         {
-            if (pawn == null) return;
-            if (!this.Patients.TryGetValue(pawn, out PatientData patientData)) return;
-            patientData.Bill += amount;
-            patientData.Bill = Mathf.Clamp(patientData.Bill, 0f, BillCap);
+            return this.GetPatientData(pawn, out PatientData d) ? Caretaker.WhyText(this, pawn, d) : string.Empty;
+        }
+
+        /// <summary>Same as <see cref="WhyStillHere"/> but as a status value.</summary>
+        public PatientStatus StatusOf(Pawn pawn, out string detail)
+        {
+            detail = null;
+            return this.GetPatientData(pawn, out PatientData d) ? Caretaker.StatusOf(this, pawn, d, out detail) : PatientStatus.None;
+        }
+
+        // Called by the caretaker when a patient's entry belongs to another map now (gravship, transport).
+        internal void TransferPatientTo(Pawn pawn, HospitalMapComponent other)
+        {
+            if (other == null || other == this || !this.Patients.TryGetValue(pawn, out PatientData data)) return;
+            this.Patients.Remove(pawn);
+            other.Patients[pawn] = data;
         }
     }
 }

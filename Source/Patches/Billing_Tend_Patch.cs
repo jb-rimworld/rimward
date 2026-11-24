@@ -17,7 +17,8 @@ namespace RimWard.Patches
                 if (patient.health.HasHediffsNeedingTend(false) && doctor != null && doctor.Faction == Faction.OfPlayer
                     && doctor != patient && medicine != null && patient.IsPatient(out HospitalMapComponent hospital, false))
                 {
-                    patient.AddToBill(hospital, Mathf.Clamp(medicine.MarketValue * 1.2f, 0f, 70f));
+                    if (hospital.GetPatientData(patient, out PatientData data))
+                        data.AddLine(InvoiceLineKind.Tend, medicine.def.label, Mathf.Clamp(medicine.MarketValue * 1.2f, 0f, 70f));
                     PatientUtility.RecordTreatment(patient, doctor, medicine);
                 }
             }
