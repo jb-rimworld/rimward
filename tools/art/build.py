@@ -3,7 +3,7 @@
 uv run --with resvg-py --with pillow python3 tools/art/build.py"""
 import sys, math
 from pathlib import Path
-sys.path.insert(0, '/Users/julius/Documents/Coding/22_RimWorld/HearthHarbor/tools/art')
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "HearthHarbor" / "tools" / "art"))  # the hhart pipeline next to this repo
 from PIL import Image, ImageDraw
 from hhart.style import *
 from hhart.registry import render_png, add_grain
