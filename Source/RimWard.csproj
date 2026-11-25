@@ -3,6 +3,7 @@
     <AssemblyName>RimWard</AssemblyName>
     <RootNamespace>RimWard</RootNamespace>
   </PropertyGroup>
-  <!-- JB Framework build: game DLLs (1.7), Harmony, JBFramework.dll (Private=false), output ../1.7/Assemblies. 1.6 stays frozen (Frozen16.sha256). -->
+  <!-- JB Framework build: game DLLs (1.7), Harmony, JBFramework.dll (Private=false), output ../1.7/Assemblies;
+       -p:RimVersion=1.6 builds the same source for 1.6 (net472, compile-only, best effort) into ../1.6/Assemblies. -->
   <Import Project="$(MSBuildProjectDirectory)/../../JBFramework/build/JBMod.props" />
 </Project>
