@@ -30,7 +30,7 @@ RimWard fixes that and adds the paperwork.
 
 ---
 
-## Features (built and tested on RimWorld 1.7; the 1.6 build is best effort and untested, frozen at the 24 November 2026 state)
+## Features (built and tested on RimWorld 1.7; the 1.6 build is best effort and untested: the same features, compiled for 1.6 but never run there)
 
 **Triage, your way.** Three intake modes. *Firehose*: patients just arrive. *Prompt*: every case is a letter with name, faction,
 diagnosis, the estimated payment and, for an operation, what it uses from your stock. *Hybrid* (the default): letters only for surgery cases
@@ -90,7 +90,7 @@ patient beds. No triage letter.
 
 ## Compatibility & requirements
 
-- **Requires:** Harmony, and on RimWorld 1.7 JB Framework (same author). The frozen 1.6 version needs Prepatcher instead.
+- **Requires:** Harmony and JB Framework (same author), on RimWorld 1.7 and 1.6.
 - **Replaces:** the *Hospital* mod and its patches. Please disable those.
 - **Multiplayer:** not supported.
 - **Combat Extended:** CE's "tend yourself" tactic is switched off for patients (soft patch, only when CE is loaded).
@@ -119,7 +119,7 @@ patient beds. No triage letter.
 
 ## Works with Hearth & Harbor
 
-Optional and soft (reflection only, no dependency in either direction). RimWorld 1.7 only: the 1.6 assembly is final and has none of this.
+Optional and soft (reflection only, no dependency in either direction).
 Both features are switches under *RimWard settings > Hearth & Harbor bridge* and do nothing when Hearth & Harbor is not loaded.
 
 **One compact bed button.** Instead of Hospital Bed, Surgery Bed and (from Hearth & Harbor) Guest Bed toggles piling up, a colony bed shows

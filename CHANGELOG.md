@@ -2,7 +2,7 @@
 
 ## 2.0.0 (2026-11-25)
 
-- **Needs JB Framework on RimWorld 1.7** (a new required mod, same author; Harmony as before). The frozen 1.6 version does not.
+- **Needs JB Framework** (a new required mod, same author; Harmony as before), on RimWorld 1.7 and 1.6. RimWorld 1.6 gets the same 2.0 version; Prepatcher is no longer listed.
 - Patients actually come with the default settings: a new hospital is open all day (it used to open only at 7, 11, 15 and 19, which let about one patient a week through), and a hospital with even one free bed gets about one patient a day.
 - The default intake is now Hybrid: wound and disease cases just arrive, but a letter asks first before an operation, which may use a bionic part or medicine from your stock. Firehose (everybody just arrives) is still one click away.
 - New Hospital tab: an open/closed switch you cannot miss, free beds, patients, offers and income this quadrum at a glance, and a checklist of what is still missing before patients come, most lines with a button that fixes it (open now, use the medical beds, a surgery bed, a doctor, forbidden medicine, a landing spot).
@@ -30,4 +30,4 @@
 - New hand-drawn textures for the landing spot, the tab icon and the Workshop preview.
 - German: goodwill is "Ruf" as in the game, the hospital's renown is "Renommee", and the policy pages are "Regeln" everywhere.
 - Safe to remove: "Prepare for removal" (Patient intake area, or the Diagnosis page) sends patients home, withdraws offers and hospital letters and removes the landing spots; the save then loads without RimWard with no error from it. RimWard's own state now lives in JB Framework's save data, so a new save names no class of RimWard any more; saves from RimWard 1.x and the 2.0 test builds load with everything intact.
-- Built and tested on RimWorld 1.7. The 1.6 build is best effort and untested; on 1.6 RimWard stays as it was on 24 November 2026.
+- Built and tested on RimWorld 1.7. The 1.6 build is best effort and untested (the same source compiled against RimWorld 1.6; it was never run in a 1.6 game).

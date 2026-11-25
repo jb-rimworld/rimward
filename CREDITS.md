@@ -24,8 +24,7 @@ the unified outcome score, triage, the consolidated tab, renown, soft compat, an
 Soft integrations (no dependency; each one does nothing when the mod is absent): Combat Extended (CE Team; patients do not
 self-tend), Hearth & Harbor and Hospital Beds Gen 2 (both by the same author).
 
-Built with Harmony (pardeike) and, on RimWorld 1.7, JB Framework (settings window, compatibility page, test harness; same author).
-The frozen RimWorld 1.6 build also lists Prepatcher (Zetrith); the 1.7 build does not use it.
+Built with Harmony (pardeike) and JB Framework (settings window, compatibility page, test harness; same author).
 
 ## License and source
 GPL-3.0 (see `LICENSE`). As a derivative of GPL-3.0 work, RimWard is and remains GPL-3.0.

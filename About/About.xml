@@ -21,22 +21,7 @@ Adding it mid-game works. To remove it, press "Prepare for removal" (Mod setting
 
 Built and tested on RimWorld 1.7. The 1.6 build is best effort and untested.
 
-Requires Harmony and, on 1.7, JB Framework. Replaces Hospital and Hospital Fix And Tweak. GPL-3.0 fork of Adamas's Hospital and assssssqwww's Hospital Fix And Tweak; source: https://github.com/jb-rimworld/rimward. Built with the help of Claude Code.</description>
-	<modDependenciesByVersion>
-		<v1.7>
-			<li>
-				<packageId>brrainz.harmony</packageId>
-				<displayName>Harmony</displayName>
-				<steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
-				<downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
-			</li>
-			<li>
-				<packageId>juliusberger.jbframework</packageId>
-				<displayName>JB Framework</displayName>
-				<steamWorkshopUrl>steam://url/CommunityFilePage/JBFRAMEWORK_WORKSHOP_ID</steamWorkshopUrl>
-			</li>
-		</v1.7>
-	</modDependenciesByVersion>
+Requires Harmony and JB Framework. Replaces Hospital and Hospital Fix And Tweak. GPL-3.0 fork of Adamas's Hospital and assssssqwww's Hospital Fix And Tweak; source: https://github.com/jb-rimworld/rimward. Built with the help of Claude Code.</description>
 	<modDependencies>
 		<li>
 			<packageId>brrainz.harmony</packageId>
@@ -45,9 +30,9 @@ Requires Harmony and, on 1.7, JB Framework. Replaces Hospital and Hospital Fix A
 			<downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
 		</li>
 		<li>
-			<packageId>zetrith.prepatcher</packageId>
-			<displayName>Prepatcher</displayName>
-			<steamWorkshopUrl>steam://url/CommunityFilePage/2934420800</steamWorkshopUrl>
+			<packageId>juliusberger.jbframework</packageId>
+			<displayName>JB Framework</displayName>
+			<steamWorkshopUrl>steam://url/CommunityFilePage/JBFRAMEWORK_WORKSHOP_ID</steamWorkshopUrl>
 		</li>
 	</modDependencies>
 	<loadAfter>
