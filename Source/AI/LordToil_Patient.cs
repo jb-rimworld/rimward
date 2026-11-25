@@ -11,11 +11,9 @@ namespace RimWard
 {
     internal class LordToil_Patient : LordToil
     {
-        public LordToilData_Patient Data => (LordToilData_Patient)this.data;
-
+        // No toil data: a save then names one class of RimWard fewer per patient (LordToilData_Patient stays for older saves).
         public LordToil_Patient()
         {
-            this.data = new LordToilData_Patient();
         }
 
         public override void Init()
@@ -38,7 +36,7 @@ namespace RimWard
         {
             foreach (Pawn pawn in this.lord.ownedPawns)
             {
-                pawn.mindState.duty = new PawnDuty(DefDatabase<DutyDef>.GetNamed("RimWard_Patient"), pawn.Position, this.Data.radius);
+                pawn.mindState.duty = new PawnDuty(DefDatabase<DutyDef>.GetNamed("RimWard_Patient"), pawn.Position, 0f);
             }
         }
     }

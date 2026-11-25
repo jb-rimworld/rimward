@@ -7,6 +7,7 @@ using Verse.AI.Group;
 
 namespace RimWard
 {
+    /// <summary>Old toil data (radius, never used with another value than 0): kept only so that saves from before 2.0 load. New lords have no toil data.</summary>
     internal class LordToilData_Patient : LordToilData
     {
         public float radius;

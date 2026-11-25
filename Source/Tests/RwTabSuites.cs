@@ -191,6 +191,7 @@ namespace RimWard.Tests
                 t.Check(card != null && card.IsOpen, "fresh colony: the welcome card opens (" + card?.GetType().Name + ")");
                 t.Check("RimWard.FirstStartPitch".CanTranslate() && "RimWard.Card.openHospital".CanTranslate() && "RimWard.Card.useBeds".CanTranslate(), "its pitch and actions are translated");
                 t.Shot("rw_welcome_" + L);
+                foreach (int y in t.Frames(3)) yield return y;   // the screenshot is taken at the end of a frame
                 card?.Close(false);
                 foreach (int y in t.Frames(2)) yield return y;
                 List<ReadinessItem> ready = HospitalOverview.Readiness(map);
