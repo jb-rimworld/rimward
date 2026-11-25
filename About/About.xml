@@ -32,7 +32,7 @@ Requires Harmony and JB Framework (if it is missing, the game offers to install 
 		<li>
 			<packageId>juliusberger.jbframework</packageId>
 			<displayName>JB Framework</displayName>
-			<steamWorkshopUrl>steam://url/CommunityFilePage/JBFRAMEWORK_WORKSHOP_ID</steamWorkshopUrl>
+			<steamWorkshopUrl>steam://url/CommunityFilePage/3845593938</steamWorkshopUrl>
 		</li>
 	</modDependencies>
 	<loadAfter>
