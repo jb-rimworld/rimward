@@ -54,8 +54,26 @@ namespace RimWard.Tests
         internal static int Now => Find.TickManager.TicksGame;
 
         /// <summary>A hospital ready for patients: open all day, surgery accepted, beds, a doctor with Medicine 8, medicine and one bionic arm.</summary>
+        /// <summary>The suite whose things are in <see cref="Spawned"/>.</summary>
+        private static TestContext spawnOwner;
+
+        /// <summary>
+        /// A suite that failed by timeout never reached its CleanUp, and its beds and patients then broke the next suite (rw.tab after the
+        /// rw.surgeryflow flake). At the start of a suite, whatever an earlier suite left in <see cref="Spawned"/> is removed.
+        /// </summary>
+        internal static void CleanLeftovers(TestContext t)
+        {
+            if (spawnOwner != null && spawnOwner != t && Spawned.Count > 0 && t.Map != null)
+            {
+                t.Note("removed what an earlier suite (" + spawnOwner.Suite + ") left behind: " + Spawned.Count + " things");
+                CleanUp(t.Map);
+            }
+            spawnOwner = t;
+        }
+
         internal static Pawn SetUp(TestContext t, int beds, int surgeryBeds)
         {
+            CleanLeftovers(t);
             ArrivalScheduler.PausedForTests = true;
             Map map = t.Map;
             HospitalPolicy pol = HospitalSave.Get.Policy;

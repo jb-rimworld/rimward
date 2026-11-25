@@ -408,30 +408,58 @@ namespace RimWard.Tests
     sealed class SurgeryFlowSuite : KitTestSuite
     {
         public override string Name => "rw.surgeryflow";
-        public override int MaxTicks => 30000;
+        // 26000 ticks for the operation + 15000 for the discharge + set-up; the suite cleans up itself before the runner's timeout
+        public override int MaxTicks => 43000;
         public override IEnumerable<int> Run(TestContext t)
         {
             Map map = t.Map;
             Pawn doc = RwT.SetUp(t, 2, 2);
             HospitalMap comp = RwT.Comp(map);
-            foreach (Pawn c in map.mapPawns.FreeColonistsSpawned) if (!c.WorkTypeIsDisabled(WorkTypeDefOf.Doctor)) c.workSettings?.SetPriority(WorkTypeDefOf.Doctor, 1);
+            // Installing a bionic arm needs Medicine 5. Before, only SetUp's doctor had it, so one mental break (a daze of several hours on a
+            // random map, after earlier suites hurt the mood) left nobody able to operate (flake of the final round: no doctor for 26000 ticks).
+            // Every colonist who can doctor gets the skill and priority 1, and a doctor who breaks down is brought back at once.
+            List<Pawn> doctors = map.mapPawns.FreeColonistsSpawned.Where(c => !c.WorkTypeIsDisabled(WorkTypeDefOf.Doctor)).ToList();
+            foreach (Pawn c in doctors)
+            {
+                c.workSettings?.SetPriority(WorkTypeDefOf.Doctor, 1);
+                SkillRecord med = c.skills?.GetSkill(SkillDefOf.Medicine);
+                if (med != null && med.Level < 8) med.Level = 8;
+            }
+            t.Check(doctors.Count > 0, "colonists who can operate: " + doctors.Count);
             Pawn p = RwT.NewPatient(map, PatientType.Wounds, out PatientData d, true, false);
             p.health.RemoveAllHediffs();
             t.Check(BillingSuite.MakeArmCase(p, d, out Bill_Medical bill, out Thing arm), "a bionic arm operation as the patient's case");
             Test_ForceSurgeryOutcome.Force = ForcedOutcome.Success;
-            int start = RwT.Now;
+            WorkGiver_Scanner surgery = DefDatabase<WorkGiverDef>.GetNamedSilentFail("DoBillsMedicalHumanOperation")?.Worker as WorkGiver_Scanner;
+            int start = RwT.Now, recovered = 0;
             while (RwT.Now - start < 26000 && !HospitalMap.CureAchieved(p, d))
             {
                 yield return 250;
+                foreach (Pawn c in doctors)
+                    if (c.Spawned && !c.Dead && c.InMentalState) { t.Note("doctor " + c.LabelShort + " broke down (" + c.MentalStateDef?.defName + "): brought back"); c.MentalState.RecoverFromState(); recovered++; }
                 if ((RwT.Now - start) % 5000 < 250)
+                {
+                    string why = "";
+                    if (surgery != null && doc != null && doc.Spawned && p.Spawned)
+                    {
+                        JobFailReason.Clear();
+                        Job job = surgery.JobOnThing(doc, p, false);
+                        why = job != null ? "could start " + job.def.defName : (JobFailReason.Reason ?? "no job, no reason");
+                        JobFailReason.Clear();
+                    }
                     t.Note("t+" + (RwT.Now - start) + ": job " + p.CurJobDef?.defName + ", duty " + p.mindState?.duty?.def?.defName + ", toil " + p.GetLord()?.CurLordToil?.GetType().Name
                         + ", seekRest " + HealthAIUtility.ShouldSeekMedicalRest(p) + ", surgeryNow " + HealthAIUtility.ShouldHaveSurgeryDoneNow(p)
-                        + ", bed " + RestUtility.FindBedFor(p, p, false)?.ThingID + ", doc job " + doc?.CurJobDef?.defName + ", pending " + d.HasPendingSurgeryBill + ", bills " + p.health.surgeryBills.Count);
+                        + ", bed " + RestUtility.FindBedFor(p, p, false)?.ThingID + ", doc job " + doc?.CurJobDef?.defName + " (" + why + ")"
+                        + ", arm reachable " + (arm != null && arm.Spawned && doc != null && doc.CanReach(arm, PathEndMode.ClosestTouch, doc.NormalMaxDanger()))
+                        + ", outdoor " + map.mapTemperature.OutdoorTemp.ToString("F0") + " C, pending " + d.HasPendingSurgeryBill + ", bills " + p.health.surgeryBills.Count);
+                }
             }
             Test_ForceSurgeryOutcome.Force = ForcedOutcome.None;
-            t.Note("status after " + (RwT.Now - start) + " ticks: " + comp.WhyStillHere(p) + ", in bed " + p.InBed());
-            t.Check(HospitalMap.CureAchieved(p, d), "a colonist installed the bionic arm by the normal surgery job");
+            t.Note("status after " + (RwT.Now - start) + " ticks: " + comp.WhyStillHere(p) + ", in bed " + p.InBed() + ", doctors brought back from a break " + recovered);
+            bool cured = HospitalMap.CureAchieved(p, d);
+            t.Check(cured, "a colonist installed the bionic arm by the normal surgery job");
             t.Check(RwT.LinesOf(d, InvoiceLineKind.Surgery) == 1 && RwT.LinesOf(d, InvoiceLineKind.Materials) == 1, "the real operation billed fee and materials");
+            if (!cured) { RwT.CleanUp(map); yield break; }   // no discharge to wait for; never leave beds behind for the next suite
             int silver0 = RwT.SilverOnMap(map);
             int due = Invoice.Build(p, d, DischargeReason.Estimate).TotalSilver;
             int waited = 0;

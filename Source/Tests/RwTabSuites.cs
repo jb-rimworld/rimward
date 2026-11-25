@@ -172,6 +172,7 @@ namespace RimWard.Tests
             Map map = t.Map;
             HospitalMap comp = RwT.Comp(map);
             HospitalSave gc = HospitalSave.Get;
+            RwT.CleanLeftovers(t);
             int red0 = t.Mark(), guard0 = HospitalMod.K.Log.ErrorCount;
             ArrivalScheduler.PausedForTests = true;
             string lang = LanguageDatabase.activeLanguage?.folderName ?? "?";
