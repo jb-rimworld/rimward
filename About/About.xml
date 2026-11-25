@@ -21,7 +21,7 @@ Adding it mid-game works. To remove it, press "Prepare for removal" (Mod setting
 
 Built and tested on RimWorld 1.7. The 1.6 build is best effort and untested.
 
-Requires Harmony and JB Framework. Replaces Hospital and Hospital Fix And Tweak. GPL-3.0 fork of Adamas's Hospital and assssssqwww's Hospital Fix And Tweak; source: https://github.com/jb-rimworld/rimward. Built with the help of Claude Code.</description>
+Requires Harmony and JB Framework; if JB Framework is missing, the game offers to install it. Replaces Hospital and Hospital Fix And Tweak. GPL-3.0 fork of Adamas's Hospital and assssssqwww's Hospital Fix And Tweak; source: https://github.com/jb-rimworld/rimward. Built with the help of Claude Code.</description>
 	<modDependencies>
 		<li>
 			<packageId>brrainz.harmony</packageId>

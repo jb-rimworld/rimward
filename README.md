@@ -91,6 +91,7 @@ patient beds. No triage letter.
 ## Compatibility & requirements
 
 - **Requires:** Harmony and JB Framework (same author), on RimWorld 1.7 and 1.6.
+- If JB Framework is missing, the game offers to install it when it starts (RimWard stays switched off until then).
 - **Replaces:** the *Hospital* mod and its patches. Please disable those.
 - **Multiplayer:** not supported.
 - **Combat Extended:** CE's "tend yourself" tactic is switched off for patients (soft patch, only when CE is loaded).

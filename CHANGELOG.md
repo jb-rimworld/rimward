@@ -3,6 +3,7 @@
 ## 2.0.0 (2026-11-25)
 
 - **Needs JB Framework** (a new required mod, same author; Harmony as before), on RimWorld 1.7 and 1.6. RimWorld 1.6 gets the same 2.0 version; Prepatcher is no longer listed.
+- If JB Framework is missing after the update, the game offers to install it at the main menu; until then RimWard stays switched off, so nothing breaks.
 - Patients actually come with the default settings: a new hospital is open all day (it used to open only at 7, 11, 15 and 19, which let about one patient a week through), and a hospital with even one free bed gets about one patient a day.
 - The default intake is now Hybrid: wound and disease cases just arrive, but a letter asks first before an operation, which may use a bionic part or medicine from your stock. Firehose (everybody just arrives) is still one click away.
 - New Hospital tab: an open/closed switch you cannot miss, free beds, patients, offers and income this quadrum at a glance, and a checklist of what is still missing before patients come, most lines with a button that fixes it (open now, use the medical beds, a surgery bed, a doctor, forbidden medicine, a landing spot).
