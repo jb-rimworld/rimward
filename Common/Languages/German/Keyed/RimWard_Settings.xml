@@ -131,4 +131,8 @@
   <RimWard.Compat.Hospital.Why>RimWard ist der neu gebaute Nachfolger von Hospital: Nutze nur eines von beiden.</RimWard.Compat.Hospital.Why>
   <RimWard.Compat.HospitalFixAndTweak.Why>Seine Korrekturen stecken schon in RimWard.</RimWard.Compat.HospitalFixAndTweak.Why>
   <RimWard.Compat.HospitalPatch.Why>Patcht die Mod Hospital, die RimWard ersetzt.</RimWard.Compat.HospitalPatch.Why>
+  <RimWard.Card.openHospital>Krankenhaus jetzt öffnen</RimWard.Card.openHospital>
+  <RimWard.Card.openHospital.Tip>Öffnet das Krankenhaus dieser Kolonie. Patienten kommen, sobald ein medizinisches Bett Patienten aufnimmt.</RimWard.Card.openHospital.Tip>
+  <RimWard.Card.useBeds>Alle medizinischen Betten für Patienten nutzen</RimWard.Card.useBeds>
+  <RimWard.Card.useBeds.Tip>Bei jedem medizinischen Bett dieser Kolonie wird der Knopf „Krankenhausbett“ eingeschaltet. Neue medizinische Betten nehmen ohnehin von selbst Patienten auf.</RimWard.Card.useBeds.Tip>
 </LanguageData>

@@ -85,10 +85,10 @@ namespace RimWard
         {
             r.WelcomeCard()
                 .WithAction("openHospital", "Open the hospital now",
-                    "Opens the hospital in this colony for all 24 hours. Patients come as soon as a medical bed is set to take patients.",
+                    "Opens the hospital in this colony. Patients come as soon as a medical bed takes patients.",
                     () => HospitalOverview.WelcomeOpenDone(), () => HospitalOverview.WelcomeOpen())
                 .WithAction("useBeds", "Use all medical beds for patients",
-                    "Every medical bed of this colony that does not take patients yet is set to Hospital Bed. New medical beds take patients by default anyway.",
+                    "Every medical bed of this colony gets its \"Hospital Bed\" switch turned on. New medical beds take patients by default anyway.",
                     () => HospitalOverview.WelcomeBedsDone(), () => HospitalOverview.WelcomeBeds());
         }
 
@@ -121,7 +121,7 @@ namespace RimWard
                 "Now and then a pandemic, raid, crash or fire sends several patients at once, never more than you have free patient beds. Each colony still opts in under Hospital policies.")
                 .LegacyEnabled("MassCasualtiesEnabled");
             r.Section(Sections.Complications, "Complications",
-                "Patients may bring a second illness, a chronic condition or a harmless addiction. Never anything that kills them or sends them berserk.")
+                "Patients may bring a harmless second illness (such as gut worms), a chronic condition or a harmless addiction. Never anything that can kill them or send them berserk.")
                 .LegacyEnabled("ComplicationsEnabled");
             r.Section(Sections.Billing, "Billing extras",
                 "Partial pay when a patient leaves early, reimbursement after a failed operation, invoice letters for big payouts. Off: the plain bill, paid in full when cured and nothing otherwise.");
@@ -129,7 +129,7 @@ namespace RimWard
                 "A patient who dies through your fault costs goodwill with their faction. Deaths you could not prevent never do.")
                 .LegacyEnabled("DeathPenaltyEnabled");
             r.Section(Sections.Renown, "Renown",
-                "Good outcomes build the hospital's renown in four tiers (Field Aid, Clinic, Hospital, Medical Hub), each paying 5% more.")
+                "Good outcomes build the hospital's renown in four tiers (Field Aid, Clinic, Hospital, Medical Hub). Every tier above Field Aid pays 5% more: +5%, +10%, +15%.")
                 .LegacyEnabled("RenownEnabled");
             r.Section(Sections.Royalty, "Noble patients (Royalty)",
                 "Titled patients want a private room: they pay 40% more for one and 25% less for a shared one.")
@@ -155,7 +155,7 @@ namespace RimWard
             r.Float(core, Keys.Difficulty, 1f, 0.5f, 2f, "Case difficulty", "Scales how badly patients are wounded or ill and how many complications they bring.")
                 .InGroup("Patients").WithStep(0.1f).Legacy("Difficulty");
             r.Bool(core, Keys.OpenInNewColonies, true, "Open the hospital in new colonies",
-                "A new colony starts with the hospital open. Nobody comes until there is a medical bed set to Patient. Existing saves keep what they had.")
+                "A new colony starts with the hospital open. Nobody comes until there is a patient bed (a medical bed with its \"Hospital Bed\" switch on). Existing saves keep what they had.")
                 .InGroup("Patients").Legacy("OpenInNewColonies");
             r.Bool(core, Keys.SpecialNeeds, false, "Special-needs xenotypes as patients",
                 "Off: patients who live on hemogen or need a deathrest casket are not sent. Their faction's own xenotype is always kept.")
