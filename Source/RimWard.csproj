@@ -2,6 +2,10 @@
   <PropertyGroup>
     <AssemblyName>RimWard</AssemblyName>
     <RootNamespace>RimWard</RootNamespace>
+    <!-- the missing-framework guard (JBFramework build/JBGuard.props; LoadFolders.xml loads it only without the framework) -->
+    <JBGuard>true</JBGuard>
+    <JBGuardLoss>its patients and the hospital's renown, income and policies</JBGuardLoss>
+    <JBGuardLossDe>ihre Patienten sowie Renommee, Einnahmen und Regeln des Krankenhauses</JBGuardLossDe>
   </PropertyGroup>
   <!-- JB Framework build: game DLLs (1.7), Harmony, JBFramework.dll (Private=false), output ../1.7/Assemblies;
        -p:RimVersion=1.6 builds the same source for 1.6 (net472, compile-only, best effort) into ../1.6/Assemblies. -->
