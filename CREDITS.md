@@ -1,6 +1,6 @@
 # Credits
 
-**RimWard — Anesthesia Not Included** is a GPL-3.0 fork. It stands on the shoulders of:
+**RimWard – Hospital for Profit (Anesthesia Not Included)** is a GPL-3.0 fork. It stands on the shoulders of:
 
 - **Adamas** — the original *Hospital* mod (`Adamas.Hospital`, GPL-3.0). RimWard reuses and adapts its
   patient lord/duty/bed/exit AI and the proven medical-tourism loop. Huge thanks.

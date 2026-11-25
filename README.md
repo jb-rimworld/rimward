@@ -1,5 +1,7 @@
-# RimWard — Anesthesia Not Included
+# RimWard – Hospital for Profit (Anesthesia Not Included)
 ### *A hospital overhaul for RimWorld*
+
+Source: https://github.com/jb-rimworld/rimward (GPL-3.0)
 
 > *"First, do no harm. Second, do submit an itemized invoice."*
 
@@ -28,7 +30,7 @@ RimWard fixes that and adds the paperwork.
 
 ---
 
-## Features (RimWorld 1.7; the 1.6 build is frozen at the November 2026 state)
+## Features (built and tested on RimWorld 1.7; the 1.6 build is best effort and untested, frozen at the 24 November 2026 state)
 
 **Triage, your way.** Three intake modes. *Firehose*: patients just arrive. *Prompt*: every case is a letter with name, faction,
 diagnosis, the estimated payment and, for an operation, what it uses from your stock. *Hybrid* (the default): letters only for surgery cases
@@ -54,7 +56,7 @@ up to 3 times (setting), and the patient cannot walk out between the botch and t
   anyone, and weather only stops new arrivals;
 - arrested, enslaved or recruited patients are dropped from the list without undoing their new status;
 - vanished patients are cleaned out before saving (no "null key" on load).
-Each patient has a readable reason why they are still here (shown in a future overview; the data exists now).
+Each patient has a readable reason why they are still here, shown on the Hospital tab.
 
 **A fair malpractice system.** You only lose goodwill when it is your fault. Death in surgery or right after a botch, after dismissal,
 or within an hour of arrival: not on you. A no-fault death can still pay its share of the bill (setting). Neglect costs goodwill.
@@ -64,7 +66,7 @@ are stored once per save and apply to every map, including the new one after a g
 (checkbox). New colonies start with the hospital open (setting); nobody comes until a medical bed is set to Patient.
 
 **Room-quality pay, renown, difficult clientele.** A private room pays 135%, a two-bed room 110%, a ward 85%, a hallway less. A chief
-physician (Medicine 12+) adds 25%. Four renown tiers, +5% each. Nobles pay 40% more for a private room and 25% less for a shared one.
+physician (Medicine 12+) adds 25%. Four renown tiers: +5%, +10%, +15% above Field Aid. Nobles pay 40% more for a private room and 25% less for a shared one.
 Tribal factions dislike glitterworld medicine, modern ones dislike herbs. Patients arrive with extra illnesses or chronic conditions
 (never anything that kills them or sends them berserk). They keep their faction's own xenotype; hemogen and deathrest xenotypes are
 not sent unless you allow them.
@@ -101,10 +103,24 @@ patient beds. No triage letter.
 
 ---
 
+## Adding and removing
+
+- **Adding to a running colony** works: the hospital opens (setting "Open the hospital in new colonies") and patients come once a medical bed takes patients.
+- **Removing:** *Mod settings > RimWard > Patient intake > Prepare for removal* (also on the Diagnosis page), then save. Patients are sent home on
+  vanilla's "leave the map" (paid like an early discharge), offers and hospital letters are withdrawn, "turned a patient away" memories and landing
+  spots are removed, intake is switched off. That save loads without RimWard with no error from it. RimWard's state (policies, renown, invoices,
+  patients) is stored in JB Framework's save data and comes back if you add RimWard again.
+- **Removing without preparing:** the first load shows red errors for every patient still on the map and every open hospital letter (the game
+  cannot read their classes any more); the colony plays on; those patients lose
+  their visit, and the ones who can walk leave while one still in bed stays as an ordinary guest (vanilla follow-up errors from their lost lords
+  stop after the first ticks).
+
+---
+
 ## Works with Hearth & Harbor
 
 Optional and soft (reflection only, no dependency in either direction). RimWorld 1.7 only: the 1.6 assembly is final and has none of this.
-Both features are switches under *RimWard settings > Hearth & Harbor* and do nothing when Hearth & Harbor is not loaded.
+Both features are switches under *RimWard settings > Hearth & Harbor bridge* and do nothing when Hearth & Harbor is not loaded.
 
 **One compact bed button.** Instead of Hospital Bed, Surgery Bed and (from Hearth & Harbor) Guest Bed toggles piling up, a colony bed shows
 a single button, *Use: Colonist / Guest / Patient / Surgery patient*, with a menu. Impossible entries are greyed out with the reason

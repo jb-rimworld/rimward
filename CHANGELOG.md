@@ -1,13 +1,14 @@
 # Changelog
 
-## 2.0.0
+## 2.0.0 (2026-11-25)
 
 - **Needs JB Framework on RimWorld 1.7** (a new required mod, same author; Harmony as before). The frozen 1.6 version does not.
 - Patients actually come with the default settings: a new hospital is open all day (it used to open only at 7, 11, 15 and 19, which let about one patient a week through), and a hospital with even one free bed gets about one patient a day.
 - The default intake is now Hybrid: wound and disease cases just arrive, but a letter asks first before an operation, which may use a bionic part or medicine from your stock. Firehose (everybody just arrives) is still one click away.
 - New Hospital tab: an open/closed switch you cannot miss, free beds, patients, offers and income this quadrum at a glance, and a checklist of what is still missing before patients come, most lines with a button that fixes it (open now, use the medical beds, a surgery bed, a doctor, forbidden medicine, a landing spot).
-- The tab lists every patient with their state and why they are still here, takes offers with Accept / Turn away (letters are optional now), has the hospital policies as a page, a short guide, and a start card once per colony: "Open the hospital now" and "Use all medical beds for patients".
-- New settings window (JB Framework): pages per area, search, presets Clinic / Charity / Meat shop, and a welcome card in a new colony. Your old RimWard settings carry over.
+- The tab lists every patient with their state and why they are still here, takes offers with Accept / Turn away (letters are optional now), has the hospital policies as a page and a short guide.
+- New settings window (JB Framework): pages per area, search, presets Clinic / Charity / Meat shop. Rows that only matter while a switch above them is on (payment scale, chief physician, retries) grey out with the reason. Your old RimWard settings carry over.
+- One welcome card per colony (in English or German): what RimWard does, a preset to start with, and two buttons, "Open the hospital now" and "Use all medical beds for patients", that show green once done.
 - Settings now belong to each save; the settings file is the template for new games.
 - Switch whole areas off: patient intake, surgery cases, mass casualties, complications, billing extras, malpractice, renown, noble patients, Guilty ideoligions, the Hearth & Harbor bridge and Combat Extended.
 - New pages: "Hospital policies (this colony)", "Pricing explained" and "Blacklists" for diseases, operations and factions you never want to see.
@@ -28,4 +29,5 @@
 - Removed two settings that did nothing (Soft compatibility, Zombie contracts).
 - New hand-drawn textures for the landing spot, the tab icon and the Workshop preview.
 - German: goodwill is "Ruf" as in the game, the hospital's renown is "Renommee", and the policy pages are "Regeln" everywhere.
-- Built and tested on RimWorld 1.7. The 1.6 version stays as it was on 24 November 2026.
+- Safe to remove: "Prepare for removal" (Patient intake area, or the Diagnosis page) sends patients home, withdraws offers and hospital letters and removes the landing spots; the save then loads without RimWard with no error from it. RimWard's own state now lives in JB Framework's save data, so a new save names no class of RimWard any more; saves from RimWard 1.x and the 2.0 test builds load with everything intact.
+- Built and tested on RimWorld 1.7. The 1.6 build is best effort and untested; on 1.6 RimWard stays as it was on 24 November 2026.

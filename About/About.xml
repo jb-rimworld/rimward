@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-	<name>RimWard - Hospital for Profit (Anesthesia Not Included)</name>
+	<name>RimWard – Hospital for Profit (Anesthesia Not Included)</name>
 	<author>juliusberger00</author>
 	<packageId>juliusberger.rimward</packageId>
 	<modVersion>2.0.0</modVersion>
@@ -8,20 +8,20 @@
 		<li>1.6</li>
 		<li>1.7</li>
 	</supportedVersions>
-	<description>A hospital mod rebuilt so it just works. Lay down medical beds, open the hospital, and strangers arrive by drop pod to be patched up. Then they pay you for it.
+	<description>Run a hospital for strangers. Lay down medical beds and injured or sick people from other factions arrive by drop pod; your doctors treat them and they pay in silver when they leave.
 
-- Patients come with wounds, diseases or an operation your colony can actually do. Triage your way: they just arrive, or a letter asks first.
-- One itemised invoice: the Bill column, the offer letter and the silver you get are the same calculation (treatments, meals, operations and materials, times payment scale, room, chief physician and renown).
-- Nobody gets stuck: dismissed patients leave, impossible operations end with a letter, a maximum stay, cured patients wait for real danger only.
+- Wounds, diseases and operations your colony can actually do; a letter asks first before an operation uses your stock.
+- One itemised invoice: the Bill column, the offer letter and the silver paid always match.
+- Nobody gets stuck: dismissed patients leave, impossible operations end with a letter, a maximum stay.
 - Fair malpractice: goodwill is lost only for deaths that are your fault.
-- Hospital policies (open, opening hours, refused operations, food, medicine) belong to the save and come along after a gravship landing.
-- Settings in the JB Framework window: switch whole areas off (intake, surgery cases, mass casualties, complications, billing extras, malpractice, renown, DLC parts), presets Clinic / Charity / Meat shop, blacklists for diseases, operations and factions, per save with a template for new games.
-- Optional links: Hospital Beds Gen 2 (its beds count), Hearth &amp; Harbor (one bed button, patients may use the spa), Luciferium Overhaul (opt-in luciferium critical cases, off by default), Combat Extended, all DLCs. None are required.
-- English and German. Multiplayer: not supported.
+- Hospital tab with a checklist and one-click fixes; policies per save; areas, presets and blacklists in the JB Framework settings. Sensible defaults, no settings needed.
+- Optional: Hospital Beds Gen 2, Hearth &amp; Harbor, Luciferium Overhaul, Combat Extended, all DLCs. English and German. Multiplayer: not supported.
 
-Built and tested on RimWorld 1.7. The 1.6 build is best effort and untested (1.6 keeps the version of 24 November 2026 and needs no framework).
+Adding it mid-game works. To remove it, press "Prepare for removal" (Mod settings, RimWard, Patient intake) and save: the save then loads without RimWard with no error. Without preparing, the first load shows a red error for each patient on the map and each open hospital letter; the colony plays on.
 
-Requires Harmony and, on 1.7, JB Framework. Replaces Hospital and Hospital Fix And Tweak: please disable those. GPL-3.0, a fork of Adamas's Hospital and assssssqwww's Hospital Fix And Tweak; full source on GitHub (jb-rimworld/rimward). Built with the help of Claude Code.</description>
+Built and tested on RimWorld 1.7. The 1.6 build is best effort and untested.
+
+Requires Harmony and, on 1.7, JB Framework. Replaces Hospital and Hospital Fix And Tweak. GPL-3.0 fork of Adamas's Hospital and assssssqwww's Hospital Fix And Tweak; source: https://github.com/jb-rimworld/rimward. Built with the help of Claude Code.</description>
 	<modDependenciesByVersion>
 		<v1.7>
 			<li>
