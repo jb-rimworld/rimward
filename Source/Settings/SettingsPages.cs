@@ -179,7 +179,7 @@ namespace RimWard
             Widgets.Label(new Rect(0f, 0f, inRect.width, 34f), this.title);
             Text.Font = GameFont.Small;
             this.filter = Widgets.TextField(new Rect(0f, 40f, inRect.width, 28f), this.filter ?? "");
-            List<T> shown = this.all.Where(d => this.filter.NullOrEmpty() || d.label.IndexOf(this.filter, StringComparison.OrdinalIgnoreCase) >= 0
+            List<T> shown = this.all.Where(d => this.filter.NullOrEmpty() || (d.label ?? "").IndexOf(this.filter, StringComparison.OrdinalIgnoreCase) >= 0
                 || d.defName.IndexOf(this.filter, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
             Rect outRect = new Rect(0f, 76f, inRect.width, inRect.height - 76f - 50f);
             Rect view = new Rect(0f, 0f, outRect.width - 16f, Mathf.Max(outRect.height, shown.Count * 26f));
