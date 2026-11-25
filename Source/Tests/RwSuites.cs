@@ -151,13 +151,16 @@ namespace RimWard.Tests
             RwT.K.Set(Keys.IntakeMode, (float)(int)IntakeMode.Prompt);
             IncidentDef inc = DefDatabase<IncidentDef>.GetNamed("RimWard_PatientArrives");
             PatientOffer surgeryOffer = null;
-            for (int i = 0; i < 12 && surgeryOffer == null; i++)
+            // a surgery case that uses stock is random: 12 rolls missed it in 3 of about 35 recorded runs; up to 40 rolls (no ticks pass,
+            // the loop stops at the first one)
+            int rolls = 0;
+            for (int i = 0; i < 40 && surgeryOffer == null; i++, rolls++)
             {
                 inc.Worker.TryExecute(new IncidentParms { target = map });
                 surgeryOffer = comp.pendingOffers.FirstOrDefault(o => o.data.Type == PatientType.Surgery && o.data.CureRecipe?.ingredients?.Count > 0);
             }
             t.Check(comp.pendingOffers.Count > 0, "prompt mode makes offers instead of arrivals (" + comp.pendingOffers.Count + ")");
-            t.Check(surgeryOffer != null, "a surgery offer that uses something from stock came up within 12 rolls");
+            t.Check(surgeryOffer != null, "a surgery offer that uses something from stock came up (" + rolls + " of at most 40 rolls)");
             if (surgeryOffer != null)
             {
                 ChoiceLetter_PatientOffer letter = Find.LetterStack.LettersListForReading.OfType<ChoiceLetter_PatientOffer>().FirstOrDefault(l => l.offerId == surgeryOffer.id);
