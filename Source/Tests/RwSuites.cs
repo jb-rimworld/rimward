@@ -653,7 +653,7 @@ namespace RimWard.Tests
             void Look(Pawn p) { PatientStatus st = comp.StatusOf(p, out _); seen[st] = comp.WhyStillHere(p); }
             Pawn hurt = RwT.NewPatient(map, PatientType.Wounds, out PatientData dh, true, false);
             // random wounds may down this one (then it reads as Acute): a flu is a case that needs tending but no rescue
-            hurt.health.RemoveAllHediffs(); hurt.health.AddHediff(HediffDefOf.Flu);
+            hurt.health.RemoveAllHediffs(); hurt.health.AddHediff(DefDatabase<HediffDef>.GetNamed("Flu"));
             Look(hurt);
             Pawn surg = RwT.NewPatient(map, PatientType.Wounds, out PatientData ds, true, false);
             t.Check(BillingSuite.MakeArmCase(surg, ds, out _, out _), "a bionic arm case for the surgery statuses");
@@ -883,7 +883,7 @@ namespace RimWard.Tests
             pol.openingHours[3] = false; pol.openingHours[4] = false;
             Pawn p = RwT.NewPatient(home, PatientType.Wounds, out PatientData d, true, false);
             // random wounds may down the patient or let them bleed out on the bare new map: a flu keeps them a mobile patient who stays
-            p?.health.RemoveAllHediffs(); p?.health.AddHediff(HediffDefOf.Flu);
+            p?.health.RemoveAllHediffs(); p?.health.AddHediff(DefDatabase<HediffDef>.GetNamed("Flu"));
             Map other = null;
             Pawn keeper = null;
             try
