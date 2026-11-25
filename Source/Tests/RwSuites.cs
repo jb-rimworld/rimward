@@ -802,6 +802,8 @@ namespace RimWard.Tests
             Thing dose = luci.SplitOff(1);
             bill?.Notify_IterationCompleted(doc, new List<Thing> { dose });
             t.Check(CriticalCase.Done(p) && HospitalMap.CureAchieved(p, d), "after the dose the case counts as cured");
+            t.Note("invoice lines: " + string.Join(", ", d.Lines.Select(l => l.kind + " " + l.amount.ToString("0"))) + "; violation " + (bill?.recipe?.Worker?.IsViolationOnPawn(p, bill.Part, Faction.OfPlayer) ?? false)
+                + ", patient " + p.IsPatient(out _, false));
             t.Check(RwT.LinesOf(d, InvoiceLineKind.CriticalCase) == 1 && RwT.LinesOf(d, InvoiceLineKind.Materials) == 1, "the invoice has the dose and the critical-case fee");
             RwT.K.Current.SetSection(Sections.Luciferium, false);
             RwT.CleanUp(map);
@@ -1043,9 +1045,11 @@ namespace RimWard.Tests
                 var migNode = gcNode.SelectSingleNode("policyMigrated");
                 if (migNode != null) gcNode.RemoveChild(migNode);
                 var mapComps = doc.SelectSingleNode("//maps/li/components");
-                var mapData = doc.SelectSingleNode("//maps/li/components/li[@Class='JBFramework.FrameworkMap']/mods/li[id='juliusberger.rimward']/data");
+                var mapEntry = doc.SelectSingleNode("//maps/li/components/li[@Class='JBFramework.FrameworkMap']/mods/li[id='juliusberger.rimward']");
+                var mapData = mapEntry?.SelectSingleNode("data");
                 var mapComp = doc.CreateElement("li"); mapComp.SetAttribute("Class", "RimWard.HospitalMapComponent");
-                if (mapData != null) { mapComp.InnerXml = mapData.InnerXml; mapData.ParentNode.RemoveChild(mapData); }
+                // a save without RimWard's map data has no entry for it in the framework's map component (as 1.x and 2.0 beta saves)
+                if (mapData != null) { mapComp.InnerXml = mapData.InnerXml; mapEntry.ParentNode.RemoveChild(mapEntry); }
                 var mce = mapComp.SelectSingleNode("MCEtriggered"); if (mce != null) mapComp.RemoveChild(mce);
                 mapComps?.AppendChild(mapComp);
                 void Add(string name, string inner) { var e = doc.CreateElement(name); e.InnerXml = inner; mapComp.AppendChild(e); }

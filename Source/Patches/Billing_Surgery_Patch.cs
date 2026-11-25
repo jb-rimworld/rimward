@@ -4,6 +4,7 @@
 // juliusberger00. Licensed under the GNU General Public License version 3 (LICENSE); full source: https://github.com/jb-rimworld/rimward
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using HarmonyLib;
 using RimWard.Utilities;
 using RimWorld;
@@ -27,6 +28,8 @@ namespace RimWard.Patches
             public bool failed;
             public bool violation;
             public Dictionary<ThingDef, int> anesthetic;
+            /// <summary>The ingredients as handed over (an administered drug is ingested during the operation: its stack is 0 afterwards).</summary>
+            public List<KeyValuePair<ThingDef, int>> ingredients;
         }
 
         [ThreadStatic] private static Context current;
@@ -35,7 +38,7 @@ namespace RimWard.Patches
         public static class IterationCompleted
         {
             [HarmonyPrefix]
-            public static void Prefix(Bill_Medical __instance)
+            public static void Prefix(Bill_Medical __instance, List<Thing> ingredients)
             {
                 current = null;
                 Pawn patient = __instance?.GiverPawn;
@@ -51,7 +54,8 @@ namespace RimWard.Patches
                 {
                     patient = patient,
                     violation = violation,
-                    anesthetic = __instance.consumedMedicine != null ? new Dictionary<ThingDef, int>(__instance.consumedMedicine) : null
+                    anesthetic = __instance.consumedMedicine != null ? new Dictionary<ThingDef, int>(__instance.consumedMedicine) : null,
+                    ingredients = ingredients?.Where(t => t?.def != null).Select(t => new KeyValuePair<ThingDef, int>(t.def, t.stackCount)).ToList()
                 };
             }
 
@@ -91,16 +95,16 @@ namespace RimWard.Patches
 
             float medicine = 0f, parts = 0f;
             Thing firstMedicine = null;
-            if (ingredients != null)
+            if (ctx.ingredients != null)
             {
-                foreach (Thing t in ingredients)
+                foreach (KeyValuePair<ThingDef, int> kv in ctx.ingredients)
                 {
-                    if (t?.def == null) continue;
-                    float v = t.def.BaseMarketValue * t.stackCount;
-                    if (t.def.IsMedicine) { medicine += v; if (firstMedicine == null) firstMedicine = t; }
+                    float v = kv.Key.BaseMarketValue * kv.Value;
+                    if (kv.Key.IsMedicine) medicine += v;
                     else parts += v;
                 }
             }
+            if (ingredients != null) firstMedicine = ingredients.FirstOrDefault(t => t?.def != null && t.def.IsMedicine);
             if (ctx.anesthetic != null)
                 foreach (KeyValuePair<ThingDef, int> kv in ctx.anesthetic)
                     if (kv.Key != null) medicine += kv.Key.BaseMarketValue * kv.Value;
