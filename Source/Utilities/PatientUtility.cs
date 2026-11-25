@@ -13,7 +13,7 @@ namespace RimWard.Utilities
 {
     public static class PatientUtility
     {
-        public static bool IsPatient(this Pawn pawn, out HospitalMapComponent hospital, bool includeDismissed = false)
+        public static bool IsPatient(this Pawn pawn, out HospitalMap hospital, bool includeDismissed = false)
         {
             hospital = null;
             if (pawn == null) return false;
@@ -21,11 +21,11 @@ namespace RimWard.Utilities
             if (map == null) return false;
             // cheap early-out for the hot paths (work giver, bed finder): colonists are never patients
             if (pawn.Faction != null && pawn.Faction.IsPlayer) return false;
-            hospital = HospitalMapComponent.For(map);
+            hospital = HospitalMap.For(map);
             return hospital != null && hospital.GetPatientData(pawn, out PatientData patientData) && (includeDismissed || !patientData.Dismissed);
         }
 
-        public static void AddToBill(this Pawn pawn, HospitalMapComponent hospital, float silver)
+        public static void AddToBill(this Pawn pawn, HospitalMap hospital, float silver)
         {
             if (pawn == null || hospital == null) return;
             if (!hospital.GetPatientData(pawn, out PatientData patientData)) return;
@@ -47,7 +47,7 @@ namespace RimWard.Utilities
         public static void RecordTreatment(Pawn patient, Pawn doctor, Thing medicine)
         {
             if (patient == null) return;
-            if (!patient.IsPatient(out HospitalMapComponent hospital) || !hospital.GetPatientData(patient, out PatientData data)) return;
+            if (!patient.IsPatient(out HospitalMap hospital) || !hospital.GetPatientData(patient, out PatientData data)) return;
             if (doctor?.skills != null)
             {
                 int skill = doctor.skills.GetSkill(SkillDefOf.Medicine)?.Level ?? 0;
@@ -60,7 +60,7 @@ namespace RimWard.Utilities
             }
         }
 
-        public static bool GetPatientRating(this Pawn pawn, out float score, HospitalMapComponent hospital)
+        public static bool GetPatientRating(this Pawn pawn, out float score, HospitalMap hospital)
         {
             score = 0f;
             if (pawn == null) return false;
@@ -69,7 +69,7 @@ namespace RimWard.Utilities
             return true;
         }
 
-        public static bool GetPatientTimeInHospital(this Pawn pawn, out int ticks, HospitalMapComponent hospital)
+        public static bool GetPatientTimeInHospital(this Pawn pawn, out int ticks, HospitalMap hospital)
         {
             ticks = 0;
             if (pawn == null) return false;
@@ -78,7 +78,7 @@ namespace RimWard.Utilities
             return true;
         }
 
-        public static void DamagePawn(Pawn pawn, PatientData patientData, HospitalMapComponent hospital)
+        public static void DamagePawn(Pawn pawn, PatientData patientData, HospitalMap hospital)
         {
             bool failed = false;
             switch (patientData.Type)
@@ -100,7 +100,7 @@ namespace RimWard.Utilities
             }
         }
 
-        public static void DamagePawn(Pawn pawn, PatientData patientData, HospitalMapComponent hospital, IncidentWorker_MassCasualtyEvent.MCEType type)
+        public static void DamagePawn(Pawn pawn, PatientData patientData, HospitalMap hospital, IncidentWorker_MassCasualtyEvent.MCEType type)
         {
             switch (type)
             {
@@ -147,7 +147,7 @@ namespace RimWard.Utilities
         /// <summary>Active danger for patients on this map (see <see cref="Threats"/>). Weather is listed too; it only stops arrivals.</summary>
         public static bool DangersOnMap(Map map, out TaggedString reasons)
         {
-            HospitalMapComponent comp = HospitalMapComponent.For(map);
+            HospitalMap comp = HospitalMap.For(map);
             string r = Threats.ArrivalBlock(map, comp?.Policy);
             reasons = r != null ? new TaggedString(r) : default(TaggedString);
             return r != null;

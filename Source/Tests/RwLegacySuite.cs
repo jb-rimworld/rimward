@@ -6,7 +6,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using HarmonyLib;
 using JBFramework.Testing;
 using RimWorld;
 using Verse;
@@ -28,22 +27,13 @@ namespace RimWard.Tests
         public override bool KeepsLoadedGame => true;
         const string SaveName = "rw_legacy";
 
-        static bool Mce(Map m)
-        {
-            IncidentScheduler s = m.GetComponent<IncidentScheduler>();
-            return s != null && (bool)AccessTools.Field(typeof(IncidentScheduler), "MCEtriggered").GetValue(s);
-        }
-
-        static void SetMce(Map m, bool v)
-        {
-            IncidentScheduler s = m.GetComponent<IncidentScheduler>();
-            if (s != null) AccessTools.Field(typeof(IncidentScheduler), "MCEtriggered").SetValue(s, v);
-        }
+        static bool Mce(Map m) => HospitalMap.For(m).mceTriggered;
+        static void SetMce(Map m, bool v) => HospitalMap.For(m).mceTriggered = v;
 
         public override IEnumerable<int> Run(TestContext t)
         {
             Map map = t.Map;
-            if (RwT.LoadedSave == null)
+            if (t.LoadedSave == null)
             {
                 string from = System.Environment.GetEnvironmentVariable("RW_LEGACY_FROM");
                 if (!from.NullOrEmpty())
@@ -58,8 +48,8 @@ namespace RimWard.Tests
                     yield break;
                 }
                 RwT.SetUp(t, 5, 1);
-                HospitalMapComponent comp = RwT.Comp(map);
-                HospitalGameComponent gc = HospitalGameComponent.Get;
+                HospitalMap comp = RwT.Comp(map);
+                HospitalSave gc = HospitalSave.Get;
                 HospitalPolicy pol = gc.Policy;
                 for (int i = 0; i < 24; i++) pol.openingHours[i] = i % 3 != 0;
                 RecipeDef refused = DefDatabase<RecipeDef>.GetNamedSilentFail("InstallBionicLeg");
@@ -105,19 +95,21 @@ namespace RimWard.Tests
                     ["surgBill"] = ds.Bill.ToString("0.0"), ["dis"] = dis.ThingID, ["patients"] = comp.Patients.Count.ToString(), ["mce"] = Mce(map).ToString(),
                 };
                 t.Check(comp.Patients.Count >= 2 && comp.pendingOffers.Count >= 1 && comp.HasOwnPolicy && Mce(map), "the state to save is built (" + comp.Patients.Count + " patients, " + comp.pendingOffers.Count + " offers)");
-                t.Check(RwT.Save(SaveName), "saved as " + SaveName);
+                t.Check(t.SaveGame(SaveName), "saved as " + SaveName);
                 RwT.WriteSide(SaveName, side);
                 yield break;
             }
             // ---- phase 2
             var want = RwT.ReadSide(SaveName);
-            t.Check(want != null && RwT.LoadedSave == SaveName, "phase 2: loaded " + RwT.LoadedSave + " with its side file");
+            t.Check(want != null && t.LoadedSave == SaveName, "phase 2: loaded " + t.LoadedSave + " with its side file");
             if (want == null) yield break;
-            HospitalGameComponent g2 = HospitalGameComponent.Get;
-            HospitalMapComponent c2 = RwT.Comp(map);
+            HospitalSave g2 = HospitalSave.Get;
+            HospitalMap c2 = RwT.Comp(map);
             t.Check(g2 != null && c2 != null, "the hospital's save and map state exist");
             if (g2 == null || c2 == null) yield break;
-            t.Check(RwT.LogLines("Null key", false).Count == 0 && RwT.LogLines("RimWard", false).Count == 0, "no RimWard error and no \"Null key\" while loading");
+            t.Check(RwT.LogLines("Null key", false).Count == 0 && t.RedErrorsSince(0).Count == 0, "no RimWard error and no \"Null key\" while loading");
+            t.Check(!Current.Game.components.Any(c => c is HospitalGameComponent) && !map.components.Any(c => c is HospitalMapComponent || c is IncidentScheduler),
+                "no legacy component left in the running game after the load");
             t.Check(g2.renown.ToString("0.0") == want["renown"], "renown " + g2.renown.ToString("0.0") + " (want " + want["renown"] + ")");
             string stats = g2.patientsTreated + "/" + g2.patientsDied + "/" + g2.patientsDiedAtFault + "/" + g2.patientsDischargedEarly + "/" + g2.silverEarned;
             t.Check(stats == want["stats"], "lifetime stats " + stats + " (want " + want["stats"] + ")");
@@ -137,7 +129,13 @@ namespace RimWard.Tests
             Pawn d2 = c2.Patients.Keys.FirstOrDefault(p => p.ThingID == want["dis"]);
             t.Check(d2 != null && c2.GetPatientData(d2, out PatientData dd2) && dd2.Dismissed, "the dismissed patient is still dismissed");
             yield return 600;
-            t.Check(RwT.LogLines("RimWard", false).Count == 0, "600 ticks after the load: no RimWard error");
+            t.Check(t.RedErrorsSince(0).Count == 0, "600 ticks after the load: no RimWard error");
+            // the build under test writes the save again: no component class of RimWard in it, the data in the framework's nodes
+            t.Check(t.SaveGame("rw_legacy_resaved"), "saved again as rw_legacy_resaved");
+            string xml = File.ReadAllText(GenFilePaths.FilePathForSavedGame("rw_legacy_resaved"));
+            string[] comps = { "RimWard.HospitalGameComponent", "RimWard.HospitalMapComponent", "RimWard.IncidentScheduler" };
+            t.Check(!comps.Any(xml.Contains), "the new save names no component class of RimWard");
+            t.Check(xml.Contains("<id>juliusberger.rimward</id>") && xml.Contains("<renown>") && xml.Contains("<patients>"), "RimWard's state sits in the framework's save and map nodes");
         }
     }
 }

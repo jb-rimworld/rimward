@@ -14,7 +14,7 @@
   <RimWard.Section.malpractice.Desc>Ein Patient, der durch deine Schuld stirbt, kostet Ruf bei seiner Fraktion. Todesfälle, die du nicht verhindern konntest, nie.</RimWard.Section.malpractice.Desc>
   <RimWard.Section.renown>Renommee</RimWard.Section.renown>
   <RimWard.Section.renown.Desc>Gute Behandlungen bauen das Renommee des Krankenhauses in vier Stufen auf (Feldlazarett, Klinik, Krankenhaus, Medizinzentrum). Jede Stufe über dem Feldlazarett zahlt 5 % mehr: +5 %, +10 %, +15 %.</RimWard.Section.renown.Desc>
-  <RimWard.FirstStartPitch>RimWard macht aus deinen medizinischen Betten ein Krankenhaus, in dem Fremde gegen Bezahlung verarztet werden. Klinik ist das normale Spiel, Wohltätigkeit behandelt umsonst, Fleischerei zahlt mehr und verzeiht Todesfälle. Alles lässt sich später in den Mod-Einstellungen ändern.</RimWard.FirstStartPitch>
+  <RimWard.FirstStartPitch>RimWard macht aus deinen medizinischen Betten ein Krankenhaus, in dem Fremde gegen Bezahlung verarztet werden. Eine neue Kolonie startet mit geöffnetem Krankenhaus, und jedes medizinische Bett nimmt Patienten auf; der Reiter „Krankenhaus“ zeigt, was noch fehlt. Klinik ist das normale Spiel, Wohltätigkeit behandelt umsonst, Fleischerei zahlt mehr und verzeiht Todesfälle. Alles lässt sich später in den Mod-Einstellungen ändern.</RimWard.FirstStartPitch>
   <RimWard.Section.royalty>Adlige Patienten (Royalty)</RimWard.Section.royalty>
   <RimWard.Section.royalty.Desc>Patienten mit Titel wollen ein Einzelzimmer: Sie zahlen dafür 40 % mehr und 25 % weniger für ein geteiltes.</RimWard.Section.royalty.Desc>
   <RimWard.Section.ideology>Schuldbewusste Ideoreligionen (Ideology)</RimWard.Section.ideology>

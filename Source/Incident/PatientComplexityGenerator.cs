@@ -32,7 +32,7 @@ namespace RimWard
             return Mathf.Max(0, Mathf.RoundToInt(b));
         }
 
-        public static void ApplyComplexity(Pawn pawn, PatientData data, HospitalMapComponent hospital)
+        public static void ApplyComplexity(Pawn pawn, PatientData data, HospitalMap hospital)
         {
             int budget = Budget();
             if (budget <= 0) return;

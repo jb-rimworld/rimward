@@ -11,14 +11,14 @@ namespace RimWard.MainTab
     public class PawnColumnWorker_Diagnosis : PawnColumnWorker_Text
     {
         private float lastTimeCached;
-        private HospitalMapComponent hospital;
+        private HospitalMap hospital;
 
         protected override string GetTextFor(Pawn pawn)
         {
             if (this.hospital == null || Time.unscaledTime > this.lastTimeCached + 2f || Find.CurrentMap != this.hospital.map)
             {
                 this.lastTimeCached = Time.unscaledTime;
-                this.hospital = HospitalMapComponent.For(Find.CurrentMap);
+                this.hospital = HospitalMap.For(Find.CurrentMap);
             }
             return this.hospital.GetPatientData(pawn, out PatientData patientData) ? patientData.Diagnosis : string.Empty;
         }

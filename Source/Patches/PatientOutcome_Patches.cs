@@ -18,7 +18,7 @@ namespace RimWard.Patches
             [HarmonyPrefix]
             public static void Prefix(Pawn __instance)
             {
-                if (__instance.IsPatient(out HospitalMapComponent hospital, false))
+                if (__instance.IsPatient(out HospitalMap hospital, false))
                 {
                     hospital.PatientDied(__instance);
                 }
@@ -33,7 +33,7 @@ namespace RimWard.Patches
             [HarmonyPrefix]
             public static bool Prefix(Pawn member, bool freed)
             {
-                HospitalMapComponent hospital = HospitalMapComponent.For(member?.Map);
+                HospitalMap hospital = HospitalMap.For(member?.Map);
                 if (hospital != null && hospital.GetPatientData(member, out _))
                 {
                     hospital.PatientLeftTheMap(member);

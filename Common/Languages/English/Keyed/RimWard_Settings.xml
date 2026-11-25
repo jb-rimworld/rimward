@@ -15,7 +15,7 @@
   <RimWard.Section.malpractice.Desc>A patient who dies through your fault costs goodwill with their faction. Deaths you could not prevent never do.</RimWard.Section.malpractice.Desc>
   <RimWard.Section.renown>Renown</RimWard.Section.renown>
   <RimWard.Section.renown.Desc>Good outcomes build the hospital's renown in four tiers (Field Aid, Clinic, Hospital, Medical Hub). Every tier above Field Aid pays 5% more: +5%, +10%, +15%.</RimWard.Section.renown.Desc>
-  <RimWard.FirstStartPitch>RimWard turns your medical beds into a hospital that strangers pay to be patched up in. Clinic is the normal game, Charity treats for free, Meat shop pays more and forgives deaths. Everything can be changed later in Mod settings.</RimWard.FirstStartPitch>
+  <RimWard.FirstStartPitch>RimWard turns your medical beds into a hospital that strangers pay to be patched up in. A new colony starts with the hospital open and every medical bed takes patients; the Hospital tab lists what is still missing. Clinic is the normal game, Charity treats for free, Meat shop pays more and forgives deaths. Everything can be changed later in Mod settings.</RimWard.FirstStartPitch>
   <RimWard.Section.royalty>Noble patients (Royalty)</RimWard.Section.royalty>
   <RimWard.Section.royalty.Desc>Titled patients want a private room: they pay 40% more for one and 25% less for a shared one.</RimWard.Section.royalty.Desc>
   <RimWard.Section.ideology>Guilty ideoligions (Ideology)</RimWard.Section.ideology>

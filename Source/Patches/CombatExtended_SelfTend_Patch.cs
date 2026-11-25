@@ -15,7 +15,8 @@ namespace RimWard.Patches
     /// <summary>
     /// Combat Extended (soft, only when loaded): CE gives non-player pawns a tactical "tend self" job
     /// (CombatExtended.AI.CompTend.TryGiveTacticalJob, job def TendSelf). Patients are treated by your doctors, so for them it returns no job.
-    /// Verified against the CE source in the local mod cache (workshop 1631756268); without CE, Prepare() skips this patch.
+    /// Verified against the CE source in the local mod cache (workshop 1631756268); without CE, Prepare() skips this patch, and when CE is
+    /// installed but lacks the method, JB Framework shows the Compatibility entry as "integration inactive: patch target not found".
     /// The vanilla-side guard (CanSelfTendNow_Patch on JobDriver_TendPatient, which CE's TendSelf also uses) stays as the second line.
     /// </summary>
     [HarmonyPatch]
@@ -35,22 +36,6 @@ namespace RimWard.Patches
         }
 
         public static MethodBase TargetMethod() => target;
-
-        /// <summary>
-        /// True when the prefix really sits on CE's method. Feeds the Compatibility entry (HealthyWhen): a CE version without
-        /// CompTend.TryGiveTacticalJob shows "installed, but the integration reports a problem" instead of claiming the block works.
-        /// // FW-REQUEST (17): the framework should report skipped [KitCompat] classes itself.
-        /// </summary>
-        public static bool Applied
-        {
-            get
-            {
-                if (target == null && !Prepare()) return false;
-                HarmonyLib.Patches info = Harmony.GetPatchInfo(target);
-                MethodInfo ours = AccessTools.Method(typeof(CombatExtended_SelfTend_Patch), nameof(Prefix));
-                return info != null && info.Prefixes.Any(p => p.PatchMethod == ours);
-            }
-        }
 
         public static bool Prefix(object __instance, ref Job __result)
         {

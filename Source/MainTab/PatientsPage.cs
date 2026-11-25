@@ -26,7 +26,7 @@ namespace RimWard.MainTab
 
         internal static void Invalidate() => cache.Clear();
 
-        private static Info Get(HospitalMapComponent comp, Pawn p)
+        private static Info Get(HospitalMap comp, Pawn p)
         {
             float now = Time.realtimeSinceStartup;
             if (cache.TryGetValue(p, out Info i) && now - i.At < 0.5f) return i;
@@ -40,7 +40,7 @@ namespace RimWard.MainTab
         }
 
         /// <summary>Active and leaving patients, the ones that need the player first (impossible, acute) on top.</summary>
-        internal static List<Pawn> Sorted(HospitalMapComponent comp)
+        internal static List<Pawn> Sorted(HospitalMap comp)
         {
             return comp.Patients.Where(kv => kv.Key != null && kv.Value != null && !kv.Key.Discarded).Select(kv => kv.Key)
                 .OrderBy(p => Rank(Get(comp, p).Status)).ThenBy(p => p.LabelShort).ToList();
@@ -74,7 +74,7 @@ namespace RimWard.MainTab
         }
 
         /// <summary>One line on the overview: name, status chip, why. Returns the next y.</summary>
-        internal static float CompactRow(float y, float w, HospitalMapComponent comp, Pawn p)
+        internal static float CompactRow(float y, float w, HospitalMap comp, Pawn p)
         {
             Info i = Get(comp, p);
             float nameW = Mathf.Clamp(w * 0.24f, 120f, 220f), chipW = Mathf.Clamp(w * 0.2f, 110f, 200f);
@@ -93,7 +93,7 @@ namespace RimWard.MainTab
 
         public static void Draw(Rect r, Map map)
         {
-            HospitalMapComponent comp = HospitalMapComponent.For(map);
+            HospitalMap comp = HospitalMap.For(map);
             Rect body = RwUI.PageHeader(r, "RimWard.Tab.Page.Patients".Translate(), "RimWard.Tab.Sub.Patients".Translate(comp.ActivePatientsList().Count(), comp.BedCount()));
             float w = RwUI.BeginScroll(body, ref scroll, viewH);
             float y = 0f;
@@ -115,7 +115,7 @@ namespace RimWard.MainTab
             }
         }
 
-        private static float FullRow(float y, float w, HospitalMapComponent comp, Pawn p)
+        private static float FullRow(float y, float w, HospitalMap comp, Pawn p)
         {
             Info i = Get(comp, p);
             comp.GetPatientData(p, out PatientData d);

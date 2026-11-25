@@ -36,7 +36,7 @@ namespace RimWard
             if (pawn == null) return false;
 
             // Build the core case (apply the ailment) so the offer / letter can show a real diagnosis.
-            HospitalMapComponent comp = HospitalMapComponent.For(map);
+            HospitalMap comp = HospitalMap.For(map);
             IncidentHelper.SetUpNewPatient(pawn);
             bool surgery = comp.AcceptSurgery && HospitalMod.Settings.SurgeryCasesOn;
             PatientType type = (PatientType)Rand.Range(1, surgery ? 4 : 3);

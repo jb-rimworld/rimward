@@ -94,7 +94,7 @@ namespace RimWard
         /// <summary>Why no patient can arrive on this map right now (translated), or null when one can. Plain accessor for the overview.</summary>
         public static string ArrivalBlockReason(Map map)
         {
-            HospitalMapComponent component = HospitalMapComponent.For(map);
+            HospitalMap component = HospitalMap.For(map);
             if (component == null) return "RimWard.Block.NoHospital".Translate();
             if (HospitalMod.Settings == null || !HospitalMod.Settings.IntakeOn) return "RimWard.Block.IntakeOff".Translate();
             HospitalPolicy pol = component.Policy;

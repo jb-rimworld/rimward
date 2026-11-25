@@ -42,11 +42,11 @@ namespace RimWard
             {
                 case FeatureArea.Intake:
                     if (!s.IntakeOn) return false;
-                    return HospitalMapComponent.For(map ?? Find.CurrentMap)?.Policy.open ?? HospitalGameComponent.Get?.Policy.open ?? false;
+                    return HospitalMap.For(map ?? Find.CurrentMap)?.Policy.open ?? HospitalSave.Get?.Policy.open ?? false;
                 case FeatureArea.MassCasualties:
                     {
                         if (!s.MassCasualtiesEnabled) return false;
-                        HospitalMapComponent c = HospitalMapComponent.For(map ?? Find.CurrentMap);
+                        HospitalMap c = HospitalMap.For(map ?? Find.CurrentMap);
                         return c == null || c.Policy.massCasualties;
                     }
                 case FeatureArea.Contracts: return s.AmbientContractsEnabled;
@@ -82,7 +82,7 @@ namespace RimWard
 
     /// <summary>
     /// Plain data for the Hospital tab overview: readiness checklist with one-click fixes, bed counts, arrival block,
-    /// per-patient status reason (see <see cref="HospitalMapComponent.WhyStillHere"/>), renown (see <see cref="HospitalGameComponent"/>).
+    /// per-patient status reason (see <see cref="HospitalMap.WhyStillHere"/>), renown (see <see cref="HospitalSave"/>).
     /// </summary>
     public static class HospitalOverview
     {
@@ -91,7 +91,7 @@ namespace RimWard
         public static List<ReadinessItem> Readiness(Map map)
         {
             List<ReadinessItem> list = new List<ReadinessItem>();
-            HospitalMapComponent comp = HospitalMapComponent.For(map);
+            HospitalMap comp = HospitalMap.For(map);
             if (comp == null) return list;
             HospitalPolicy pol = comp.Policy;
 
@@ -253,7 +253,7 @@ namespace RimWard
         /// <summary>Opens or closes the hospital (the policy in force on this map) and says so.</summary>
         public static void SetOpen(Map map, bool open)
         {
-            HospitalMapComponent comp = HospitalMapComponent.For(map);
+            HospitalMap comp = HospitalMap.For(map);
             if (comp == null) return;
             HospitalPolicy pol = comp.Policy;
             pol.open = open;
@@ -281,6 +281,40 @@ namespace RimWard
                 n++;
             }
             return n;
+        }
+
+        // ---------------------------------------------------------------- welcome card actions (JB Framework's card, once per colony)
+
+        private static Map CardMap => Find.CurrentMap ?? Find.AnyPlayerHomeMap;
+
+        /// <summary>The hospital is open on the map the player looks at (and intake is on).</summary>
+        internal static bool WelcomeOpenDone()
+        {
+            Map m = CardMap;
+            return m != null && HospitalMod.Settings != null && HospitalMod.Settings.IntakeOn && HospitalMap.For(m).Policy.open;
+        }
+
+        internal static void WelcomeOpen()
+        {
+            Map m = CardMap;
+            if (m == null) return;
+            SetOpen(m, true);
+            Messages.Message("RimWard.Start.OpenedMsg".Translate(), MessageTypeDefOf.TaskCompletion, false);
+        }
+
+        /// <summary>No medical bed of the colony is left out (also true while there is none yet: new medical beds take patients by default).</summary>
+        internal static bool WelcomeBedsDone()
+        {
+            Map m = CardMap;
+            return m == null || !UnusedMedicalBeds(m).Any();
+        }
+
+        internal static void WelcomeBeds()
+        {
+            Map m = CardMap;
+            if (m == null) return;
+            int n = UseAllMedicalBeds(m);
+            Messages.Message("RimWard.Start.BedsMsg".Translate(n), MessageTypeDefOf.TaskCompletion, false);
         }
 
         /// <summary>Beds nobody owns that could become medical patient beds (indoors, humanlike, not for prisoners).</summary>
@@ -361,17 +395,17 @@ namespace RimWard
         /// <summary>Why no patient arrives right now on this map (translated), null when one can.</summary>
         public static string ArrivalBlock(Map map) => IncidentHelper.ArrivalBlockReason(map);
 
-        public static int PatientCount(Map map) => HospitalMapComponent.For(map)?.ActivePatientsList().Count() ?? 0;
-        public static int BedsTotal(Map map) => HospitalMapComponent.For(map)?.BedCount() ?? 0;
-        public static int BedsFree(Map map) => HospitalMapComponent.For(map)?.FreeMedicalBeds() ?? 0;
-        public static int PendingOffers(Map map) => HospitalMapComponent.For(map)?.PendingOfferCount ?? 0;
+        public static int PatientCount(Map map) => HospitalMap.For(map)?.ActivePatientsList().Count() ?? 0;
+        public static int BedsTotal(Map map) => HospitalMap.For(map)?.BedCount() ?? 0;
+        public static int BedsFree(Map map) => HospitalMap.For(map)?.FreeMedicalBeds() ?? 0;
+        public static int PendingOffers(Map map) => HospitalMap.For(map)?.PendingOfferCount ?? 0;
 
         // renown, plain values
-        public static float Renown => HospitalGameComponent.Get?.renown ?? 0f;
-        public static int RenownTier => HospitalGameComponent.Get?.Tier ?? 0;
-        public static string RenownTierLabel => HospitalGameComponent.Get?.TierLabel ?? string.Empty;
-        public static float RenownProgress => HospitalGameComponent.Get?.TierProgress ?? 0f;
-        public static float RenownNextTierAt => HospitalGameComponent.Get?.NextTierAt ?? -1f;
-        public static float RenownPayMultiplier => HospitalGameComponent.Get?.RenownPaymentMultiplier ?? 1f;
+        public static float Renown => HospitalSave.Get?.renown ?? 0f;
+        public static int RenownTier => HospitalSave.Get?.Tier ?? 0;
+        public static string RenownTierLabel => HospitalSave.Get?.TierLabel ?? string.Empty;
+        public static float RenownProgress => HospitalSave.Get?.TierProgress ?? 0f;
+        public static float RenownNextTierAt => HospitalSave.Get?.NextTierAt ?? -1f;
+        public static float RenownPayMultiplier => HospitalSave.Get?.RenownPaymentMultiplier ?? 1f;
     }
 }

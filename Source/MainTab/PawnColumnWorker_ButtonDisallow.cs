@@ -11,7 +11,7 @@ namespace RimWard.MainTab
     public class PawnColumnWorker_ButtonDisallow : PawnColumnWorker
     {
         private float lastTimeCached;
-        private HospitalMapComponent hospital;
+        private HospitalMap hospital;
 
         public override void DoCell(Rect rect, Pawn pawn, PawnTable table)
         {
@@ -19,7 +19,7 @@ namespace RimWard.MainTab
             if (this.hospital == null || Time.unscaledTime > this.lastTimeCached + 2f || Find.CurrentMap != this.hospital.map)
             {
                 this.lastTimeCached = Time.unscaledTime;
-                this.hospital = HospitalMapComponent.For(Find.CurrentMap);
+                this.hospital = HospitalMap.For(Find.CurrentMap);
             }
             if (this.hospital.GetPatientData(pawn, out PatientData patientData) && patientData.CureRecipe != null
                 && Widgets.ButtonText(rect, "Disallow".Translate()))

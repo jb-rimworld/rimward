@@ -8,24 +8,14 @@ using Verse;
 
 namespace RimWard
 {
-    // Parity arrival cadence (auto-instantiated MapComponent). Replaced by the target-concurrency
-    // volume controller in Step 6; kept faithful here (bug fixed: uses this.map, not Find.CurrentMap).
-    public class IncidentScheduler : MapComponent
+    /// <summary>
+    /// Patient arrivals and the weekly mass-casualty try, per map (driven by RimWard's OnTick; was the IncidentScheduler map component
+    /// before 2.0, whose flag now lives in <see cref="HospitalMap"/>).
+    /// </summary>
+    public static class ArrivalScheduler
     {
-        private bool MCEtriggered;
-
         /// <summary>True while an in-game test suite drives arrivals itself (set only by the JB_TESTS suites).</summary>
         internal static bool PausedForTests;
-
-        public IncidentScheduler(Map map) : base(map)
-        {
-        }
-
-        public override void ExposeData()
-        {
-            base.ExposeData();
-            Scribe_Values.Look(ref this.MCEtriggered, "MCEtriggered", false);
-        }
 
         /// <summary>Checks per day (one every 42 ticks).</summary>
         public const float ChecksPerDay = GenDate.TicksPerDay / 42f;
@@ -47,36 +37,35 @@ namespace RimWard
         /// <summary>Expected arrival attempts per day (two-day average) for <paramref name="freeBeds"/> free beds, all hours open.</summary>
         public static float ExpectedAttemptsPerDay(int freeBeds) => (ChancePerCheck(freeBeds, 0) + ChancePerCheck(freeBeds, 1)) / 2f * ChecksPerDay;
 
-        public override void MapComponentTick()
+        internal static void Tick(HospitalMap h)
         {
-            base.MapComponentTick();
-            if (GenTicks.TicksGame % 42 != 0 || PausedForTests) return;
-
+            if (GenTicks.TicksGame % 42 != 0 || PausedForTests || h == null) return;
+            Map map = h.map;
             try
             {
-                int free = HospitalMapComponent.For(this.map).FreeMedicalBeds();
+                int free = h.FreeMedicalBeds();
                 if (Rand.Chance(ChancePerCheck(free, GenDate.DaysPassed)))
                 {
-                    IncidentParms parms = new IncidentParms { target = this.map };
+                    IncidentParms parms = new IncidentParms { target = map };
                     DefDatabase<IncidentDef>.GetNamed("RimWard_PatientArrives").Worker.TryExecute(parms);
                 }
 
                 if (GenDate.DaysPassed % 7 == 0 && GenDate.DaysPassed > 0)
                 {
-                    if (!this.MCEtriggered)
+                    if (!h.mceTriggered)
                     {
-                        IncidentParms parms2 = new IncidentParms { target = this.map };
-                        this.MCEtriggered = DefDatabase<IncidentDef>.GetNamed("RimWard_MassCasualtyEvent").Worker.TryExecute(parms2);
+                        IncidentParms parms2 = new IncidentParms { target = map };
+                        h.mceTriggered = DefDatabase<IncidentDef>.GetNamed("RimWard_MassCasualtyEvent").Worker.TryExecute(parms2);
                     }
                 }
                 else
                 {
-                    this.MCEtriggered = false;
+                    h.mceTriggered = false;
                 }
             }
             catch (System.Exception e)
             {
-                Log.ErrorOnce("[RimWard] patient arrival scheduler failed on map " + this.map?.uniqueID + ": " + e, 0x61c0de ^ (this.map?.uniqueID ?? 0));
+                Log.ErrorOnce("[RimWard] patient arrival scheduler failed on map " + map?.uniqueID + ": " + e, 0x61c0de ^ (map?.uniqueID ?? 0));
             }
         }
     }

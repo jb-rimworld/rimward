@@ -31,7 +31,7 @@ namespace RimWard
     }
 
     /// <summary>
-    /// The caretaker: no patient ever gets stuck. Runs every 250 ticks per map (from <see cref="HospitalMapComponent.MapComponentTick"/>),
+    /// The caretaker: no patient ever gets stuck. Runs every 250 ticks per map (from <see cref="HospitalMap.Tick"/>),
     /// repairs what it finds and counts every repair (for the diagnosis page). The same predicates feed the "why still here" text,
     /// so what the player reads is what the caretaker acts on.
     /// </summary>
@@ -48,14 +48,14 @@ namespace RimWard
         /// <summary>The last 20 repairs, newest first ("tick: fix: pawn").</summary>
         public static IReadOnlyList<string> Recent => recent;
 
-        public static void Log(HospitalMapComponent comp, Fix fix, Pawn pawn)
+        public static void Log(HospitalMap comp, Fix fix, Pawn pawn)
         {
             counts[fix] = counts.TryGetValue(fix, out int n) ? n + 1 : 1;
             int tick = Find.TickManager?.TicksGame ?? 0;
             recent.Insert(0, tick + ": " + fix + ": " + (pawn?.LabelShort ?? "?"));
             while (recent.Count > RecentCount) recent.RemoveAt(recent.Count - 1);
-            // FW-REQUEST: counted here (diagnosis page); KitMod.CaretakerFixed would log every routine repair as a warning (request 4)
-            if (Prefs.DevMode) Verse.Log.Message("[RimWard] caretaker " + fix + " " + (pawn?.LabelShort ?? "?"));
+            // counted here (RimWard's diagnosis lines and tests) and by the framework (Diagnosis page; Info level in RimWard's own log)
+            HospitalMod.K?.CaretakerFixed("Patients", fix + " (" + (pawn?.LabelShort ?? "?") + ")");
         }
 
         /// <summary>The patient is gone for good (no map will see them again as our patient).</summary>
@@ -64,7 +64,7 @@ namespace RimWard
             return p == null || p.Discarded || p.Dead || (p.Destroyed && !p.Dead) || p.IsWorldPawn() || p.GetCaravan() != null;
         }
 
-        public static void Run(HospitalMapComponent comp)
+        public static void Run(HospitalMap comp)
         {
             int now = Find.TickManager.TicksGame;
             Settings s = HospitalMod.Settings;
@@ -85,7 +85,7 @@ namespace RimWard
                     if (held == null) continue; // in transit (e.g. on a gravship in flight): wait, decide on arrival
                     if (held != comp.map)
                     {
-                        comp.TransferPatientTo(pawn, HospitalMapComponent.For(held));
+                        comp.TransferPatientTo(pawn, HospitalMap.For(held));
                         Log(comp, Fix.MovedToOtherMap, pawn);
                         continue;
                     }
@@ -144,7 +144,7 @@ namespace RimWard
 
                     // the cure bill vanished without the cure (not deleted by the player: that clears the pending flag)
                     if (data.HasPendingSurgeryBill && data.RetryAfterTick < 0 && data.CureRecipe != null && CureBill(pawn, data) == null
-                        && !HospitalMapComponent.CureAchieved(pawn, data) && comp.IsSurgeryRecipeAllowed(data.CureRecipe))
+                        && !HospitalMap.CureAchieved(pawn, data) && comp.IsSurgeryRecipeAllowed(data.CureRecipe))
                     {
                         BodyPartRecord part = data.CureRecipe.targetsBodyPart ? data.CureRecipe.Worker.GetPartsToApplyOn(pawn, data.CureRecipe).FirstOrDefault() : null;
                         if (part != null || !data.CureRecipe.targetsBodyPart)
@@ -196,7 +196,7 @@ namespace RimWard
         }
 
         /// <summary>Why the pending cure cannot be done right now (translated), or null when it can (or nothing is pending).</summary>
-        public static string ImpossibleReason(HospitalMapComponent comp, Pawn pawn, PatientData data)
+        public static string ImpossibleReason(HospitalMap comp, Pawn pawn, PatientData data)
         {
             if (data == null || data.Dismissed || !data.HasPendingSurgeryBill || data.CureRecipe == null || data.RetryAfterTick >= 0) return null;
             if (!pawn.Spawned) return null;
@@ -222,7 +222,7 @@ namespace RimWard
         /// Cured patient, active threat on the map: may they go anyway? They wait at most <see cref="Settings.MaxDangerHoldHours"/>,
         /// then leave with a message. Returns true when they may leave now.
         /// </summary>
-        public static bool MayLeaveDespiteDanger(HospitalMapComponent comp, Pawn pawn, PatientData data)
+        public static bool MayLeaveDespiteDanger(HospitalMap comp, Pawn pawn, PatientData data)
         {
             if (comp.Policy.acceptDanger || !Threats.AnyActiveThreat(comp.map, out string reasons))
             {
@@ -239,7 +239,7 @@ namespace RimWard
             return true;
         }
 
-        public static PatientStatus StatusOf(HospitalMapComponent comp, Pawn pawn, PatientData data, out string detail)
+        public static PatientStatus StatusOf(HospitalMap comp, Pawn pawn, PatientData data, out string detail)
         {
             detail = null;
             if (data == null) return PatientStatus.None;
@@ -265,7 +265,7 @@ namespace RimWard
             return PatientStatus.ReadyToLeave;
         }
 
-        public static string WhyText(HospitalMapComponent comp, Pawn pawn, PatientData data)
+        public static string WhyText(HospitalMap comp, Pawn pawn, PatientData data)
         {
             PatientStatus st = StatusOf(comp, pawn, data, out string detail);
             if (st == PatientStatus.None) return string.Empty;

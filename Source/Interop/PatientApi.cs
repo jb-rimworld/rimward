@@ -65,11 +65,11 @@ namespace RimWard
         public static PatientStage StageOf(Pawn pawn)
         {
             if (pawn == null || pawn.Dead || pawn.Destroyed) return PatientStage.None;
-            HospitalMapComponent hospital = null;
+            HospitalMap hospital = null;
             PatientData data = null;
             try
             {
-                hospital = HospitalMapComponent.For(pawn.Map);
+                hospital = HospitalMap.For(pawn.Map);
                 if (hospital == null || !hospital.GetPatientData(pawn, out data)) return PatientStage.None;
             }
             catch (Exception) { return PatientStage.None; }

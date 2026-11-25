@@ -13,14 +13,14 @@ namespace RimWard.MainTab
     {
         protected internal float score;
         private float lastTimeCached;
-        private HospitalMapComponent hospital;
+        private HospitalMap hospital;
 
         protected override string GetTextFor(Pawn pawn)
         {
             if (this.hospital == null || Time.unscaledTime > this.lastTimeCached + 2f || Find.CurrentMap != this.hospital.map)
             {
                 this.lastTimeCached = Time.unscaledTime;
-                this.hospital = HospitalMapComponent.For(Find.CurrentMap);
+                this.hospital = HospitalMap.For(Find.CurrentMap);
             }
             return pawn.GetPatientRating(out this.score, this.hospital) ? Mathf.Clamp01(this.score).ToStringPercent() : string.Empty;
         }

@@ -33,7 +33,7 @@ namespace RimWard.Tests
             t.Check(k != null && !k.Blocked, "RimWard's framework context exists and is not blocked");
             t.Check(k != null && k.PatchFailures.Count == 0, "every Harmony patch class applied (" + (k == null ? "-" : string.Join("; ", k.PatchFailures)) + ")");
             t.Check(RwT.S != null, "the settings class is RimWard.Settings");
-            HospitalGameComponent gc = HospitalGameComponent.Get;
+            HospitalSave gc = HospitalSave.Get;
             t.Check(gc != null && !gc.LoadedFromSave, "a new game has the hospital game component");
             t.Check(gc != null && gc.Policy.open == RwT.S.OpenInNewColonies, "case 14: a new colony starts with the hospital " + (gc != null && gc.Policy.open ? "open" : "closed") + " (setting: " + RwT.S.OpenInNewColonies + ")");
             t.Check(RwT.S.Payment == PaymentPreset.BreakEven && Mathf.Approximately(RwT.S.Difficulty, 1f) && RwT.S.ChargePatients, "defaults: break-even, difficulty 1, patients pay");
@@ -55,7 +55,7 @@ namespace RimWard.Tests
         {
             Map map = t.Map;
             RwT.SetUp(t, 3, 1);
-            HospitalMapComponent comp = RwT.Comp(map);
+            HospitalMap comp = RwT.Comp(map);
             int ok = 0, fallback = 0, wrongPart = 0, noBill = 0, errors = 0;
             var recipes = new Dictionary<string, int>();
             for (int i = 0; i < 30; i++)
@@ -146,7 +146,7 @@ namespace RimWard.Tests
         {
             Map map = t.Map;
             RwT.SetUp(t, 1, 1);
-            HospitalMapComponent comp = RwT.Comp(map);
+            HospitalMap comp = RwT.Comp(map);
             float oldMode = RwT.K.Get(Keys.IntakeMode);
             RwT.K.Set(Keys.IntakeMode, (float)(int)IntakeMode.Prompt);
             IncidentDef inc = DefDatabase<IncidentDef>.GetNamed("RimWard_PatientArrives");
@@ -217,7 +217,7 @@ namespace RimWard.Tests
             RwT.K.Set(Keys.Difficulty, 2f);
             int made = 0, badAddiction = 0, carcinoma = 0, aggro = 0, hemogen = 0, xenoOff = 0, extra = 0, lethalComplication = 0;
             HediffDef carc = DefDatabase<HediffDef>.GetNamedSilentFail("Carcinoma");
-            HospitalMapComponent comp = RwT.Comp(map);
+            HospitalMap comp = RwT.Comp(map);
             Faction fac = RwT.PatientFaction();
             for (int i = 0; i < 200; i++)
             {
@@ -276,7 +276,7 @@ namespace RimWard.Tests
         {
             Map map = t.Map;
             Pawn doc = RwT.SetUp(t, 3, 2);
-            HospitalMapComponent comp = RwT.Comp(map);
+            HospitalMap comp = RwT.Comp(map);
             t.Check(doc != null, "a doctor");
             if (doc == null) { RwT.CleanUp(map); yield break; }
 
@@ -327,7 +327,7 @@ namespace RimWard.Tests
             t.Check(RwT.LinesOf(d, InvoiceLineKind.Surgery) == 1 && RwT.LinesOf(d, InvoiceLineKind.Materials) == 1, "a successful operation adds an Operation and a Materials line");
             float mat = d.Lines.Where(l => l.kind == InvoiceLineKind.Materials).Sum(l => l.amount);
             t.Check(Mathf.Abs(mat - (oneArm.def.BaseMarketValue + oneMed.def.BaseMarketValue)) < 1f, "materials are billed at base value (" + mat.ToString("0") + ")");
-            t.Check(HospitalMapComponent.CureAchieved(p, d), "the arm is installed (cure achieved)");
+            t.Check(HospitalMap.CureAchieved(p, d), "the arm is installed (cure achieved)");
 
             // ---- case 6: the Bill column one tick before == invoice total == silver dropped
             d.HasPendingSurgeryBill = false;
@@ -336,7 +336,7 @@ namespace RimWard.Tests
             Invoice inv = comp.Discharge(p, d, DischargeReason.Cured);
             int dropped = RwT.SilverOnMap(map) - silver0;
             t.Check(inv != null && inv.TotalSilver == estimate && dropped == estimate, "invoice parity: estimate " + estimate + ", invoice " + inv?.TotalSilver + ", silver dropped " + dropped);
-            t.Check(HospitalGameComponent.Get.recentInvoices.FirstOrDefault() == inv, "the invoice is kept with the last discharges");
+            t.Check(HospitalSave.Get.recentInvoices.FirstOrDefault() == inv, "the invoice is kept with the last discharges");
 
             // ---- case 5: failure: no fee, reimbursement, retry later, patient waits, three failures end it without penalty
             Pawn q = RwT.NewPatient(map, PatientType.Wounds, out PatientData e, true, false);
@@ -373,7 +373,7 @@ namespace RimWard.Tests
             t.Note("after the last failure: attempts " + e.SurgeryAttempts + ", retryAt " + e.RetryAfterTick + ", pending " + e.HasPendingSurgeryBill + ", bills " + q.health.surgeryBills.Count);
             yield return 260;
             t.Check(!e.HasPendingSurgeryBill && e.RetryAfterTick < 0, "after the last allowed retry nothing is pending (attempts " + e.SurgeryAttempts + ", pending " + e.HasPendingSurgeryBill + ", retryAt " + e.RetryAfterTick + ")");
-            t.Check(!q.Dead && HospitalGameComponent.Get.patientsDiedAtFault == 0, "nobody died through the failures");
+            t.Check(!q.Dead && HospitalSave.Get.patientsDiedAtFault == 0, "nobody died through the failures");
             t.Note("goodwill of " + q.Faction.Name + ": " + gw + " → " + q.Faction.PlayerGoodwill);
             t.Check(q.Faction.PlayerGoodwill >= gw, "the failures cost no goodwill");
             RwT.CleanUp(map);
@@ -413,14 +413,14 @@ namespace RimWard.Tests
         {
             Map map = t.Map;
             Pawn doc = RwT.SetUp(t, 2, 2);
-            HospitalMapComponent comp = RwT.Comp(map);
+            HospitalMap comp = RwT.Comp(map);
             foreach (Pawn c in map.mapPawns.FreeColonistsSpawned) if (!c.WorkTypeIsDisabled(WorkTypeDefOf.Doctor)) c.workSettings?.SetPriority(WorkTypeDefOf.Doctor, 1);
             Pawn p = RwT.NewPatient(map, PatientType.Wounds, out PatientData d, true, false);
             p.health.RemoveAllHediffs();
             t.Check(BillingSuite.MakeArmCase(p, d, out Bill_Medical bill, out Thing arm), "a bionic arm operation as the patient's case");
             Test_ForceSurgeryOutcome.Force = ForcedOutcome.Success;
             int start = RwT.Now;
-            while (RwT.Now - start < 26000 && !HospitalMapComponent.CureAchieved(p, d))
+            while (RwT.Now - start < 26000 && !HospitalMap.CureAchieved(p, d))
             {
                 yield return 250;
                 if ((RwT.Now - start) % 5000 < 250)
@@ -430,7 +430,7 @@ namespace RimWard.Tests
             }
             Test_ForceSurgeryOutcome.Force = ForcedOutcome.None;
             t.Note("status after " + (RwT.Now - start) + " ticks: " + comp.WhyStillHere(p) + ", in bed " + p.InBed());
-            t.Check(HospitalMapComponent.CureAchieved(p, d), "a colonist installed the bionic arm by the normal surgery job");
+            t.Check(HospitalMap.CureAchieved(p, d), "a colonist installed the bionic arm by the normal surgery job");
             t.Check(RwT.LinesOf(d, InvoiceLineKind.Surgery) == 1 && RwT.LinesOf(d, InvoiceLineKind.Materials) == 1, "the real operation billed fee and materials");
             int silver0 = RwT.SilverOnMap(map);
             int due = Invoice.Build(p, d, DischargeReason.Estimate).TotalSilver;
@@ -451,7 +451,7 @@ namespace RimWard.Tests
         {
             Map map = t.Map;
             Pawn doc = RwT.SetUp(t, 3, 0);
-            HospitalMapComponent comp = RwT.Comp(map);
+            HospitalMap comp = RwT.Comp(map);
             Pawn p = RwT.NewPatient(map, PatientType.Disease, out PatientData d, true, false);
             d.AddLine(InvoiceLineKind.Tend, "test", 120f);
             MemeDef guilty = DefDatabase<MemeDef>.GetNamedSilentFail("Guilty");
@@ -502,7 +502,7 @@ namespace RimWard.Tests
         {
             Map map = t.Map;
             RwT.SetUp(t, 2, 1);
-            HospitalMapComponent comp = RwT.Comp(map);
+            HospitalMap comp = RwT.Comp(map);
             while (RwT.Now < 2 * 2500 + 600) yield return 250;   // clocks below 0 mean "not set": the game must be older than 2 × 1 h
             float oldHours = RwT.K.Get(Keys.ImpossibleHours);
             RwT.K.Set(Keys.ImpossibleHours, 1f);   // 1 h = 2500 ticks, so the clock can be set back inside a young test game
@@ -546,7 +546,7 @@ namespace RimWard.Tests
         {
             Map map = t.Map;
             RwT.SetUp(t, 2, 0);
-            HospitalMapComponent comp = RwT.Comp(map);
+            HospitalMap comp = RwT.Comp(map);
             float old = RwT.K.Get(Keys.MaxStayDays);
             RwT.K.Set(Keys.MaxStayDays, 1f);
             Pawn p = RwT.NewPatient(map, PatientType.Disease, out PatientData d, true, false);
@@ -573,7 +573,7 @@ namespace RimWard.Tests
         {
             Map map = t.Map;
             RwT.SetUp(t, 2, 0);
-            HospitalMapComponent comp = RwT.Comp(map);
+            HospitalMap comp = RwT.Comp(map);
             float oldHold = RwT.K.Get(Keys.DangerHoldHours);
             RwT.K.Set(Keys.DangerHoldHours, 1f);   // 1 h, so the hold clock can be set back inside a young test game
             Pawn cured = RwT.NewPatient(map, PatientType.Wounds, out PatientData d, true, false);
@@ -623,7 +623,7 @@ namespace RimWard.Tests
         {
             Map map = t.Map;
             RwT.SetUp(t, 3, 0);
-            HospitalMapComponent comp = RwT.Comp(map);
+            HospitalMap comp = RwT.Comp(map);
             Pawn a = RwT.NewPatient(map, PatientType.Wounds, out _, true, false);
             Pawn s = ModsConfig.IdeologyActive ? RwT.NewPatient(map, PatientType.Wounds, out _, true, false) : null;
             Pawn r = RwT.NewPatient(map, PatientType.Wounds, out _, true, false);
@@ -648,7 +648,7 @@ namespace RimWard.Tests
         {
             Map map = t.Map;
             RwT.SetUp(t, 3, 1);
-            HospitalMapComponent comp = RwT.Comp(map);
+            HospitalMap comp = RwT.Comp(map);
             var seen = new Dictionary<PatientStatus, string>();
             void Look(Pawn p) { PatientStatus st = comp.StatusOf(p, out _); seen[st] = comp.WhyStillHere(p); }
             Pawn hurt = RwT.NewPatient(map, PatientType.Wounds, out PatientData dh, true, false);
@@ -684,8 +684,8 @@ namespace RimWard.Tests
         {
             Map map = t.Map;
             RwT.SetUp(t, 5, 0);
-            HospitalMapComponent comp = RwT.Comp(map);
-            HospitalGameComponent.Get.Policy.massCasualties = true;
+            HospitalMap comp = RwT.Comp(map);
+            HospitalSave.Get.Policy.massCasualties = true;
             RwT.NewPatient(map, PatientType.Wounds, out _, true, false);
             RwT.NewPatient(map, PatientType.Wounds, out _, true, false);
             int free = comp.FreeMedicalBeds(), before = comp.Patients.Count;
@@ -699,7 +699,7 @@ namespace RimWard.Tests
             RwT.K.Current.SetSection(Sections.MassCasualties, false);
             t.Check(!comp.MassCasualties && !mce.Worker.CanFireNow(new IncidentParms { target = map }), "switching the area off stops the event");
             RwT.K.Current.SetSection(Sections.MassCasualties, true);
-            HospitalGameComponent.Get.Policy.massCasualties = false;
+            HospitalSave.Get.Policy.massCasualties = false;
             RwT.CleanUp(map);
         }
     }
@@ -713,7 +713,7 @@ namespace RimWard.Tests
         {
             Map map = t.Map;
             RwT.SetUp(t, 3, 1);
-            HospitalMapComponent comp = RwT.Comp(map);
+            HospitalMap comp = RwT.Comp(map);
             KitProfile pr = RwT.K.Current;
             IncidentDef inc = DefDatabase<IncidentDef>.GetNamed("RimWard_PatientArrives");
 
@@ -787,7 +787,7 @@ namespace RimWard.Tests
                 yield break;
             }
             Pawn doc = RwT.SetUp(t, 2, 1);
-            HospitalMapComponent comp = RwT.Comp(map);
+            HospitalMap comp = RwT.Comp(map);
             RwT.K.Current.SetSection(Sections.Luciferium, true);
             t.Check(!CriticalCase.Possible(map), "without luciferium in stock no critical case");
             Thing luci = RwT.Place(ThingDef.Named("Luciferium"), 2, map);
@@ -799,7 +799,7 @@ namespace RimWard.Tests
             t.Check(bill != null && bill.recipe == CriticalCase.Recipe, "the cure is the vanilla administer-luciferium bill");
             Thing dose = luci.SplitOff(1);
             bill?.Notify_IterationCompleted(doc, new List<Thing> { dose });
-            t.Check(CriticalCase.Done(p) && HospitalMapComponent.CureAchieved(p, d), "after the dose the case counts as cured");
+            t.Check(CriticalCase.Done(p) && HospitalMap.CureAchieved(p, d), "after the dose the case counts as cured");
             t.Check(RwT.LinesOf(d, InvoiceLineKind.CriticalCase) == 1 && RwT.LinesOf(d, InvoiceLineKind.Materials) == 1, "the invoice has the dose and the critical-case fee");
             RwT.K.Current.SetSection(Sections.Luciferium, false);
             RwT.CleanUp(map);
@@ -816,10 +816,9 @@ namespace RimWard.Tests
         {
             Map map = t.Map;
             RwT.SetUp(t, 1, 0);
-            HospitalMapComponent comp = RwT.Comp(map);
+            HospitalMap comp = RwT.Comp(map);
             bool hh = HearthBridge.HearthLoaded;
-            // jbmod renames local extra mods to <packageId>.slotN, which KitDetect does not match: look the mod up by prefix (FW request 12)
-            bool hbg = LoadedModManager.RunningModsListForReading.Any(m => m.PackageId.StartsWith(HospitalMod.HospitalBedsId, StringComparison.OrdinalIgnoreCase));
+            bool hbg = KitDetect.IsActive(HospitalMod.HospitalBedsId);   // also a local copy in a jbmod slot (".slotN")
             t.Note("Hearth & Harbor " + (hh ? "loaded" : "absent") + ", Hospital Beds Gen 2 " + (hbg ? "loaded" : "absent"));
             t.Check(RwT.K.On(Sections.Hearth) == hh, "the Hearth & Harbor bridge area exists exactly when H&H is loaded");
             Building_Bed bed = RwT.Spawned.OfType<Building_Bed>().FirstOrDefault();
@@ -830,8 +829,10 @@ namespace RimWard.Tests
                 List<string> labels = bed.GetGizmos().OfType<Command>().Select(c => c.defaultLabel ?? "").ToList();
                 t.Check(labels.Contains("CommandBedSetAsHospitalLabel".Translate()), "the bed has the Hospital Bed switch (" + string.Join(" | ", labels.Take(12)) + ")");
             }
-            bool ce = ModsConfig.IsActive(HospitalMod.CombatExtendedId);
-            t.Check(RimWard.Patches.CombatExtended_SelfTend_Patch.Applied == ce, "the Combat Extended self-tend patch is applied exactly when CE is loaded (CE " + (ce ? "loaded" : "absent") + ")");
+            bool ce = KitDetect.IsActive(HospitalMod.CombatExtendedId);
+            System.Reflection.MethodBase ceTarget = HarmonyLib.AccessTools.Method("CombatExtended.AI.CompTend:TryGiveTacticalJob");
+            bool ceApplied = ceTarget != null && (HarmonyLib.Harmony.GetPatchInfo(ceTarget)?.Prefixes.Any(px => px.owner == HospitalMod.PackageId) ?? false);
+            t.Check(ceApplied == ce, "the Combat Extended self-tend patch is applied exactly when CE is loaded (CE " + (ce ? "loaded" : "absent") + ")");
             if (!hh && !hbg && !ce) t.Note("no other mod loaded: the H&H, HBG2 and CE branches did not run (run with extra mods for them)");
             if (hh && bed != null)
             {
@@ -848,7 +849,7 @@ namespace RimWard.Tests
             }
             if (hbg)
             {
-                ThingDef hb = DefDatabase<ThingDef>.AllDefsListForReading.FirstOrDefault(d => d.IsBed && d.modContentPack != null && d.modContentPack.PackageId.StartsWith(HospitalMod.HospitalBedsId, StringComparison.OrdinalIgnoreCase)
+                ThingDef hb = DefDatabase<ThingDef>.AllDefsListForReading.FirstOrDefault(d => d.IsBed && d.modContentPack != null && KitDetect.Same(d.modContentPack.PackageId, HospitalMod.HospitalBedsId)
                     && d.building.bed_humanlike && d.Size.x == 1);
                 t.Check(hb != null, "a single Hospital Beds Gen 2 bed def exists (" + hb?.defName + ")");
                 if (hb != null && TestCells.TryFindFreeRect(map, 3, 4, out CellRect r))
@@ -876,7 +877,7 @@ namespace RimWard.Tests
         {
             Map home = t.Map;
             RwT.SetUp(t, 2, 0);
-            HospitalPolicy pol = HospitalGameComponent.Get.Policy;
+            HospitalPolicy pol = HospitalSave.Get.Policy;
             pol.openingHours[3] = false; pol.openingHours[4] = false;
             Pawn p = RwT.NewPatient(home, PatientType.Wounds, out PatientData d, true, false);
             Map other = null;
@@ -887,7 +888,7 @@ namespace RimWard.Tests
                 PlanetTile tile = PlanetTile.Invalid;
                 for (int i = 0; i < 30; i++)
                     if (TileFinder.TryFindNewSiteTile(out PlanetTile cand, home.Tile, 2, 12) && (Find.WorldGrid[cand].Mutators?.Count ?? 0) == 0) { tile = cand; break; }
-                if (!tile.Valid && TileFinder.TryFindNewSiteTile(out PlanetTile any, home.Tile, 2, 12)) { tile = any; RwT.ExpectRedError("Failed to find location structure"); }
+                if (!tile.Valid && TileFinder.TryFindNewSiteTile(out PlanetTile any, home.Tile, 2, 12)) { tile = any; t.ExpectRedError("Failed to find location structure"); }
                 if (tile.Valid)
                     other = GetOrGenerateMapUtility.GetOrGenerateMap(tile, new IntVec3(75, 1, 75), WorldObjectDefOf.Camp);
                 if (other != null)
@@ -900,7 +901,7 @@ namespace RimWard.Tests
             catch (Exception e) { t.Note("second map failed: " + e.Message); }
             t.Check(other != null, "a second map exists (stands in for the map a gravship lands on)");
             if (other == null) { RwT.CleanUp(home); yield break; }
-            HospitalMapComponent there = HospitalMapComponent.For(other);
+            HospitalMap there = HospitalMap.For(other);
             t.Check(there != null && RwT.Hours(there.Policy) == RwT.Hours(pol) && there.Policy.open == pol.open, "the new map's hospital uses the save's policy (open, same hours)");
             p.DeSpawn();   // leaves the map the way pawns board a gravship (the lord loses them)
             yield return 260;
@@ -950,10 +951,10 @@ namespace RimWard.Tests
         public override IEnumerable<int> Run(TestContext t)
         {
             Map map = t.Map;
-            if (RwT.LoadedSave == null)
+            if (t.LoadedSave == null)
             {
                 RwT.SetUp(t, 4, 1);
-                HospitalMapComponent comp = RwT.Comp(map);
+                HospitalMap comp = RwT.Comp(map);
                 float modeBefore = RwT.K.Get(Keys.IntakeMode);
                 RwT.K.Set(Keys.IntakeMode, (float)(int)IntakeMode.Prompt);
                 IncidentDef inc = DefDatabase<IncidentDef>.GetNamed("RimWard_PatientArrives");
@@ -973,10 +974,10 @@ namespace RimWard.Tests
                 {
                     ["offers"] = comp.pendingOffers.Count.ToString(),
                     ["surg"] = surg.ThingID, ["surgLines"] = ds.Lines.Count.ToString(), ["surgRetry"] = ds.RetryAfterTick.ToString(), ["surgRecipe"] = ds.CureRecipe.defName,
-                    ["dis"] = dis.ThingID, ["hours"] = RwT.Hours(HospitalGameComponent.Get.Policy),
+                    ["dis"] = dis.ThingID, ["hours"] = RwT.Hours(HospitalSave.Get.Policy),
                     ["patients"] = (comp.Patients.Count - 1).ToString(),
                 };
-                t.Check(RwT.Save(SaveName), "saved as " + SaveName);
+                t.Check(t.SaveGame(SaveName), "saved as " + SaveName);
                 RwT.WriteSide(SaveName, side);
                 t.Check(!comp.Patients.ContainsKey(gone), "saving dropped the entry of the discarded pawn (no null key later)");
                 yield break;
@@ -985,7 +986,7 @@ namespace RimWard.Tests
             var want = RwT.ReadSide(SaveName);
             t.Check(want != null, "phase 2: the side file of the save exists");
             if (want == null) yield break;
-            HospitalMapComponent c2 = RwT.Comp(map);
+            HospitalMap c2 = RwT.Comp(map);
             t.Check(RwT.LogLines("Null key", false).Count == 0, "no \"Null key\" error while loading");
             t.Check(c2.pendingOffers.Count.ToString() == want["offers"] && c2.pendingOffers.All(o => o.pawn != null && o.data != null), "the pending offer came back (" + c2.pendingOffers.Count + ")");
             Pawn s2 = c2.Patients.Keys.FirstOrDefault(p => p.ThingID == want["surg"]);
@@ -994,9 +995,9 @@ namespace RimWard.Tests
             Pawn d2 = c2.Patients.Keys.FirstOrDefault(p => p.ThingID == want["dis"]);
             t.Check(d2 == null || (c2.GetPatientData(d2, out PatientData dd2) && dd2.Dismissed), "the dismissed patient is still dismissed (or already gone)");
             t.Check(c2.Patients.Keys.All(p => p != null && !p.Discarded), "no entry with a missing pawn");
-            t.Check(RwT.Hours(HospitalGameComponent.Get.Policy) == want["hours"], "the policy came back");
+            t.Check(RwT.Hours(HospitalSave.Get.Policy) == want["hours"], "the policy came back");
             yield return 2500;
-            t.Check(RwT.LogLines("RimWard", false).Count == 0, "2500 ticks after the load: no RimWard error");
+            t.Check(t.RedErrorsSince(0).Count == 0, "2500 ticks after the load: no RimWard error");
         }
     }
 
@@ -1011,9 +1012,9 @@ namespace RimWard.Tests
         public override IEnumerable<int> Run(TestContext t)
         {
             Map map = t.Map;
-            if (RwT.LoadedSave == null)
+            if (t.LoadedSave == null)
             {
-                HospitalPolicy pol = HospitalGameComponent.Get.Policy;
+                HospitalPolicy pol = HospitalSave.Get.Policy;
                 pol.Repair();
                 pol.open = true; pol.acceptSurgery = false; pol.acceptDanger = true; pol.massCasualties = true;
                 for (int i = 0; i < 24; i++) pol.openingHours[i] = i == 3 || i == 9 || i == 21;
@@ -1022,27 +1023,36 @@ namespace RimWard.Tests
                 FoodPolicy fp = Current.Game.foodRestrictionDatabase.AllFoodRestrictions.LastOrDefault();
                 pol.foodPolicy = fp;
                 yield return 1;
-                t.Check(RwT.Save(Base), "saved a 2.0 save to rewrite");
+                t.Check(t.SaveGame(Base), "saved a 2.0 save to rewrite");
                 var doc = new System.Xml.XmlDocument();
                 doc.Load(GenFilePaths.FilePathForSavedGame(Base));
-                var gcNode = doc.SelectSingleNode("//game/components/li[@Class='RimWard.HospitalGameComponent']");
-                var polNode = gcNode?.SelectSingleNode("policy");
+                // a 2.0 save keeps RimWard's state in the framework's components; RimWard 1.x kept it in its own components with the policy
+                // fields on the map component: move the data into those legacy component nodes and the policy onto the map
+                var gameComps = doc.SelectSingleNode("//game/components");
+                var fwData = doc.SelectSingleNode("//game/components/li[@Class='JBFramework.FrameworkGame']/mods/li[id='juliusberger.rimward']/data");
+                var gcNode = doc.CreateElement("li"); gcNode.SetAttribute("Class", "RimWard.HospitalGameComponent");
+                if (fwData != null) { gcNode.InnerXml = fwData.InnerXml; fwData.ParentNode.RemoveChild(fwData); }
+                gameComps?.AppendChild(gcNode);
+                var polNode = gcNode.SelectSingleNode("policy");
                 string foodRef = polNode?.SelectSingleNode("foodPolicy")?.InnerText;
                 if (polNode != null) gcNode.RemoveChild(polNode);
-                var migNode = gcNode?.SelectSingleNode("policyMigrated");
+                var migNode = gcNode.SelectSingleNode("policyMigrated");
                 if (migNode != null) gcNode.RemoveChild(migNode);
-                var mapComp = doc.SelectSingleNode("//maps/li/components/li[@Class='RimWard.HospitalMapComponent']");
+                var mapComps = doc.SelectSingleNode("//maps/li/components");
+                var mapData = doc.SelectSingleNode("//maps/li/components/li[@Class='JBFramework.FrameworkMap']/mods/li[id='juliusberger.rimward']/data");
+                var mapComp = doc.CreateElement("li"); mapComp.SetAttribute("Class", "RimWard.HospitalMapComponent");
+                if (mapData != null) { mapComp.InnerXml = mapData.InnerXml; mapData.ParentNode.RemoveChild(mapData); }
+                var mce = mapComp.SelectSingleNode("MCEtriggered"); if (mce != null) mapComp.RemoveChild(mce);
+                mapComps?.AppendChild(mapComp);
                 void Add(string name, string inner) { var e = doc.CreateElement(name); e.InnerXml = inner; mapComp.AppendChild(e); }
-                if (mapComp != null)
-                {
-                    var own = mapComp.SelectSingleNode("ownPolicy"); if (own != null) mapComp.RemoveChild(own);
-                    Add("openForBusiness", "True");
-                    Add("openingHours", string.Concat(pol.openingHours.Select(b => "<li>" + b + "</li>")));
-                    Add("refusedOperations", refused != null ? "<li>" + refused.defName + "</li>" : "");
-                    if (!foodRef.NullOrEmpty()) Add("PatientFoodPolicy", foodRef);
-                    Add("massCasualties", "True"); Add("acceptSurgery", "False"); Add("AcceptDanger", "True");
-                }
-                t.Check(gcNode != null && polNode != null && mapComp != null, "rewrote the save into the 1.x layout (policy on the map component)");
+                var own = mapComp.SelectSingleNode("ownPolicy"); if (own != null) mapComp.RemoveChild(own);
+                Add("openForBusiness", "True");
+                Add("openingHours", string.Concat(pol.openingHours.Select(b => "<li>" + b + "</li>")));
+                Add("refusedOperations", refused != null ? "<li>" + refused.defName + "</li>" : "");
+                if (!foodRef.NullOrEmpty()) Add("PatientFoodPolicy", foodRef);
+                Add("massCasualties", "True"); Add("acceptSurgery", "False"); Add("AcceptDanger", "True");
+                t.Check(fwData != null && polNode != null && mapData != null && gameComps != null && mapComps != null,
+                    "rewrote the save into the 1.x layout (RimWard's own components, policy on the map component)");
                 doc.Save(GenFilePaths.FilePathForSavedGame(Old));
                 bool foodFound = !foodRef.NullOrEmpty();
                 RwT.WriteSide(Old, new Dictionary<string, string>
@@ -1052,9 +1062,9 @@ namespace RimWard.Tests
                 yield break;
             }
             var want = RwT.ReadSide(Old);
-            t.Check(want != null && RwT.LoadedSave == Old, "phase 2: loaded the 1.x-layout save " + RwT.LoadedSave);
+            t.Check(want != null && t.LoadedSave == Old, "phase 2: loaded the 1.x-layout save " + t.LoadedSave);
             if (want == null) yield break;
-            HospitalGameComponent gc = HospitalGameComponent.Get;
+            HospitalSave gc = HospitalSave.Get;
             HospitalPolicy p2 = gc.Policy;
             t.Check(gc.policyMigrated && gc.LoadedFromSave, "the old per-map policy was migrated");
             t.Check(p2.open && RwT.Hours(p2) == want["hours"], "open with the same hours (" + RwT.Hours(p2) + ")");
@@ -1062,7 +1072,10 @@ namespace RimWard.Tests
             t.Check(p2.refusedOperations.Any(r => r.defName == want["refused"]), "the refused operation came along");
             if (want["foodFound"] == "True") t.Check(p2.FoodPolicy?.label == want["food"], "the food policy came along (" + p2.FoodPolicy?.label + ")");
             t.Check(!RwT.Comp(map).HasOwnPolicy, "a single map gets no own copy");
-            t.Check(RwT.LogLines("RimWard", false).Count == 0, "no RimWard error while loading");
+            yield return 1;
+            t.Check(!Current.Game.components.Any(c => c is HospitalGameComponent) && !map.components.Any(c => c is HospitalMapComponent || c is IncidentScheduler),
+                "the legacy components were dropped after the load (they never reach a new save)");
+            t.Check(t.RedErrorsSince(0).Count == 0, "no RimWard error while loading");
             yield return 1;
         }
     }
@@ -1076,25 +1089,27 @@ namespace RimWard.Tests
         public override bool KeepsLoadedGame => true;
         public override IEnumerable<int> Run(TestContext t)
         {
-            if (RwT.LoadedSave == null)
+            if (t.LoadedSave == null)
             {
-                HospitalGameComponent.Get.Policy.open = false;
+                HospitalSave.Get.Policy.open = false;
                 yield return 1;
-                t.Check(RwT.Save("rw_base"), "saved");
+                t.Check(t.SaveGame("rw_base"), "saved");
                 var doc = new System.Xml.XmlDocument();
                 doc.Load(GenFilePaths.FilePathForSavedGame("rw_base"));
                 int removed = 0;
-                foreach (System.Xml.XmlNode n in doc.SelectNodes("//li[starts-with(@Class,'RimWard.')]").Cast<System.Xml.XmlNode>().ToList()) { n.ParentNode.RemoveChild(n); removed++; }
-                t.Check(removed >= 3 && !doc.OuterXml.Contains("RimWard."), "the rewritten save holds no RimWard data (" + removed + " components removed)");
+                foreach (System.Xml.XmlNode n in doc.SelectNodes("//li[starts-with(@Class,'RimWard.')] | //mods/li[id='juliusberger.rimward']").Cast<System.Xml.XmlNode>().ToList())
+                { n.ParentNode.RemoveChild(n); removed++; }
+                t.Check(removed >= 2 && !doc.OuterXml.Contains("RimWard.") && !doc.OuterXml.Contains("<id>juliusberger.rimward</id>"),
+                    "the rewritten save holds no RimWard data (" + removed + " nodes removed: the framework's entries of RimWard and its lords)");
                 doc.Save(GenFilePaths.FilePathForSavedGame("rw_nomod"));
                 yield break;
             }
-            HospitalGameComponent gc = HospitalGameComponent.Get;
-            t.Check(RwT.LoadedSave == "rw_nomod", "phase 2: loaded the save without RimWard data");
+            HospitalSave gc = HospitalSave.Get;
+            t.Check(t.LoadedSave == "rw_nomod", "phase 2: loaded the save without RimWard data");
             t.Check(gc != null && !gc.LoadedFromSave, "the hospital component was created fresh");
             t.Check(gc.Policy.open == RwT.S.OpenInNewColonies, "the hospital is " + (gc.Policy.open ? "open" : "closed") + " as the setting says (" + RwT.S.OpenInNewColonies + ")");
             yield return 600;
-            t.Check(RwT.LogLines("RimWard", false).Count == 0, "no RimWard error");
+            t.Check(t.RedErrorsSince(0).Count == 0, "no RimWard error");
         }
     }
 }

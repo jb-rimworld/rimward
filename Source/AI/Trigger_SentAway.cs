@@ -34,7 +34,7 @@ namespace RimWard
             {
                 return false;
             }
-            HospitalMapComponent hospital = HospitalMapComponent.For(pawn.Map);
+            HospitalMap hospital = HospitalMap.For(pawn.Map);
             if (hospital == null || !hospital.GetPatientData(pawn, out PatientData data))
             {
                 return true; // no longer our patient (forgotten by the caretaker): let the lord walk them out

@@ -20,17 +20,8 @@
     <RimWard.Tab.Sub.Guide>Das Krankenhaus in sechs kurzen Karten.</RimWard.Tab.Sub.Guide>
 
     <!-- Startkarte -->
-    <RimWard.Start.Title>Willkommen in deinem Krankenhaus</RimWard.Start.Title>
-    <RimWard.Start.Text>Fremde kommen per Kapsel, deine Ärzte behandeln sie in medizinischen Betten, und beim Gehen zahlen sie. Eine neue Kolonie startet mit geöffnetem Krankenhaus, und jedes medizinische Bett nimmt Patienten auf, bis du seinen Knopf „Krankenhausbett“ ausschaltest. Die Knöpfe unten zeigen, was erledigt ist, und erledigen den Rest.</RimWard.Start.Text>
-    <RimWard.Start.OpenNow>Krankenhaus jetzt öffnen</RimWard.Start.OpenNow>
-    <RimWard.Start.IsOpen>Das Krankenhaus ist geöffnet</RimWard.Start.IsOpen>
-    <RimWard.Start.UseBeds>Alle {0} medizinischen Betten für Patienten nutzen</RimWard.Start.UseBeds>
-    <RimWard.Start.UseBedsTip>Jedes medizinische Bett dieser Kolonie nimmt Patienten auf. Einzelne Betten stellst du mit ihrem Knopf „Krankenhausbett“ wieder um.</RimWard.Start.UseBedsTip>
-    <RimWard.Start.BedsDone>Alle {0} medizinischen Betten nehmen Patienten auf</RimWard.Start.BedsDone>
-    <RimWard.Start.NoBeds>Noch kein medizinisches Bett</RimWard.Start.NoBeds>
+    <RimWard.Start.OpenedMsg>Das Krankenhaus ist jetzt geöffnet.</RimWard.Start.OpenedMsg>
     <RimWard.Start.BedsMsg>{0} medizinische Betten nehmen jetzt Patienten auf.</RimWard.Start.BedsMsg>
-    <RimWard.Start.Done>Fertig</RimWard.Start.Done>
-    <RimWard.Start.Hint>Die Liste unten sagt, was noch fehlt. Diese Karte erscheint einmal pro Kolonie.</RimWard.Start.Hint>
 
     <!-- Statusband -->
     <RimWard.Band.IntakeOff>Die Patientenaufnahme ist ausgeschaltet</RimWard.Band.IntakeOff>

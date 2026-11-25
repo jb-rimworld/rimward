@@ -25,7 +25,7 @@ namespace RimWard.MainTab
             if (Time.unscaledTime > this.lastTimeCached + 4f || Find.CurrentMap != this.currentMap)
             {
                 this.currentMap = Find.CurrentMap;
-                HospitalMapComponent component = this.currentMap.GetComponent<HospitalMapComponent>();
+                HospitalMap component = HospitalMap.For(this.currentMap);
                 this.patientCountCached = component.ActivePatientsList().Count();
                 this.full = component.IsFull();
                 this.bedCountCached = component.BedCount();

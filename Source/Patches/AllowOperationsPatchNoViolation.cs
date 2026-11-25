@@ -21,7 +21,7 @@ namespace RimWard.Patches
         /// <summary>True when <paramref name="recipe"/> is the treatment <paramref name="pawn"/> came to our hospital for.</summary>
         public static bool IsRequestedTreatment(Pawn pawn, RecipeDef recipe)
         {
-            if (recipe == null || !pawn.IsPatient(out HospitalMapComponent hospital, false)) return false;
+            if (recipe == null || !pawn.IsPatient(out HospitalMap hospital, false)) return false;
             return hospital.GetPatientData(pawn, out PatientData data) && data.CureRecipe == recipe;
         }
 

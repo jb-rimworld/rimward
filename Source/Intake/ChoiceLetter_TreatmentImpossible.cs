@@ -18,7 +18,7 @@ namespace RimWard
         public Pawn patient;
         public int mapId = -1;
 
-        public static void Send(HospitalMapComponent comp, Pawn pawn, PatientData data, string why, int ticksUntilDischarge)
+        public static void Send(HospitalMap comp, Pawn pawn, PatientData data, string why, int ticksUntilDischarge)
         {
             LetterDef def = DefDatabase<LetterDef>.GetNamedSilentFail("RimWard_TreatmentImpossible") ?? LetterDefOf.NegativeEvent;
             TaggedString label = "RimWard.Impossible.Label".Translate(pawn.LabelShortCap);
@@ -57,8 +57,8 @@ namespace RimWard
 
         private void Resolve(bool discharge)
         {
-            HospitalMapComponent comp = Find.Maps.FirstOrDefault(m => m.uniqueID == this.mapId)?.GetComponent<HospitalMapComponent>()
-                ?? HospitalMapComponent.For(this.patient?.MapHeld);
+            HospitalMap comp = HospitalMap.For(Find.Maps.FirstOrDefault(m => m.uniqueID == this.mapId))
+                ?? HospitalMap.For(this.patient?.MapHeld);
             if (comp != null && this.patient != null && comp.GetPatientData(this.patient, out PatientData data) && !data.Dismissed)
             {
                 if (discharge) comp.Discharge(this.patient, data, DischargeReason.TreatmentImpossible);

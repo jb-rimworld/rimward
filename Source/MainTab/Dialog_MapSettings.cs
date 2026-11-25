@@ -30,7 +30,7 @@ namespace RimWard.MainTab
 
         public override void DoWindowContents(Rect inRect)
         {
-            if (HospitalMapComponent.For(this.map) == null) { this.Close(); return; }
+            if (HospitalMap.For(this.map) == null) { this.Close(); return; }
             Rect body = RwUI.PageHeader(new Rect(inRect.x, inRect.y, inRect.width, inRect.height - 50f), "HospitalSettings".Translate(), null);
             float w = RwUI.BeginScroll(body, ref this.scroll, this.viewH);
             float used = 0f;
@@ -41,7 +41,7 @@ namespace RimWard.MainTab
         public override void PostClose()
         {
             base.PostClose();
-            foreach (Map m in Find.Maps) HospitalMapComponent.For(m)?.ApplyPolicyToAll();
+            foreach (Map m in Find.Maps) HospitalMap.For(m)?.ApplyPolicyToAll();
         }
     }
 }

@@ -44,7 +44,7 @@ namespace RimWard
 
         public override void Notify_PawnLost(Pawn pawn, PawnLostCondition condition)
         {
-            HospitalMapComponent hospital = HospitalMapComponent.For(this.lord?.Map) ?? HospitalMapComponent.For(pawn?.MapHeld);
+            HospitalMap hospital = HospitalMap.For(this.lord?.Map) ?? HospitalMap.For(pawn?.MapHeld);
             if (hospital == null || pawn == null) return;
             switch (condition)
             {

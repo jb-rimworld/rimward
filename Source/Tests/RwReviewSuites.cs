@@ -31,7 +31,7 @@ namespace RimWard.Tests
         public override IEnumerable<int> Run(TestContext t)
         {
             Map map = t.Map;
-            HospitalMapComponent comp = RwT.Comp(map);
+            HospitalMap comp = RwT.Comp(map);
 
             // ---- (1) defaults bring patients
             List<Pawn> hostile = map.mapPawns.AllPawnsSpawned.Where(x => x.Faction != null && x.Faction.HostileTo(Faction.OfPlayer)).ToList();
@@ -39,11 +39,11 @@ namespace RimWard.Tests
                 t.Note("hostiles on the map: " + string.Join(", ", hostile.Take(8).Select(x => x.LabelShort + " (" + (x.GetLord()?.LordJob?.GetType().Name ?? "no lord") + "/" + (x.GetLord()?.CurLordToil?.GetType().Name ?? "-") + ", active " + Threats.IsActiveThreat(x) + ")")));
             HospitalPolicy fresh = HospitalPolicy.NewDefault(true);
             t.Check(fresh.OpenHourCount == 24, "a new hospital is open all day (" + fresh.OpenHourCount + " hours)");
-            float one = IncidentScheduler.ExpectedAttemptsPerDay(1), two = IncidentScheduler.ExpectedAttemptsPerDay(2), twenty = IncidentScheduler.ExpectedAttemptsPerDay(20);
+            float one = ArrivalScheduler.ExpectedAttemptsPerDay(1), two = ArrivalScheduler.ExpectedAttemptsPerDay(2), twenty = ArrivalScheduler.ExpectedAttemptsPerDay(20);
             t.Note("expected arrival attempts a day: 1 bed " + one.ToString("0.00") + ", 2 beds " + two.ToString("0.00") + ", 20 beds " + twenty.ToString("0.00"));
             t.Check(one >= 0.8f && two >= 0.8f, "one or two free beds still bring about one patient a day");
             t.Check(twenty > two && twenty <= 10f, "more free beds bring more patients, within reason");
-            t.Check(IncidentScheduler.ChancePerCheck(0, 0) == 0f, "no free bed: no arrival");
+            t.Check(ArrivalScheduler.ChancePerCheck(0, 0) == 0f, "no free bed: no arrival");
             // a simulated week on the default policy with two free beds: every 42 ticks a check, open hours as the policy says
             int arrivals = 0;
             Rand.PushState(424242);
@@ -52,7 +52,7 @@ namespace RimWard.Tests
                 for (int tick = 0; tick < 7 * GenDate.TicksPerDay; tick += 42)
                 {
                     int day = tick / GenDate.TicksPerDay, hour = (tick % GenDate.TicksPerDay) / GenDate.TicksPerHour;
-                    if (Rand.Chance(IncidentScheduler.ChancePerCheck(2, day)) && fresh.IsOpenAtHour(hour)) arrivals++;
+                    if (Rand.Chance(ArrivalScheduler.ChancePerCheck(2, day)) && fresh.IsOpenAtHour(hour)) arrivals++;
                 }
             }
             finally { Rand.PopState(); }
@@ -131,10 +131,10 @@ namespace RimWard.Tests
                 ud.HasPendingSurgeryBill = false;
                 u.DeSpawn();
                 int silver0 = RwT.SilverOnMap(map);
-                long earned0 = HospitalGameComponent.Get.silverEarned;
+                long earned0 = HospitalSave.Get.silverEarned;
                 Invoice inv = comp.Discharge(u, ud, DischargeReason.Cured);
                 int dropped = RwT.SilverOnMap(map) - silver0;
-                long counted = HospitalGameComponent.Get.silverEarned - earned0;
+                long counted = HospitalSave.Get.silverEarned - earned0;
                 t.Check(inv != null && inv.TotalSilver > 0 && dropped == inv.TotalSilver && counted == dropped,
                     "unspawned discharge: invoice " + inv?.TotalSilver + ", silver on the map " + dropped + ", counted " + counted);
                 comp.ForgetPatient(u);
@@ -201,16 +201,15 @@ namespace RimWard.Tests
             if (x1 != null && x2 != null)
             {
                 int ticked = 0, errors0 = Log.Messages.Count(m => m.type == LogMessageType.Error);
-                RwT.ExpectRedError("[JBTEST-EXPECTED]");
-                HospitalMapComponent.TestTickHook = p =>
+                t.ExpectRedError("[JBTEST-EXPECTED]");
+                HospitalMap.TestTickHook = p =>
                 {
                     if (p == x1) throw new InvalidOperationException("[JBTEST-EXPECTED] thrown by rw.review");
                     if (p == x2) ticked++;
                 };
                 try { yield return 760; }   // three real hospital ticks (every 250 ticks)
-                finally { HospitalMapComponent.TestTickHook = null; }
+                finally { HospitalMap.TestTickHook = null; }
                 int errors = Log.Messages.Count(m => m.type == LogMessageType.Error) - errors0;
-                Find.WindowStack.TryRemove(typeof(LudeonTK.EditWindow_Log), false);   // the expected error opened the debug log; later screenshots need a clear screen
                 t.Check(ticked >= 1, "the other patient still ticks (" + ticked + ")");
                 t.Check(errors <= 1, "logged once, not every 250 ticks (" + errors + " errors)");
                 comp.ForgetPatient(x1); comp.ForgetPatient(x2); RwT.Discard(x1); RwT.Discard(x2);
@@ -237,8 +236,8 @@ namespace RimWard.Tests
             }
 
             // ---- (10) the welcome pitch follows the game language
-            t.Check(PitchTranslation.Applied && RwT.K.Info.FirstStartPitch == "RimWard.FirstStartPitch".Translate().ToString(),
-                "the welcome card's pitch is the translated text (" + RwT.K.Info.FirstStartPitch.Truncate(50) + ")");
+            // (the framework translates <prefix>.FirstStartPitch itself; rw.tab opens the card and shoots it)
+            t.Check("RimWard.FirstStartPitch".CanTranslate() && !"RimWard.FirstStartPitch".Translate().ToString().NullOrEmpty(), "the welcome card's pitch has a translation key in this language");
 
             RwT.CleanUp(map);
         }
@@ -258,13 +257,13 @@ namespace RimWard.Tests
         public override IEnumerable<int> Run(TestContext t)
         {
             Map map = t.Map;
-            HospitalMapComponent comp = RwT.Comp(map);
+            HospitalMap comp = RwT.Comp(map);
             RwT.SetUp(t, 2, 0);
-            HospitalPolicy pol = HospitalGameComponent.Get.Policy;
+            HospitalPolicy pol = HospitalSave.Get.Policy;
             HospitalPolicy def = HospitalPolicy.NewDefault(true);
             pol.openingHours = def.openingHours; pol.acceptSurgery = def.acceptSurgery; pol.acceptDanger = def.acceptDanger;
             t.Check(RwT.S.Intake == IntakeMode.Hybrid && pol.OpenHourCount == 24, "defaults: Hybrid intake, open all day");
-            IncidentScheduler.PausedForTests = false;
+            ArrivalScheduler.PausedForTests = false;
             var seen = new HashSet<int>();
             int start = RwT.Now, accepted = 0;
             while (RwT.Now - start < 3 * GenDate.TicksPerDay)
@@ -281,9 +280,7 @@ namespace RimWard.Tests
             }
             t.Note("3 days on defaults: " + seen.Count + " patients (" + accepted + " offers accepted), now " + comp.Patients.Count + " here");
             t.Check(seen.Count >= 2, "at least two patients in three days on the defaults (" + seen.Count + ")");
-            List<string> red = TabT.RedSince(0);
-            foreach (string l in red.Take(5)) t.Note("red: " + l);
-            t.Check(red.Count == 0, "no red error of RimWard or the framework (" + red.Count + ")");
+            t.CheckNoRedErrors(0, "no red error of RimWard or the framework");
             RwT.CleanUp(map);
         }
     }

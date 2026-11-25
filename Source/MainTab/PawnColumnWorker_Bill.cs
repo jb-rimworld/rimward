@@ -18,7 +18,7 @@ namespace RimWard.MainTab
         {
             float now = Time.unscaledTime;
             if (this.cache.TryGetValue(pawn, out KeyValuePair<float, Invoice> kv) && now - kv.Key < 1f) return kv.Value;
-            HospitalMapComponent h = HospitalMapComponent.For(Find.CurrentMap);
+            HospitalMap h = HospitalMap.For(Find.CurrentMap);
             Invoice inv = h != null && h.GetPatientData(pawn, out PatientData data) ? Invoice.Build(pawn, data, DischargeReason.Estimate) : null;
             if (this.cache.Count > 200) this.cache.Clear();
             this.cache[pawn] = new KeyValuePair<float, Invoice>(now, inv);

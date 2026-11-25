@@ -14,10 +14,15 @@ using Verse.AI.Group;
 
 namespace RimWard
 {
-    // Central per-map hospital state: the patients on this map, pending offers and (optionally) a map-only policy override.
-    // The policies themselves live per save in HospitalGameComponent, so a new map (gravship landing) keeps them.
-    public class HospitalMapComponent : MapComponent
+    /// <summary>
+    /// Central per-map hospital state: the patients on this map, pending offers, (optionally) a map-only policy override and the weekly
+    /// mass-casualty flag. The policies themselves live per save in <see cref="HospitalSave"/>, so a new map (gravship landing) keeps them.
+    /// Stored inside JB Framework's map component (<c>KitRegistry.MapData</c>), so a save names no class of RimWard; older saves hold the same
+    /// fields in the legacy <see cref="HospitalMapComponent"/> and <see cref="IncidentScheduler"/>, which read them into this object.
+    /// </summary>
+    public sealed class HospitalMap
     {
+        public readonly Map map;
         public Dictionary<Pawn, PatientData> Patients;
         private List<Pawn> _patientsKeysWorkingList;
         private List<PatientData> _patientsValuesWorkingList;
@@ -29,24 +34,27 @@ namespace RimWard
         private int nextOfferId = 1;
         public int PendingOfferCount => this.pendingOffers.Count;
 
+        /// <summary>The mass-casualty event of this week already happened (one try per seventh day).</summary>
+        internal bool mceTriggered;
+
         // pre-2.0 per-map fields, read only while loading an older save and then migrated
         private HospitalPolicy legacyPolicy;
 
-        private static readonly Dictionary<Map, HospitalMapComponent> cache = new Dictionary<Map, HospitalMapComponent>();
+        private static readonly Dictionary<Map, HospitalMap> cache = new Dictionary<Map, HospitalMap>();
 
-        public HospitalMapComponent(Map map) : base(map)
+        private HospitalMap(Map map)
         {
+            this.map = map;
             this.Patients = new Dictionary<Pawn, PatientData>();
-            if (map != null) cache[map] = this;
         }
 
-        /// <summary>The hospital of a map without the linear component search (hot paths).</summary>
-        public static HospitalMapComponent For(Map map)
+        /// <summary>The hospital of a map (created on first use; null without a map).</summary>
+        public static HospitalMap For(Map map)
         {
             if (map == null) return null;
-            if (cache.TryGetValue(map, out HospitalMapComponent c) && c != null && c.map == map) return c;
-            c = map.GetComponent<HospitalMapComponent>();
-            if (c != null) cache[map] = c;
+            if (cache.TryGetValue(map, out HospitalMap c) && c != null) return c;
+            c = new HospitalMap(map);
+            cache[map] = c;
             return c;
         }
 
@@ -56,29 +64,42 @@ namespace RimWard
             Threats.ClearCache();
         }
 
+        /// <summary>MapData reset: a new or freshly loading map, or a removed one, forgets its hospital.</summary>
+        internal static void Forget(Map map)
+        {
+            if (map != null) cache.Remove(map);
+        }
+
+        /// <summary>MapData expose (the framework's node of RimWard in this map).</summary>
+        internal static void ExposeFor(Map map) => For(map)?.ExposeData(true);
+
         // ---------------------------------------------------------------- policy
 
         /// <summary>The policy in force on this map: its own override, else the save's policy.</summary>
-        public HospitalPolicy Policy => this.ownPolicy ?? HospitalGameComponent.Get?.Policy ?? (this.ownPolicy = HospitalPolicy.NewDefault(false));
+        public HospitalPolicy Policy => this.ownPolicy ?? HospitalSave.Get?.Policy ?? (this.ownPolicy = HospitalPolicy.NewDefault(false));
 
         public bool HasOwnPolicy => this.ownPolicy != null;
 
         /// <summary>Give this map its own copy of the policy (true) or go back to the save's policy (false).</summary>
         public void SetOwnPolicy(bool own)
         {
-            if (own && this.ownPolicy == null) this.ownPolicy = (HospitalGameComponent.Get?.Policy ?? HospitalPolicy.NewDefault(false)).Copy();
+            if (own && this.ownPolicy == null) this.ownPolicy = (HospitalSave.Get?.Policy ?? HospitalPolicy.NewDefault(false)).Copy();
             else if (!own) this.ownPolicy = null;
         }
 
-        public override void ExposeData()
+        /// <summary>
+        /// Saves and loads the map's hospital. <paramref name="withSchedulerFlag"/> = also the weekly mass-casualty flag (false when the
+        /// legacy HospitalMapComponent reads an old save: there the flag sat in the legacy IncidentScheduler).
+        /// </summary>
+        internal void ExposeData(bool withSchedulerFlag)
         {
-            base.ExposeData();
             if (Scribe.mode == LoadSaveMode.Saving) this.CleanForSave();
             if (this.Patients == null) this.Patients = new Dictionary<Pawn, PatientData>();
             Scribe_Collections.Look(ref this.Patients, "patients", LookMode.Reference, LookMode.Deep, ref this._patientsKeysWorkingList, ref this._patientsValuesWorkingList);
             Scribe_Deep.Look(ref this.ownPolicy, "ownPolicy");
             Scribe_Collections.Look(ref this.pendingOffers, "pendingOffers", LookMode.Deep);
             Scribe_Values.Look(ref this.nextOfferId, "nextOfferId", 1);
+            if (withSchedulerFlag) Scribe_Values.Look(ref this.mceTriggered, "MCEtriggered", false);
 
             if (Scribe.mode == LoadSaveMode.LoadingVars) this.ReadLegacyPolicy();
             if (Scribe.mode == LoadSaveMode.ResolvingCrossRefs && this.legacyPolicy != null)
@@ -90,7 +111,6 @@ namespace RimWard
                 foreach (Pawn p in bad) if (p != null) this.Patients.Remove(p);
                 if (this.pendingOffers == null) this.pendingOffers = new List<PatientOffer>();
                 this.pendingOffers.RemoveAll(o => o == null || o.pawn == null || o.pawn.Discarded);
-                cache[this.map] = this;
             }
         }
 
@@ -110,16 +130,15 @@ namespace RimWard
             this.legacyPolicy = p;
         }
 
-        public override void FinalizeInit()
+        /// <summary>After a load (every map, in map order): migrates a pre-2.0 per-map policy and completes old invoices.</summary>
+        internal void AfterLoad()
         {
-            base.FinalizeInit();
-            cache[this.map] = this;
             if (this.legacyPolicy != null)
             {
                 // Resolve the cross-reference (food policy) read during LoadingVars, then migrate:
                 // the first map's values become the save policy, other maps that differ keep their own.
                 this.legacyPolicy.Repair();
-                HospitalGameComponent gc = HospitalGameComponent.Get;
+                HospitalSave gc = HospitalSave.Get;
                 if (gc != null)
                 {
                     if (!gc.policyMigrated)
@@ -135,12 +154,6 @@ namespace RimWard
                 this.legacyPolicy = null;
             }
             foreach (PatientData d in this.Patients.Values) d?.EnsureLines(true);
-        }
-
-        public override void MapRemoved()
-        {
-            base.MapRemoved();
-            cache.Remove(this.map);
         }
 
         /// <summary>Drops entries that would come back as null keys ("Null key while loading dictionary"): gone, discarded, dead or off this map.</summary>
@@ -166,9 +179,9 @@ namespace RimWard
 
         // ---------------------------------------------------------------- tick
 
-        public override void MapComponentTick()
+        /// <summary>Called every game tick for every map (RimWard's OnTick); works every 250 ticks.</summary>
+        internal void Tick()
         {
-            base.MapComponentTick();
             if (Find.TickManager.TicksGame % 250 != 0) return;
             int now = Find.TickManager.TicksGame;
 
@@ -454,7 +467,7 @@ namespace RimWard
             return true;
         }
 
-        private void DiscardOffer(PatientOffer offer)
+        internal void DiscardOffer(PatientOffer offer)
         {
             // No goodwill penalty for declining. Discard a held drop-pod pawn; leave ambient pawns be.
             if (offer.kind == OfferKind.DropPod && offer.pawn != null && !offer.pawn.Spawned && !offer.pawn.Discarded)
@@ -530,7 +543,7 @@ namespace RimWard
         {
             if (pawn == null || data == null) return null;
             Invoice inv = Invoice.Build(pawn, data, reason);
-            HospitalGameComponent gc = HospitalGameComponent.Get;
+            HospitalSave gc = HospitalSave.Get;
             float silver = data.PaidOnDischarge ? 0f : inv.TotalSilver;
             data.PaidOnDischarge = true;
             if (silver >= 1f)
@@ -603,7 +616,7 @@ namespace RimWard
                 || (s.NoFaultUnwinnable && diedFast);
 
             int penalty = noFault ? 0 : -s.DeathPenaltyAmount;
-            HospitalGameComponent gc = HospitalGameComponent.Get;
+            HospitalSave gc = HospitalSave.Get;
             gc?.RecordDischarge(false, 0f, 0f);
             if (!noFault && gc != null) gc.patientsDiedAtFault++;
 
@@ -779,7 +792,7 @@ namespace RimWard
         }
 
         // Called by the caretaker when a patient's entry belongs to another map now (gravship, transport).
-        internal void TransferPatientTo(Pawn pawn, HospitalMapComponent other)
+        internal void TransferPatientTo(Pawn pawn, HospitalMap other)
         {
             if (other == null || other == this || !this.Patients.TryGetValue(pawn, out PatientData data)) return;
             this.Patients.Remove(pawn);

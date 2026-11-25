@@ -22,23 +22,6 @@ namespace RimWard.Tests
 {
     internal static class TabT
     {
-        // FW-REQUEST (7): the harness keeps its UI helpers (frames, screenshots) internal; small copies.
-        internal static string ShotDir => KitTestEnv.Get(KitTestEnv.Shots) is string v && v != "0" ? v : null;
-        internal static int Shots;
-        internal static void Shot(string name)
-        {
-            string dir = ShotDir;
-            if (dir == null) return;
-            try { Directory.CreateDirectory(dir); ScreenCapture.CaptureScreenshot(Path.Combine(dir, name + ".png")); Shots++; }
-            catch (Exception e) { Log.Warning("[JBTEST] screenshot failed: " + e.Message); }
-        }
-
-        internal static IEnumerable<int> Frames(int frames)
-        {
-            int until = Time.frameCount + frames, guard = 0;
-            while (Time.frameCount < until && guard++ < 3000) yield return 1;
-        }
-
         internal static bool Inside(Rect inner, Rect outer, float slack = 0.5f)
             => inner.xMin >= outer.xMin - slack && inner.yMin >= outer.yMin - slack && inner.xMax <= outer.xMax + slack && inner.yMax <= outer.yMax + slack;
 
@@ -56,28 +39,21 @@ namespace RimWard.Tests
             if (Find.MainTabsRoot.OpenTab != null) Find.MainTabsRoot.EscapeCurrentTab(false);
         }
 
-        /// <summary>Red errors in the game log after <paramref name="since"/> that name RimWard or the framework.</summary>
-        internal static List<string> RedSince(int since)
-            => Log.Messages.Skip(since).Where(m => m.type == LogMessageType.Error && ((m.text ?? "").Contains("RimWard") || (m.text ?? "").Contains("JBFramework"))
-                    && !(m.text ?? "").Contains("[JBTEST-EXPECTED]"))
-                .Select(m => m.text.Split('\n')[0]).ToList();
-        internal static int LogMark => Log.Messages.Count();
-
         /// <summary>Draws one page for a few frames and checks frame, layout, width and errors. Optional screenshot.</summary>
         internal static IEnumerable<int> CheckPage(TestContext t, string page, string tag, string shot)
         {
             KitMod k = HospitalMod.K;
-            int g0 = k.Log.ErrorCount, red0 = LogMark;
+            int g0 = k.Log.ErrorCount, red0 = t.Mark();
             MainTabWindow_Hospital.SelectedPage = page;
-            foreach (int y in Frames(3)) yield return y;
+            foreach (int y in t.Frames(3)) yield return y;
             int f0 = Time.frameCount;
-            if (shot != null) Shot(shot);
-            foreach (int y in Frames(2)) yield return y;
+            if (shot != null) t.Shot(shot);
+            foreach (int y in t.Frames(2)) yield return y;
             MainTabWindow_Hospital w = Window;
             var L = MainTabWindow_Hospital.Last;
             t.Check(w != null && w.IsOpen, tag + " " + page + ": the tab is open");
             t.Check(L.Page == page && L.Frame >= f0 - 1, tag + " " + page + ": drawn (frame " + L.Frame + ")");
-            t.Check(k.Log.ErrorCount == g0 && RedSince(red0).Count == 0, tag + " " + page + ": nothing threw" + string.Join("; ", RedSince(red0).Take(2)));
+            t.Check(k.Log.ErrorCount == g0 && t.RedErrorsSince(red0).Count == 0, tag + " " + page + ": nothing threw" + string.Join("; ", t.RedErrorsSince(red0).Take(2)));
             t.Check(Inside(L.Header, L.In) && Inside(L.List, L.In) && Inside(L.Content, L.In) && L.List.xMax <= L.Content.xMin,
                 tag + " " + page + ": header, page list and page inside the window");
             t.Check(L.SettingsButton.width <= 0f || (Inside(L.SettingsButton, L.Header, 1f) && (L.OpenChip.width <= 0f || L.OpenChip.xMax <= L.SettingsButton.xMin)),
@@ -127,7 +103,7 @@ namespace RimWard.Tests
         /// <summary>Patients in every status the "why still here" knows (and one pending offer). Returns the pawns made.</summary>
         internal static List<Pawn> EveryState(TestContext t, Map map, out Pawn cured)
         {
-            HospitalMapComponent comp = RwT.Comp(map);
+            HospitalMap comp = RwT.Comp(map);
             var made = new List<Pawn>();
             Pawn hurt = RwT.NewPatient(map, PatientType.Wounds, out _, true, false); made.Add(hurt);
             Pawn disease = RwT.NewPatient(map, PatientType.Disease, out _, true, false); made.Add(disease);
@@ -173,7 +149,7 @@ namespace RimWard.Tests
 
         internal static void CleanUpAll(Map map, IEnumerable<Pawn> made)
         {
-            HospitalMapComponent comp = RwT.Comp(map);
+            HospitalMap comp = RwT.Comp(map);
             comp.Policy.refusedOperations.Clear();
             foreach (Pawn p in made ?? Enumerable.Empty<Pawn>()) { comp.ForgetPatient(p); RwT.Discard(p); }
             RwT.CleanUp(map);
@@ -194,11 +170,10 @@ namespace RimWard.Tests
         public override IEnumerable<int> Run(TestContext t)
         {
             Map map = t.Map;
-            HospitalMapComponent comp = RwT.Comp(map);
-            HospitalGameComponent gc = HospitalGameComponent.Get;
-            int red0 = TabT.LogMark, guard0 = HospitalMod.K.Log.ErrorCount;
-            IncidentScheduler.PausedForTests = true;
-            float uiScale0 = Prefs.UIScale;
+            HospitalMap comp = RwT.Comp(map);
+            HospitalSave gc = HospitalSave.Get;
+            int red0 = t.Mark(), guard0 = HospitalMod.K.Log.ErrorCount;
+            ArrivalScheduler.PausedForTests = true;
             string lang = LanguageDatabase.activeLanguage?.folderName ?? "?";
             string L = lang.StartsWith("German") ? "de" : "en";
             List<Pawn> made = null;
@@ -210,7 +185,14 @@ namespace RimWard.Tests
                 t.Check(HospitalOverview.PatientBeds(map).Count() == 0, "fresh colony: no patient bed yet");
                 statsKept = gc.TestClearStats();   // earlier suites in the same game sent patients home and earned silver: a fresh colony has none
                 t.Check(gc.IncomeThisQuadrum(Find.WorldGrid.LongLatOf(map.Tile).x) == 0 && gc.recentInvoices.Count == 0 && gc.renown == 0f, "fresh colony: no income, no invoice, no renown on the overview");
-                t.Check(OverviewPage.StartCardDue(), "fresh colony: the start card is due");
+                // the welcome card (JB Framework's, with RimWard's pitch and two actions): drawn, translated, closed again
+                Window card = t.OpenWelcomeCard();
+                foreach (int y in t.Frames(4)) yield return y;
+                t.Check(card != null && card.IsOpen, "fresh colony: the welcome card opens (" + card?.GetType().Name + ")");
+                t.Check("RimWard.FirstStartPitch".CanTranslate() && "RimWard.Card.openHospital".CanTranslate() && "RimWard.Card.useBeds".CanTranslate(), "its pitch and actions are translated");
+                t.Shot("rw_welcome_" + L);
+                card?.Close(false);
+                foreach (int y in t.Frames(2)) yield return y;
                 List<ReadinessItem> ready = HospitalOverview.Readiness(map);
                 t.Note("checklist: " + string.Join(" | ", ready.Select(i => (i.ok ? "ok " : "NO ") + i.key + (i.detail != null ? " (" + i.detail + ")" : "") + (i.fixLabel != null ? " [" + i.fixLabel + "]" : "") + (i.pointer != null ? " -> " + i.pointer : ""))));
                 ReadinessItem beds = ready.FirstOrDefault(i => i.key == "Beds");
@@ -218,7 +200,7 @@ namespace RimWard.Tests
                 t.Check(ready.All(i => !i.label.NullOrEmpty() && !i.label.Contains("RimWard.")) && ready.Where(i => !i.ok).All(i => i.fix != null || !i.pointer.NullOrEmpty() || !i.detail.NullOrEmpty()),
                     "every line is translated and every open line has a fix, a pointer or a reason");
                 TabT.Open("overview");
-                foreach (int y in TabT.Frames(4)) yield return y;
+                foreach (int y in t.Frames(4)) yield return y;
                 foreach (int y in TabT.CheckPage(t, "overview", "fresh", "rw_tab_" + L + "_fresh_overview")) yield return y;
                 foreach (int y in TabT.CheckPage(t, "patients", "fresh", "rw_tab_" + L + "_fresh_patients")) yield return y;
                 // closed hospital: band and checklist say so, the fix opens it
@@ -297,7 +279,7 @@ namespace RimWard.Tests
                 t.Note("checklist after the fixes: " + string.Join(" | ", after.Select(i => (i.ok ? "ok " : "NO ") + i.key)));
                 t.Check(after.All(i => i.ok || i.key == "Safe" || i.key == "Landing"), "after the fixes every line is done (danger and drop spot depend on the map)");
                 TabT.Open("overview");
-                foreach (int y in TabT.Frames(3)) yield return y;
+                foreach (int y in t.Frames(3)) yield return y;
                 OverviewPage.Invalidate();
                 foreach (int y in TabT.CheckPage(t, "overview", "ready", "rw_tab_" + L + "_ready_overview")) yield return y;
 
@@ -333,23 +315,24 @@ namespace RimWard.Tests
 
                 // all pages at three screen sizes
                 OverviewPage.Invalidate();
-                var scales = new[] { (1.5f, "1280x720"), (1f, "1920x1080"), (0.75f, "2560x1440") };
-                foreach (var (scale, tag) in scales)
+                var screens = new[] { (720, "1280x720"), (1080, "1920x1080"), (1440, "2560x1440") };
+                foreach (var (height, tag) in screens)
                 {
                     TabT.Close();
-                    Prefs.UIScale = scale;
-                    foreach (int y in TabT.Frames(4)) yield return y;
-                    t.Note(tag + ": UI scale " + scale + " gives a virtual screen of " + UI.screenWidth + "x" + UI.screenHeight);
-                    TabT.Open("overview");
-                    foreach (int y in TabT.Frames(4)) yield return y;
-                    MainTabWindow_Hospital w = TabT.Window;
-                    t.Check(w != null && w.windowRect.width >= Mathf.Min(1000f, UI.screenWidth) - 0.5f, tag + ": tab size " + w?.windowRect.size + " keeps its minimum width");
-                    foreach (string page in MainTabWindow_Hospital.PageIds)
-                        foreach (int y in TabT.CheckPage(t, page, tag, "rw_tab_" + L + "_" + tag + "_" + page)) yield return y;
+                    using (t.ScreenHeight(height))
+                    {
+                        foreach (int y in t.Frames(4)) yield return y;
+                        t.Note(tag + ": virtual screen " + UI.screenWidth + "x" + UI.screenHeight);
+                        TabT.Open("overview");
+                        foreach (int y in t.Frames(4)) yield return y;
+                        MainTabWindow_Hospital w = TabT.Window;
+                        t.Check(w != null && w.windowRect.width >= Mathf.Min(1000f, UI.screenWidth) - 0.5f, tag + ": tab size " + w?.windowRect.size + " keeps its minimum width");
+                        foreach (string page in MainTabWindow_Hospital.PageIds)
+                            foreach (int y in TabT.CheckPage(t, page, tag, "rw_tab_" + L + "_" + tag + "_" + page)) yield return y;
+                        TabT.Close();
+                    }
                 }
-                TabT.Close();
-                Prefs.UIScale = uiScale0;
-                foreach (int y in TabT.Frames(3)) yield return y;
+                foreach (int y in t.Frames(3)) yield return y;
 
                 // held by danger: an awake hostile mechanoid, shown on the overview (band and checklist)
                 if (Faction.OfMechanoids != null)
@@ -367,12 +350,16 @@ namespace RimWard.Tests
                     mech.Destroy(DestroyMode.Vanish);
                     Threats.ClearCache();
                 }
-                // the start card goes away once answered
-                gc.startCardDone = true;
-                t.Check(!OverviewPage.StartCardDue(), "the start card is gone once answered");
-                gc.startCardDone = false; gc.patientsTreated++;
-                t.Check(!OverviewPage.StartCardDue(), "and never shows for a hospital that already sent a patient home");
-                gc.patientsTreated = 0; gc.patientsDied = 0;
+                // the welcome card's actions: they report what is done and do what is left
+                HospitalOverview.SetOpen(map, false);
+                t.Check(!HospitalOverview.WelcomeOpenDone(), "welcome card: \"open the hospital\" is open while the hospital is closed");
+                HospitalOverview.WelcomeOpen();
+                t.Check(HospitalOverview.WelcomeOpenDone() && comp.Policy.open, "and opens it");
+                Building_Bed offBed = RwT.SpawnBed(map, false);
+                CompHospitalBed offComp = offBed?.TryGetComp<CompHospitalBed>(); if (offComp != null) offComp.Hospital = false;
+                t.Check(offBed == null || !HospitalOverview.WelcomeBedsDone(), "welcome card: \"use all medical beds\" is open while a medical bed takes no patients");
+                HospitalOverview.WelcomeBeds();
+                t.Check(HospitalOverview.WelcomeBedsDone(), "and sets every medical bed to take patients");
                 // an operation whose part in stock is forbidden says so (doctors never fetch forbidden things)
                 comp.Policy.refusedOperations.Clear();
                 ThingDef legDef = ThingDefOf.WoodLog;   // a peg leg is made of wood on the spot
@@ -395,21 +382,17 @@ namespace RimWard.Tests
             }
             finally
             {
-                Prefs.UIScale = uiScale0;
                 foreach (var kv in doctorPrio) kv.Key.workSettings?.SetPriority(WorkTypeDefOf.Doctor, kv.Value);
                 TabT.Close();
                 TabT.CleanUpAll(map, made);
                 gc.TestRestoreStats(statsKept);
             }
             t.Check(HospitalMod.K.Log.ErrorCount == guard0, "no fenced failure in the whole suite");
-            List<string> red = TabT.RedSince(red0);
-            foreach (string l in red.Take(5)) t.Note("red: " + l);
-            t.Check(red.Count == 0, "no red error of RimWard or the framework (" + red.Count + ")");
-            if (TabT.ShotDir != null) t.Note(TabT.Shots + " screenshots");
+            t.CheckNoRedErrors(red0, "no red error of RimWard or the framework in the whole suite");
         }
     }
 
-    /// <summary>rw.tabload (two phases, explicit): patients, an offer, income and the start card survive save and load, and the tab draws every page after the load.</summary>
+    /// <summary>rw.tabload (two phases, explicit): patients, an offer and income survive save and load, and the tab draws every page after the load.</summary>
     sealed class TabLoadSuite : KitTestSuite
     {
         public override string Name => "rw.tabload";
@@ -421,10 +404,10 @@ namespace RimWard.Tests
         public override IEnumerable<int> Run(TestContext t)
         {
             Map map = t.Map;
-            HospitalMapComponent comp = RwT.Comp(map);
-            HospitalGameComponent gc = HospitalGameComponent.Get;
+            HospitalMap comp = RwT.Comp(map);
+            HospitalSave gc = HospitalSave.Get;
             float lon = Find.WorldGrid.LongLatOf(map.Tile).x;
-            if (RwT.LoadedSave == null)
+            if (t.LoadedSave == null)
             {
                 RwT.SetUp(t, 16, 2);
                 for (int i = 0; i < 24; i++) comp.Policy.openingHours[i] = true;
@@ -440,7 +423,6 @@ namespace RimWard.Tests
                 List<Pawn> made = TabT.EveryState(t, map, out _);
                 Pawn payer = RwT.NewPatient(map, PatientType.Wounds, out PatientData dp, true, false);
                 comp.Discharge(payer, dp, DischargeReason.Cured);
-                gc.startCardDone = true;
                 TabT.Open("overview");
                 foreach (int y in TabT.CheckPage(t, "overview", "before save", null)) yield return y;
                 TabT.Close();
@@ -455,7 +437,7 @@ namespace RimWard.Tests
                     ["statuses"] = string.Join(",", comp.Patients.Keys.Select(p => comp.StatusOf(p, out _)).Distinct().OrderBy(s => s).Select(s => s.ToString())),
                 };
                 t.Note("before save: " + string.Join(", ", side.Select(kv => kv.Key + "=" + kv.Value)));
-                t.Check(RwT.Save(SaveName), "saved as " + SaveName);
+                t.Check(t.SaveGame(SaveName), "saved as " + SaveName);
                 RwT.WriteSide(SaveName, side);
                 yield break;
             }
@@ -468,18 +450,15 @@ namespace RimWard.Tests
             int paidSince = gc.recentInvoices.Sum(i => i.TotalSilver) - int.Parse(want["invoiceSum"]);
             t.Check(gc.IncomeThisQuadrum(lon) == int.Parse(want["income"]) + paidSince, "income this quadrum came back (" + gc.IncomeThisQuadrum(lon) + " = " + want["income"] + " saved + " + paidSince + " paid after the load)");
             t.Check(gc.recentInvoices.Count >= int.Parse(want["invoices"]), "the last discharges came back (" + gc.recentInvoices.Count + ", saved " + want["invoices"] + ")");
-            t.Check(gc.startCardDone, "the start card stays answered");
             t.Note("after load: patients " + comp.Patients.Count + " (was " + want["patients"] + "), statuses " + string.Join(",", comp.Patients.Keys.Select(p => comp.StatusOf(p, out _)).Distinct().OrderBy(s => s)));
             t.Check(comp.Patients.Count > 0 && comp.Patients.Count <= int.Parse(want["patients"]), "the patients came back (an arriving one may have been dropped)");
             TabT.Open("overview");
-            foreach (int y in TabT.Frames(4)) yield return y;
+            foreach (int y in t.Frames(4)) yield return y;
             foreach (string page in MainTabWindow_Hospital.PageIds)
                 foreach (int y in TabT.CheckPage(t, page, "after load", "rw_tabload_" + page)) yield return y;
             TabT.Close();
             yield return 1200;
-            List<string> red = TabT.RedSince(red0);
-            foreach (string l in red.Take(5)) t.Note("red: " + l);
-            t.Check(red.Count == 0, "load, tab and 1200 ticks: no red error of RimWard or the framework");
+            t.CheckNoRedErrors(red0, "load, tab and 1200 ticks: no red error of RimWard or the framework");
         }
     }
 
@@ -497,10 +476,10 @@ namespace RimWard.Tests
         public override IEnumerable<int> Run(TestContext t)
         {
             Map map = t.Map;
-            HospitalMapComponent comp = RwT.Comp(map);
-            HospitalGameComponent gc = HospitalGameComponent.Get;
+            HospitalMap comp = RwT.Comp(map);
+            HospitalSave gc = HospitalSave.Get;
             RwT.SetUp(t, 3, 1);
-            IncidentScheduler.PausedForTests = false;   // the hook only sets the hospital up; arrivals are the real thing
+            ArrivalScheduler.PausedForTests = false;   // the hook only sets the hospital up; arrivals are the real thing
             Place(map);
             var admitted = new HashSet<int>();
             var treatedTended = new HashSet<int>();
@@ -543,9 +522,7 @@ namespace RimWard.Tests
             t.Check(gc.patientsTreated > treated0 && paid.Any(i => i.TotalSilver > 0), "at least one patient was billed and sent home (" + (gc.patientsTreated - treated0) + ", silver " + (gc.silverEarned - silver0) + ")");
             List<Pawn> still = comp.Patients.Keys.Where(p => p != null).ToList();
             t.Check(still.All(p => comp.WhyStillHere(p).Length > 0), "every patient still here has a reason");
-            List<string> red = TabT.RedSince(0);
-            foreach (string l in red.Take(5)) t.Note("red: " + l);
-            t.Check(red.Count == 0, "no red error of RimWard or the framework in the whole run (" + red.Count + ")");
+            t.CheckNoRedErrors(0, "no red error of RimWard or the framework in the whole run");
             RwT.CleanUp(map);
         }
 
@@ -577,7 +554,7 @@ namespace RimWard.Tests
             t.Note("quicktest wood: " + free + " allowed, " + forb + " forbidden");
             RwT.SetUp(t, 2, 2);
             RwT.Place(RimWorld.ThingDefOf.WoodLog, 60, map);
-            HospitalMapComponent comp = RwT.Comp(map);
+            HospitalMap comp = RwT.Comp(map);
             Verse.Pawn p = RwT.NewPatient(map, PatientType.Wounds, out PatientData d, true, false);
             bool ok = TabT.MakeCase(p, d, "InstallPegLeg", "WoodLog");
             t.Check(ok, "peg leg case set up (" + d.CureRecipe?.defName + ")");

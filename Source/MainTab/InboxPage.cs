@@ -32,7 +32,7 @@ namespace RimWard.MainTab
 
         public static void Draw(Rect r, Map map)
         {
-            HospitalMapComponent comp = HospitalMapComponent.For(map);
+            HospitalMap comp = HospitalMap.For(map);
             Rect body = RwUI.PageHeader(r, "RimWard.Tab.Page.Inbox".Translate(), "RimWard.Tab.Sub.Inbox".Translate());
             float w = RwUI.BeginScroll(body, ref scroll, viewH);
             float y = 0f;
@@ -53,7 +53,7 @@ namespace RimWard.MainTab
             }
         }
 
-        private static float OfferRow(float y, float w, HospitalMapComponent comp, PatientOffer o, bool bedFree)
+        private static float OfferRow(float y, float w, HospitalMap comp, PatientOffer o, bool bedFree)
         {
             Invoice est = Estimate(o);
             string accept = "RimWard.Offer.Accept".Translate(), decline = "RimWard.Offer.Decline".Translate();
@@ -67,7 +67,7 @@ namespace RimWard.MainTab
             string kind = o.kind == OfferKind.Ambient ? "RimWard.Tab.OfferAmbient".Translate() : "RimWard.Tab.OfferPod".Translate();
             int left = o.expiresTick - Find.TickManager.TicksGame;
             string facts = "RimWard.Tab.OfferFacts".Translate(kind, o.data?.Diagnosis ?? "?", est != null ? ((float)est.TotalSilver).ToStringMoney() : "-", Mathf.Max(0, left).ToStringTicksToPeriod(false, true));
-            string uses = HospitalMapComponent.OfferStockNote(o.data);
+            string uses = HospitalMap.OfferStockNote(o.data);
             if (!uses.NullOrEmpty()) facts += "\n" + uses;
             float hh = 26f, fh = RwUI.TextH(facts, textW, GameFont.Small);
             float h = pad + hh + 2f + fh + pad + (stack ? 38f : 0f);

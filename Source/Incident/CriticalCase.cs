@@ -41,7 +41,7 @@ namespace RimWard
         }
 
         /// <summary>Rolls the chance and, on a hit, turns the fresh patient into a critical case. False = a normal case follows.</summary>
-        public static bool TryMake(Pawn pawn, PatientData data, HospitalMapComponent comp)
+        public static bool TryMake(Pawn pawn, PatientData data, HospitalMap comp)
         {
             if (pawn?.health == null || data == null || comp == null || !pawn.RaceProps.Humanlike) return false;
             if (!Possible(comp.map) || !Rand.Chance(HospitalMod.Settings.CriticalCaseChance)) return false;
@@ -49,7 +49,7 @@ namespace RimWard
         }
 
         /// <summary>Turns the patient into a critical case without the chance roll (also used by the tests).</summary>
-        public static bool Make(Pawn pawn, PatientData data, HospitalMapComponent comp)
+        public static bool Make(Pawn pawn, PatientData data, HospitalMap comp)
         {
             if (Recipe == null || pawn?.health == null) return false;
             Hediff condition = null;

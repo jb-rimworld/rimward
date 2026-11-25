@@ -26,14 +26,14 @@ namespace RimWard
         {
             if (!base.CanFireNowSub(parms)) return false;
             Map map = (Map)parms.target;
-            HospitalMapComponent c = HospitalMapComponent.For(map);
+            HospitalMap c = HospitalMap.For(map);
             return c != null && c.MassCasualties && IncidentHelper.CanSpawnPatient(map);
         }
 
         protected override bool TryExecuteWorker(IncidentParms parms)
         {
             Map map = (Map)parms.target;
-            HospitalMapComponent component = HospitalMapComponent.For(map);
+            HospitalMap component = HospitalMap.For(map);
             if (component == null || !component.MassCasualties) return false;
             if (!IncidentHelper.CanSpawnPatient(map)) return false;
 
@@ -90,7 +90,7 @@ namespace RimWard
             info.spawnWipeMode = WipeMode.Vanish;
             DropPodUtility.MakeDropPodAt(cell, map, info);
 
-            HospitalMapComponent component = HospitalMapComponent.For(map);
+            HospitalMap component = HospitalMap.For(map);
             PatientUtility.DamagePawn(pawn, patientData, component, type);
             component.PatientArrived(pawn, patientData);
             pawn.jobs.StopAll();

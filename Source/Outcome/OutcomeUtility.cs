@@ -57,7 +57,7 @@ namespace RimWard
 
             if (s.RenownEnabled)
             {
-                HospitalGameComponent gc = HospitalGameComponent.Get;
+                HospitalSave gc = HospitalSave.Get;
                 if (gc != null && gc.RenownPaymentMultiplier > 1.0001f)
                     into.Add(new InvoiceFactor { key = "RimWard.Invoice.Factor.Renown", detail = gc.TierLabel, mult = gc.RenownPaymentMultiplier });
             }

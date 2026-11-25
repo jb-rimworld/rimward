@@ -9,8 +9,12 @@ using Verse;
 
 namespace RimWard
 {
-    // Per-save global state: the hospital policies (shared by all maps), renown, lifetime stats and the last discharges.
-    public class HospitalGameComponent : GameComponent
+    /// <summary>
+    /// Per-save global state: the hospital policies (shared by all maps), renown, lifetime stats and the last discharges. Stored inside
+    /// JB Framework's game component (<c>KitRegistry.SaveData</c>), so a save names no class of RimWard; saves of RimWard 2.0 betas and
+    /// 1.x hold the same fields in the legacy <see cref="HospitalGameComponent"/>, which reads them into this object.
+    /// </summary>
+    public sealed class HospitalSave : IExposable
     {
         public float renown;
         public int patientsTreated;
@@ -20,8 +24,8 @@ namespace RimWard
         public long silverEarned;
 
         private HospitalPolicy policy;
-        // FW-REQUEST (10): set while loading, never saved; the "tmp" prefix tells the save/load test harness it is rebuilt after a load
-        private bool tmpLoadedFromSave;
+        [JBFramework.KitTransient("set while loading, never saved")]
+        private bool loadedFromSave;
         /// <summary>True once the old per-map policy fields of a pre-2.0 save were moved into <see cref="Policy"/>.</summary>
         public bool policyMigrated;
         public List<Invoice> recentInvoices = new List<Invoice>();
@@ -32,9 +36,6 @@ namespace RimWard
         private List<int> payoutTicksAbs = new List<int>();
         private List<int> payoutSilver = new List<int>();
         public const int PayoutKeepDays = 60;
-
-        /// <summary>The hospital start card on the Hospital tab was answered (per save).</summary>
-        public bool startCardDone;
 
 #if JB_TESTS
         /// <summary>Test-only: clears the stats a fresh colony would not have (earlier suites in the same game) and returns them for <see cref="TestRestoreStats"/>.</summary>
@@ -56,17 +57,32 @@ namespace RimWard
         }
 #endif
 
-        public HospitalGameComponent(Game game)
+        private static HospitalSave current;
+
+        /// <summary>The running game's hospital state (null without a game).</summary>
+        public static HospitalSave Get
         {
-            HospitalMapComponent.ClearCache();
+            get
+            {
+                if (Current.Game == null) return null;
+                return current ?? (current = new HospitalSave());
+            }
+        }
+
+        /// <summary>SaveData reset: a new Game object (new colony, or before a load) starts with empty state and empty caches.</summary>
+        internal static void Reset()
+        {
+            current = new HospitalSave();
+            HospitalMap.ClearCache();
             JobGiver_PatientLeisure.ClearCaches();
         }
 
-        public static HospitalGameComponent Get => Current.Game?.GetComponent<HospitalGameComponent>();
+        /// <summary>SaveData expose: the fields live in the framework's node of RimWard.</summary>
+        internal static void ExposeCurrent() => (current ?? (current = new HospitalSave())).ExposeData();
 
         /// <summary>
         /// The save's hospital policy. A new colony starts from the settings (open if "Open in new colonies" is on);
-        /// a pre-2.0 save gets the values its maps had (see <see cref="HospitalMapComponent"/> migration).
+        /// a pre-2.0 save gets the values its maps had (see <see cref="HospitalMap"/> migration).
         /// </summary>
         public HospitalPolicy Policy
         {
@@ -74,7 +90,7 @@ namespace RimWard
             {
                 if (this.policy == null)
                 {
-                    bool open = !this.tmpLoadedFromSave && HospitalMod.Settings != null && HospitalMod.Settings.OpenInNewColonies;
+                    bool open = !this.loadedFromSave && HospitalMod.Settings != null && HospitalMod.Settings.OpenInNewColonies;
                     this.policy = HospitalPolicy.NewDefault(open);
                 }
                 return this.policy;
@@ -82,7 +98,7 @@ namespace RimWard
             set => this.policy = value;
         }
 
-        public bool LoadedFromSave => this.tmpLoadedFromSave;
+        public bool LoadedFromSave => this.loadedFromSave;
 
         // ---- renown (plain accessors for the overview page)
         public static readonly float[] TierThresholds = { 0f, 50f, 200f, 600f };
@@ -156,10 +172,9 @@ namespace RimWard
             while (this.recentInvoices.Count > RecentInvoiceCount) this.recentInvoices.RemoveAt(this.recentInvoices.Count - 1);
         }
 
-        public override void ExposeData()
+        public void ExposeData()
         {
-            base.ExposeData();
-            if (Scribe.mode == LoadSaveMode.LoadingVars) this.tmpLoadedFromSave = true;
+            if (Scribe.mode == LoadSaveMode.LoadingVars) this.loadedFromSave = true;
             Scribe_Values.Look(ref this.renown, "renown", 0f);
             Scribe_Values.Look(ref this.patientsTreated, "patientsTreated", 0);
             Scribe_Values.Look(ref this.patientsDied, "patientsDied", 0);
@@ -171,7 +186,6 @@ namespace RimWard
             Scribe_Collections.Look(ref this.recentInvoices, "recentInvoices", LookMode.Deep);
             Scribe_Collections.Look(ref this.payoutTicksAbs, "payoutTicksAbs", LookMode.Value);
             Scribe_Collections.Look(ref this.payoutSilver, "payoutSilver", LookMode.Value);
-            Scribe_Values.Look(ref this.startCardDone, "startCardDone", false);
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
                 if (this.payoutTicksAbs == null || this.payoutSilver == null || this.payoutTicksAbs.Count != this.payoutSilver.Count)

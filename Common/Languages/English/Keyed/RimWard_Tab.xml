@@ -20,17 +20,8 @@
     <RimWard.Tab.Sub.Guide>The hospital in six short cards.</RimWard.Tab.Sub.Guide>
 
     <!-- start card -->
-    <RimWard.Start.Title>Welcome to your hospital</RimWard.Start.Title>
-    <RimWard.Start.Text>Strangers drop in by pod, your doctors treat them in medical beds, and they pay when they leave. A new colony starts with the hospital open, and every medical bed takes patients until you switch its "Hospital Bed" button off. The buttons below show what is done and do what is left.</RimWard.Start.Text>
-    <RimWard.Start.OpenNow>Open the hospital now</RimWard.Start.OpenNow>
-    <RimWard.Start.IsOpen>The hospital is open</RimWard.Start.IsOpen>
-    <RimWard.Start.UseBeds>Use all {0} medical beds for patients</RimWard.Start.UseBeds>
-    <RimWard.Start.UseBedsTip>Every medical bed of this colony takes patients. You can switch single beds back with their "Hospital Bed" button.</RimWard.Start.UseBedsTip>
-    <RimWard.Start.BedsDone>All {0} medical beds take patients</RimWard.Start.BedsDone>
-    <RimWard.Start.NoBeds>No medical bed yet</RimWard.Start.NoBeds>
+    <RimWard.Start.OpenedMsg>The hospital is open now.</RimWard.Start.OpenedMsg>
     <RimWard.Start.BedsMsg>{0} medical beds now take patients.</RimWard.Start.BedsMsg>
-    <RimWard.Start.Done>Done</RimWard.Start.Done>
-    <RimWard.Start.Hint>The checklist below says what is still missing. This card shows once per colony.</RimWard.Start.Hint>
 
     <!-- status band -->
     <RimWard.Band.IntakeOff>Patient intake is switched off</RimWard.Band.IntakeOff>

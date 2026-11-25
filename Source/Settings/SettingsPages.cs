@@ -25,9 +25,9 @@ namespace RimWard
         {
             float y = area.y, w = area.width;
             y += KitStyle.Paragraph(area.x, y, w, "RimWard.Page.Policies.Intro".Translate(), KitStyle.Grey) + 10f;
-            HospitalGameComponent gc = Current.ProgramState == ProgramState.Playing ? HospitalGameComponent.Get : null;
+            HospitalSave gc = Current.ProgramState == ProgramState.Playing ? HospitalSave.Get : null;
             Map map = Current.ProgramState == ProgramState.Playing ? Find.CurrentMap : null;
-            HospitalMapComponent comp = HospitalMapComponent.For(map);
+            HospitalMap comp = HospitalMap.For(map);
             if (gc == null || comp == null)
             {
                 KitStyle.Paragraph(area.x, y, w, "RimWard.Page.Policies.NoGame".Translate(), KitStyle.DimGrey);
@@ -72,7 +72,7 @@ namespace RimWard
             y += KitStyle.Paragraph(0f, y, w, "RimWard.Page.Pricing.LinesText".Translate(), Color.white) + 12f;
 
             y += KitStyle.Section(0f, y, w, "RimWard.Page.Pricing.Factors".Translate());
-            float renown = HospitalGameComponent.Get != null && s.RenownEnabled ? HospitalGameComponent.Get.RenownPaymentMultiplier : 1f;
+            float renown = HospitalSave.Get != null && s.RenownEnabled ? HospitalSave.Get.RenownPaymentMultiplier : 1f;
             var rows = new List<(string, string)>
             {
                 ("RimWard.Page.Pricing.Scale".Translate(), s.ChargePatients ? Settings.EnumLabel(s.Payment) + " = " + s.PaymentMultiplier.ToStringPercent() : "RimWard.Page.Pricing.Charity".Translate().ToString()),

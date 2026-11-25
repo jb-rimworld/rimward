@@ -48,18 +48,17 @@ namespace RimWard.Tests
     {
         internal static readonly List<Thing> Spawned = new List<Thing>();
 
-        internal static HospitalMapComponent Comp(Map m) => HospitalMapComponent.For(m);
+        internal static HospitalMap Comp(Map m) => HospitalMap.For(m);
         internal static KitMod K => HospitalMod.K;
         internal static Settings S => HospitalMod.Settings;
         internal static int Now => Find.TickManager.TicksGame;
-        internal static string LoadedSave => KitTestEnv.Get(KitTestEnv.Load);
 
         /// <summary>A hospital ready for patients: open all day, surgery accepted, beds, a doctor with Medicine 8, medicine and one bionic arm.</summary>
         internal static Pawn SetUp(TestContext t, int beds, int surgeryBeds)
         {
-            IncidentScheduler.PausedForTests = true;
+            ArrivalScheduler.PausedForTests = true;
             Map map = t.Map;
-            HospitalPolicy pol = HospitalGameComponent.Get.Policy;
+            HospitalPolicy pol = HospitalSave.Get.Policy;
             Comp(map).SetOwnPolicy(false);
             pol.open = true;
             pol.Repair();
@@ -111,7 +110,7 @@ namespace RimWard.Tests
         internal static Pawn NewPatient(Map map, PatientType type, out PatientData data, bool spawn, bool complications)
         {
             data = null;
-            HospitalMapComponent comp = Comp(map);
+            HospitalMap comp = Comp(map);
             Faction fac = PatientFaction();
             if (fac == null) return null;
             Pawn p = IncidentHelper.GenerateValidPatientPawn(fac);
@@ -126,7 +125,7 @@ namespace RimWard.Tests
 
         internal static void Admit(Map map, Pawn p, PatientData data)
         {
-            HospitalMapComponent comp = Comp(map);
+            HospitalMap comp = Comp(map);
             IntVec3 cell = CellFinder.StandableCellNear(TestCells.Anchor(map), map, 12f);
             GenSpawn.Spawn(p, cell.IsValid ? cell : TestCells.Anchor(map), map);
             comp.PatientArrived(p, data);
@@ -144,7 +143,7 @@ namespace RimWard.Tests
         /// <summary>Removes every patient, offer and thing the suites made, and switches the scheduler back on.</summary>
         internal static void CleanUp(Map map)
         {
-            HospitalMapComponent comp = Comp(map);
+            HospitalMap comp = Comp(map);
             if (comp != null)
             {
                 foreach (Pawn p in comp.Patients.Keys.ToList()) { comp.ForgetPatient(p); Discard(p); }
@@ -155,7 +154,7 @@ namespace RimWard.Tests
             foreach (Thing pod in map.listerThings.ThingsInGroup(ThingRequestGroup.ActiveTransporter).ToList())
                 if (!pod.Destroyed) pod.Destroy(DestroyMode.Vanish);
             Test_ForceSurgeryOutcome.Force = ForcedOutcome.None;
-            IncidentScheduler.PausedForTests = false;
+            ArrivalScheduler.PausedForTests = false;
             Threats.ClearCache();
         }
 
@@ -163,26 +162,14 @@ namespace RimWard.Tests
 
         internal static int LinesOf(PatientData d, InvoiceLineKind kind) => d.Lines.Count(l => l.kind == kind);
 
-        /// <summary>Game log lines (errors, and warnings when asked) containing <paramref name="fragment"/>.</summary>
+        /// <summary>
+        /// Game log lines (errors, and warnings when asked) containing <paramref name="fragment"/>, also vanilla's own lines (the harness's
+        /// <c>RedErrorsSince</c> counts only red errors of ours; "Null key while loading" and RimWard's warnings need this).
+        /// </summary>
         internal static List<string> LogLines(string fragment, bool warningsToo)
             => Verse.Log.Messages.Where(m => (m.type == LogMessageType.Error || (warningsToo && m.type == LogMessageType.Warning)) && (m.text ?? "").Contains(fragment)
                     && !(m.text ?? "").Contains("[JBTEST-EXPECTED]"))
                 .Select(m => m.text).ToList();
-
-        // FW-REQUEST: the harness keeps its save and log helpers internal (request 7); these are small copies for RimWard's suites.
-        /// <summary>Saves the running game as <paramref name="name"/> without the test runner component (as the kit does).</summary>
-        internal static bool Save(string name)
-        {
-            List<GameComponent> comps = Current.Game.components;
-            List<GameComponent> runners = comps.Where(c => c != null && c.GetType().Assembly == typeof(KitTestSuite).Assembly).ToList();
-            try
-            {
-                foreach (GameComponent r in runners) comps.Remove(r);
-                GameDataSaveLoader.SaveGame(name);
-            }
-            finally { foreach (GameComponent r in runners) if (!comps.Contains(r)) comps.Add(r); }
-            return File.Exists(GenFilePaths.FilePathForSavedGame(name));
-        }
 
         internal static string SidePath(string save) => Path.Combine(GenFilePaths.SavedGamesFolderPath, save + ".rw.txt");
         internal static void WriteSide(string save, Dictionary<string, string> v) => File.WriteAllLines(SidePath(save), v.Select(kv => kv.Key + "=" + kv.Value));
@@ -192,23 +179,6 @@ namespace RimWard.Tests
             if (!File.Exists(SidePath(save))) return null;
             foreach (string l in File.ReadAllLines(SidePath(save))) { int i = l.IndexOf('='); if (i > 0) d[l.Substring(0, i)] = l.Substring(i + 1); }
             return d;
-        }
-
-        /// <summary>
-        /// Tells the harness that a red error containing <paramref name="fragment"/> is provoked on purpose (it then never counts as ours).
-        /// // FW-REQUEST (19): KitTestLog.Expect is internal to the harness; reached by reflection here.
-        /// </summary>
-        internal static bool ExpectRedError(string fragment)
-        {
-            try
-            {
-                Type log = typeof(KitTestSuite).Assembly.GetType("JBFramework.Testing.KitTestLog");
-                System.Reflection.MethodInfo m = log == null ? null : AccessTools.Method(log, "Expect", new[] { typeof(string) });
-                if (m == null) return false;
-                m.Invoke(null, new object[] { fragment });
-                return true;
-            }
-            catch (Exception) { return false; }
         }
 
         internal static string Hours(HospitalPolicy p) { p.Repair(); return string.Join("", p.openingHours.Select(b => b ? "1" : "0")); }

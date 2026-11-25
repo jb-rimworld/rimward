@@ -15,7 +15,7 @@ namespace RimWard.MainTab
             if (Widgets.ButtonText(rect, "Dismiss".Translate()))
             {
                 CameraJumper.TryJumpAndSelect(pawn);
-                HospitalMapComponent.For(Find.CurrentMap).DismissPatient(pawn);
+                HospitalMap.For(Find.CurrentMap).DismissPatient(pawn);
             }
         }
 

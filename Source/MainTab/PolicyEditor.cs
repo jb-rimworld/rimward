@@ -20,7 +20,7 @@ namespace RimWard.MainTab
         /// <summary>Draws the editor at (0, y) with width <paramref name="w"/> inside a scroll view; returns the height used.</summary>
         public static float Draw(float y0, float w, Map map)
         {
-            HospitalMapComponent hospital = HospitalMapComponent.For(map);
+            HospitalMap hospital = HospitalMap.For(map);
             if (hospital == null) return 0f;
             HospitalPolicy pol = hospital.Policy;
             float y = y0;

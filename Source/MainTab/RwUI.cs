@@ -2,7 +2,6 @@
 // RimWard - Hospital for Profit. Copyright (C) 2026 juliusberger00. Written for RimWard 2.0 (a GPL-3.0 fork of Hospital by Adamas and
 // Hospital Fix And Tweak by assssssqwww). Licensed under the GNU General Public License version 3 (LICENSE);
 // full source: https://github.com/jb-rimworld/rimward
-using System.Collections.Generic;
 using JBFramework;
 using UnityEngine;
 using Verse;
@@ -10,28 +9,15 @@ using Verse;
 namespace RimWard.MainTab
 {
     /// <summary>
-    /// Drawing helpers of the Hospital tab: the framework's KitStyle colours and helpers, with RimWard's accent (teal) and the page frame of
+    /// Drawing helpers of the Hospital tab: the framework's KitStyle colours, helpers and text measuring, drawn with RimWard's accent (teal),
+    /// a status chip and an accent button of its own, and the page frame of
     /// Hearth &amp; Harbor's main tab (title, subtitle, accent rule, measured scroll view). Heights come from the text, so translations never clip.
     /// </summary>
     [StaticConstructorOnStartup]
     internal static class RwUI
     {
-        // FW-REQUEST (13): KitStyle.Accent follows the mod only inside its settings window (KitMod.Drawing is internal), and KitStyle.Section,
-        // Chip and Banner use it; outside, they draw in Hearth & Harbor amber. RimWard's tab keeps copies that take the accent explicitly.
-        private static readonly Color FallbackAccent = new Color(0.40f, 0.74f, 0.70f);
-        private static Color? accent;
-        public static Color Accent
-        {
-            get
-            {
-                if (accent == null)
-                {
-                    try { accent = HospitalMod.K?.Info?.Theme?.Accent ?? FallbackAccent; }
-                    catch { accent = FallbackAccent; }
-                }
-                return accent.Value;
-            }
-        }
+        /// <summary>RimWard's accent (hospital teal, from its framework theme), also outside the settings window.</summary>
+        public static Color Accent => KitStyle.AccentOf(HospitalMod.K);
         public static Color AccentSoft { get { Color a = Accent; return new Color(a.r, a.g, a.b, 0.18f); } }
         public static Color Grey => KitStyle.Grey;
         public static Color DimGrey => KitStyle.DimGrey;
@@ -44,26 +30,10 @@ namespace RimWard.MainTab
 
         public static readonly Texture2D Mark = ContentFinder<Texture2D>.Get("UI/RimWard/IconSmall", false);
 
-        // ---------------------------------------------------------------- text measuring (cached; KitUI's helpers are internal)
-        // FW-REQUEST (14): KitUI.TextH / TextW are internal; a mod's own window needs them too.
-        private static readonly Dictionary<string, float> heights = new Dictionary<string, float>();
-        public static float TextH(string text, float width, GameFont font = GameFont.Small)
-        {
-            if (string.IsNullOrEmpty(text)) return 0f;
-            width = Mathf.Max(20f, width);
-            string k = (int)font + "|" + (int)width + "|" + text;
-            if (heights.TryGetValue(k, out float h)) return h;
-            GameFont f = Text.Font; Text.Font = font; h = Text.CalcHeight(text, width); Text.Font = f;
-            if (heights.Count > 3000) heights.Clear();
-            return heights[k] = h;
-        }
+        // ---------------------------------------------------------------- text measuring (the framework's cached helpers)
+        public static float TextH(string text, float width, GameFont font = GameFont.Small) => string.IsNullOrEmpty(text) ? 0f : KitUI.TextH(text, Mathf.Max(20f, width), font);
 
-        public static float TextW(string text, GameFont font = GameFont.Small)
-        {
-            if (string.IsNullOrEmpty(text)) return 0f;
-            GameFont f = Text.Font; Text.Font = font; float w = Text.CalcSize(text).x; Text.Font = f;
-            return w;
-        }
+        public static float TextW(string text, GameFont font = GameFont.Small) => string.IsNullOrEmpty(text) ? 0f : KitUI.TextW(text, font);
 
         /// <summary>Button width that fits its label (one line) between <paramref name="min"/> and <paramref name="max"/>.</summary>
         public static float ButtonW(string label, float min = 110f, float max = 320f) => Mathf.Clamp(TextW(label) + 28f, min, max);
@@ -107,12 +77,10 @@ namespace RimWard.MainTab
             return usedY + 12f;
         }
 
-        /// <summary>Section header in the accent colour with a rule beneath. Returns the height used.</summary>
+        /// <summary>Section header in RimWard's accent with a rule beneath (the framework's, drawn as RimWard). Returns the height used.</summary>
         public static float Section(float x, float y, float w, string text)
         {
-            KitStyle.LabelColored(new Rect(x, y, w, 24f), (text ?? "").ToUpper(), Accent);
-            GUI.color = Line; Widgets.DrawLineHorizontal(x, y + 24f, w); GUI.color = Color.white;
-            return 30f;
+            using (KitStyle.Using(HospitalMod.K)) return KitStyle.Section(x, y, w, text);
         }
 
         /// <summary>A coloured status chip (rounded look via a soft background). Text is truncated to the width; full text as tooltip.</summary>

@@ -61,14 +61,15 @@ namespace RimWard.MainTab
         public override void PostClose()
         {
             base.PostClose();
-            foreach (Map m in Find.Maps) HospitalMapComponent.For(m)?.ApplyPolicyToAll();
+            foreach (Map m in Find.Maps) HospitalMap.For(m)?.ApplyPolicyToAll();
         }
 
         public override void DoWindowContents(Rect inRect)
         {
             KitMod k = HospitalMod.K;
             if (k == null) return;
-            k.Run(KitMod.Core, "UI.HospitalTab", () => this.Draw(inRect));
+            // drawn as RimWard: the framework's KitStyle helpers use RimWard's accent inside this scope
+            using (KitStyle.Using(k)) k.Run(KitMod.Core, "UI.HospitalTab", () => this.Draw(inRect));
         }
 
         /// <summary>Header, page list and page area for an inner rect.</summary>
@@ -86,7 +87,7 @@ namespace RimWard.MainTab
         {
             Frames++;
             Map map = Find.CurrentMap;
-            HospitalMapComponent comp = HospitalMapComponent.For(map);
+            HospitalMap comp = HospitalMap.For(map);
             if (pages.All(p => p.Id != SelectedPage)) SelectedPage = pages[0].Id;
             Layout(inRect, out Rect header, out Rect list, out Rect content);
             TabLayout L = new TabLayout { In = inRect, Header = header, List = list, Content = content, Page = SelectedPage, Frame = Time.frameCount };

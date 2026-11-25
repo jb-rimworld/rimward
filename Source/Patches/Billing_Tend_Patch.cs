@@ -19,7 +19,7 @@ namespace RimWard.Patches
             public static void Prefix(Pawn doctor, Pawn patient, Medicine medicine)
             {
                 if (patient.health.HasHediffsNeedingTend(false) && doctor != null && doctor.Faction == Faction.OfPlayer
-                    && doctor != patient && medicine != null && patient.IsPatient(out HospitalMapComponent hospital, false))
+                    && doctor != patient && medicine != null && patient.IsPatient(out HospitalMap hospital, false))
                 {
                     if (hospital.GetPatientData(patient, out PatientData data))
                         data.AddLine(InvoiceLineKind.Tend, medicine.def.label, Mathf.Clamp(medicine.MarketValue * 1.2f, 0f, 70f));

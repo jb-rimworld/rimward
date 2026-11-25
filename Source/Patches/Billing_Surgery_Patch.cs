@@ -76,14 +76,14 @@ namespace RimWard.Patches
                 Context ctx = current;
                 if (ctx != null && ctx.patient == patient) ctx.failed = true;
                 // schedule the retry now, before vanilla deletes the bill (deleting the cure bill would otherwise clear "pending")
-                if (patient.IsPatient(out HospitalMapComponent hospital, false)) hospital.OnSurgeryBotched(patient);
+                if (patient.IsPatient(out HospitalMap hospital, false)) hospital.OnSurgeryBotched(patient);
             }
         }
 
         private static void BillFor(Context ctx, RecipeDef recipe, Pawn billDoer, List<Thing> ingredients)
         {
             Pawn pawn = ctx.patient;
-            HospitalMapComponent hospital = HospitalMapComponent.For(pawn.MapHeld);
+            HospitalMap hospital = HospitalMap.For(pawn.MapHeld);
             if (hospital == null || !hospital.GetPatientData(pawn, out PatientData data) || data.Dismissed) return;
             // An operation the patient's people count as a violation (harvesting an organ, euthanasia...) is not a treatment: nobody pays
             // for it, and vanilla's goodwill penalty applies (the requested treatment itself is never a violation: AllowOperationsPatchNoViolation).
@@ -139,7 +139,7 @@ namespace RimWard.Patches
             public static void Prefix(BillStack __instance, Bill bill)
             {
                 if (bill is Bill_Medical medical && __instance.billGiver is Pawn pawn
-                    && pawn.IsPatient(out HospitalMapComponent hospital, false) && hospital.GetPatientData(pawn, out PatientData patientData))
+                    && pawn.IsPatient(out HospitalMap hospital, false) && hospital.GetPatientData(pawn, out PatientData patientData))
                 {
                     if ((patientData.CureRecipe == null || medical.recipe == patientData.CureRecipe) && patientData.RetryAfterTick < 0)
                     {

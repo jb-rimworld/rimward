@@ -44,7 +44,8 @@ namespace RimWard
             Url = "https://github.com/jb-rimworld/rimward",
             LicenseLine = "GPL-3.0 (fork of Hospital by Adamas and Hospital Fix And Tweak by assssssqwww)",
             HarmonyId = PackageId,
-            FirstStartPitch = "RimWard turns your medical beds into a hospital that strangers pay to be patched up in. Clinic is the normal game, "
+            FirstStartPitch = "RimWard turns your medical beds into a hospital that strangers pay to be patched up in. A new colony starts with the "
+                + "hospital open and every medical bed takes patients; the Hospital tab lists what is still missing. Clinic is the normal game, "
                 + "Charity treats for free, Meat shop pays more and forgives deaths. Everything can be changed later in Mod settings.",
             Theme = new KitTheme
             {
@@ -63,12 +64,57 @@ namespace RimWard
             r.Page("policies", "Hospital policies", SettingsPages.DrawPolicies).WithOrder(5).InSection(Sections.Intake);
             r.Page("pricing", "Pricing explained", SettingsPages.DrawPricing).WithOrder(30);
             r.Page("blacklists", "Blacklists", SettingsPages.DrawBlacklists).WithOrder(40);
+            RegisterSaveData(r);
+            RegisterWelcomeCard(r);
+        }
+
+        /// <summary>
+        /// Per-save and per-map state inside the framework's components (a save names no component class of RimWard), the three old
+        /// component classes as legacy readers for older saves ("Prepare for removal" sits on the Patient intake area, see RegisterSections).
+        /// </summary>
+        private static void RegisterSaveData(KitRegistry r)
+        {
+            r.SaveData(HospitalSave.ExposeCurrent, HospitalSave.Reset);
+            r.MapData(HospitalMap.ExposeFor, HospitalMap.Forget);
+            r.LegacyComponent(typeof(HospitalGameComponent));
+            r.LegacyComponent(typeof(HospitalMapComponent));
+            r.LegacyComponent(typeof(IncidentScheduler));
+        }
+
+        private static void RegisterWelcomeCard(KitRegistry r)
+        {
+            r.WelcomeCard()
+                .WithAction("openHospital", "Open the hospital now",
+                    "Opens the hospital in this colony for all 24 hours. Patients come as soon as a medical bed is set to take patients.",
+                    () => HospitalOverview.WelcomeOpenDone(), () => HospitalOverview.WelcomeOpen())
+                .WithAction("useBeds", "Use all medical beds for patients",
+                    "Every medical bed of this colony that does not take patients yet is set to Hospital Bed. New medical beds take patients by default anyway.",
+                    () => HospitalOverview.WelcomeBedsDone(), () => HospitalOverview.WelcomeBeds());
+        }
+
+        protected override void OnGameLoaded(bool joinedExistingSave)
+        {
+            foreach (Map m in Find.Maps) HospitalMap.For(m)?.AfterLoad();
+        }
+
+        protected override void OnTick(int ticksGame)
+        {
+            if (ticksGame % 42 != 0 && ticksGame % 250 != 0) return;
+            List<Map> maps = Find.Maps;
+            for (int i = 0; i < maps.Count; i++)
+            {
+                HospitalMap h = HospitalMap.For(maps[i]);
+                if (h == null) continue;
+                ArrivalScheduler.Tick(h);
+                h.Tick();
+            }
         }
 
         private static void RegisterSections(KitRegistry r)
         {
             r.Section(Sections.Intake, "Patient intake",
-                "Patients arrive by drop pod while the hospital is open. Off: nobody new comes and no contracts are offered; patients already here are treated and leave as usual.");
+                "Patients arrive by drop pod while the hospital is open. Off: nobody new comes and no contracts are offered; patients already here are treated and leave as usual.")
+                .WithRemoval(RemovalPrep.Run);
             r.Section(Sections.Surgery, "Surgery cases",
                 "Some patients come for an operation your colony can do (a bionic, a cataract, a carcinoma). Off: no new surgery patients; operations already planned still happen.");
             r.Section(Sections.MassCasualties, "Mass casualties",
@@ -127,20 +173,18 @@ namespace RimWard
                 "Only active threats count (raiders, manhunters). Dormant mech clusters and weather never hold anyone.")
                 .InGroup("Nobody gets stuck").WithStep(1f).Legacy("MaxDangerHoldHours");
             // ---- General: payment
-            // FW-REQUEST: RequiresOn cannot point at a Bool setting (payment rows when patients pay, chief rows with the bonus, retries with
-            // auto-retry); those rows are registered without a dependency for now. See handoff/FW_requests/RimWard.md 1.
             r.Bool(core, Keys.ChargePatients, true, "Patients pay", "Off: a charity ward. Nobody pays, goodwill still counts.")
                 .InGroup("Payment").Legacy("ChargePatients");
             r.Enum(core, Keys.Payment, PaymentPreset.BreakEven, "Payment scale",
                 "How much patients pay compared with what their treatment cost you. Break-even covers medicine and work.")
-                .InGroup("Payment").Legacy("Payment");
+                .InGroup("Payment").Legacy("Payment").RequiresSetting(Keys.ChargePatients, true);
             r.Percent(core, Keys.CustomPayment, 1f, 0.05f, 15f, "Custom payment scale", "Used when the payment scale is Custom.")
-                .InGroup("Payment").Legacy("CustomPaymentMultiplier");
+                .InGroup("Payment").Legacy("CustomPaymentMultiplier").RequiresSetting(Keys.ChargePatients, true);
             r.Silver(core, Keys.BillCap, 20000, 1000, 50000, "Maximum payout per patient", "No patient pays more than this, however long the bill.")
-                .InGroup("Payment").Legacy("BillCap");
+                .InGroup("Payment").Legacy("BillCap").RequiresSetting(Keys.ChargePatients, true);
             r.Enum(core, Keys.MedPref, MedicineStrictness.Soft, "Faction medicine preference",
                 "Tribal patients dislike glitterworld medicine, modern ones dislike herbal medicine: they pay less when treated with it. Strict doubles the effect.")
-                .InGroup("Payment").Legacy("FactionMedicinePref");
+                .InGroup("Payment").Legacy("FactionMedicinePref").RequiresSetting(Keys.ChargePatients, true);
             // ---- General: rooms and doctors
             r.Percent(core, Keys.SingleRoom, 1.35f, 1f, 2f, "Private room pay", "Pay multiplier for a patient who rested in a room of their own.")
                 .InGroup("Rooms and doctors").Legacy("SingleRoomMultiplier");
@@ -151,9 +195,9 @@ namespace RimWard
             r.Bool(core, Keys.Chief, true, "Chief physician bonus", "Patients treated by a highly skilled doctor pay more and leave happier.")
                 .InGroup("Rooms and doctors").Legacy("ChiefPhysicianEnabled");
             r.Int(core, Keys.ChiefSkill, 12, 1, 20, "Chief physician: minimum Medicine skill", "The best doctor who treated the patient needs at least this Medicine skill.")
-                .InGroup("Rooms and doctors").Legacy("ChiefPhysicianMinSkill");
+                .InGroup("Rooms and doctors").Legacy("ChiefPhysicianMinSkill").RequiresSetting(Keys.Chief, true);
             r.Percent(core, Keys.ChiefMult, 1.25f, 1f, 2f, "Chief physician pay", "Pay multiplier when the chief physician bonus applies.")
-                .InGroup("Rooms and doctors").Legacy("ChiefPhysicianMultiplier");
+                .InGroup("Rooms and doctors").Legacy("ChiefPhysicianMultiplier").RequiresSetting(Keys.Chief, true);
 
             // ---- Intake
             r.Enum(Sections.Intake, Keys.IntakeMode, IntakeMode.Hybrid, "Intake mode",
@@ -169,7 +213,7 @@ namespace RimWard
             r.Bool(Sections.Surgery, Keys.AutoRetry, true, "Retry failed operations", "A botched operation is attempted again instead of sending the patient home uncured.")
                 .InGroup("Operations").Legacy("AutoRetryEnabled");
             r.Int(Sections.Surgery, Keys.MaxRetries, 3, 0, 3, "Retries at most", "How often a failed operation is attempted again.")
-                .InGroup("Operations").Legacy("MaxSurgeryRetries");
+                .InGroup("Operations").Legacy("MaxSurgeryRetries").RequiresSetting(Keys.AutoRetry, true);
 
             // ---- Billing extras
             r.Percent(Sections.Billing, Keys.EarlyPay, 0.5f, 0f, 1f, "Share paid when leaving early",
@@ -252,8 +296,7 @@ namespace RimWard
             r.Compat("Hearth & Harbor", HearthHarborId, "One bed button for all bed uses; patients may use the spa. Switch: the Hearth & Harbor bridge area.")
                 .HealthyWhen(() => HearthBridge.HearthLoaded);
             r.Compat("Luciferium Overhaul", LuciferiumOverhaulId, "Offers the Luciferium critical cases area (off until you switch it on); its addiction rules apply after the dose.");
-            r.Compat("Combat Extended", CombatExtendedId, "CE's tactical self-tend is blocked for patients. Switch: the Combat Extended area.")
-                .HealthyWhen(() => RimWard.Patches.CombatExtended_SelfTend_Patch.Applied);
+            r.Compat("Combat Extended", CombatExtendedId, "CE's tactical self-tend is blocked for patients. Switch: the Combat Extended area.");
             r.Compat("Royalty", KitDetect.RoyaltyId, "Noble patients want a private room.");
             r.Compat("Ideology", KitDetect.IdeologyId, "Guilty ideoligions mind turning the sick away.");
             r.Compat("Biotech", KitDetect.BiotechId, "Patients keep their faction's xenotype; hemogen and deathrest xenotypes stay home unless you allow them.");
@@ -272,7 +315,7 @@ namespace RimWard
 
         protected override IEnumerable<string> Diagnosis()
         {
-            HospitalGameComponent gc = HospitalGameComponent.Get;
+            HospitalSave gc = HospitalSave.Get;
             if (gc != null)
                 yield return "Save: hospital " + (gc.Policy.open ? "open" : "closed") + ", " + gc.Policy.OpenHourCount + " opening hours, renown " + gc.renown.ToString("0")
                     + " (tier " + gc.Tier + "), treated " + gc.patientsTreated + ", died " + gc.patientsDied + " (at fault " + gc.patientsDiedAtFault + ")";
@@ -280,7 +323,7 @@ namespace RimWard
             {
                 foreach (Map m in Find.Maps)
                 {
-                    HospitalMapComponent c = HospitalMapComponent.For(m);
+                    HospitalMap c = HospitalMap.For(m);
                     if (c == null) continue;
                     yield return "Map " + m.uniqueID + ": " + c.Patients.Count + " patients, " + c.PendingOfferCount + " offers, beds " + c.FreeMedicalBeds() + " free of " + c.BedCount()
                         + (c.HasOwnPolicy ? ", own policy" : "") + ", arrivals: " + (IncidentHelper.ArrivalBlockReason(m) ?? "possible");
@@ -293,36 +336,6 @@ namespace RimWard
             Settings s = Settings;
             if (s != null)
                 yield return "Blacklists: " + s.blockedDiseases.Count + " diseases, " + s.blockedSurgeries.Count + " operations, " + s.blockedFactions.Count + " factions";
-        }
-    }
-}
-
-namespace RimWard
-{
-    /// <summary>
-    /// // FW-REQUEST (2): the framework copies <c>KitInfo.FirstStartPitch</c> in the Mod constructor, before languages load, and never
-    /// translates it. Once the game has started (languages loaded, before any welcome card), this puts the translated pitch
-    /// (key RimWard.FirstStartPitch) into the framework's copy. Fenced: without the internal field the English pitch stays.
-    /// </summary>
-    [StaticConstructorOnStartup]
-    internal static class PitchTranslation
-    {
-        internal static bool Applied;
-
-        static PitchTranslation()
-        {
-            try
-            {
-                KitMod k = HospitalMod.K;
-                if (k == null || !"RimWard.FirstStartPitch".CanTranslate()) return;
-                object cfg = HarmonyLib.AccessTools.Field(typeof(KitMod), "Cfg")?.GetValue(k);
-                if (cfg is KitInfo info)
-                {
-                    info.FirstStartPitch = "RimWard.FirstStartPitch".Translate().ToString();
-                    Applied = true;
-                }
-            }
-            catch (System.Exception) { }
         }
     }
 }

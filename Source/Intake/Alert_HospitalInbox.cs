@@ -20,7 +20,7 @@ namespace RimWard
             int n = 0;
             foreach (Map m in Find.Maps)
             {
-                HospitalMapComponent c = HospitalMapComponent.For(m);
+                HospitalMap c = HospitalMap.For(m);
                 if (c != null) n += c.PendingOfferCount;
             }
             return n;

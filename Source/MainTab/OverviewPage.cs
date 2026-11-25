@@ -12,7 +12,7 @@ using Verse;
 namespace RimWard.MainTab
 {
     /// <summary>
-    /// Overview page of the Hospital tab: start card (once per save), the open/closed status band, beds, patients, offers and income tiles,
+    /// Overview page of the Hospital tab: the open/closed status band, beds, patients, offers and income tiles,
     /// the readiness checklist with one-click fixes, the patients with their "why still here", renown and money.
     /// </summary>
     internal static class OverviewPage
@@ -39,22 +39,14 @@ namespace RimWard.MainTab
 
         internal static void Invalidate() { readiness = null; PatientsPage.Invalidate(); }
 
-        /// <summary>True when the start card shows: once per save, until answered, and never for a hospital that already treated someone.</summary>
-        internal static bool StartCardDue()
-        {
-            HospitalGameComponent gc = HospitalGameComponent.Get;
-            return gc != null && !gc.startCardDone && gc.patientsTreated + gc.patientsDied == 0;
-        }
-
         public static void Draw(Rect r, Map map)
         {
-            HospitalMapComponent comp = HospitalMapComponent.For(map);
+            HospitalMap comp = HospitalMap.For(map);
             Rect body = RwUI.PageHeader(r, "RimWard.Tab.Page.Overview".Translate(), "RimWard.Tab.Sub.Overview".Translate());
             float w = RwUI.BeginScroll(body, ref scroll, viewH);
             float y = 0f;
             try
             {
-                if (StartCardDue()) y = StartCard(y, w, map) + 14f;
                 y = StatusBand(y, w, map, comp) + 14f;
                 y = Tiles(y, w, map, comp) + 14f;
                 y = Readiness(y, w, map) + 12f;
@@ -69,65 +61,8 @@ namespace RimWard.MainTab
             }
         }
 
-        // ------------------------------------------------------------------------------------------------ start card
-        private static float StartCard(float y, float w, Map map)
-        {
-            HospitalMapComponent comp = HospitalMapComponent.For(map);
-            HospitalGameComponent gc = HospitalGameComponent.Get;
-            float pad = 16f, tx = pad + (RwUI.Mark != null ? 72f : 0f);
-            string title = "RimWard.Start.Title".Translate();
-            string text = "RimWard.Start.Text".Translate();
-            float tw = w - tx - pad;
-            float th = RwUI.TextH(title, tw, GameFont.Medium), bh = RwUI.TextH(text, tw);
-
-            bool open = HospitalMod.Settings.IntakeOn && comp.Policy.open;
-            int unused = HospitalOverview.UnusedMedicalBeds(map).Count();
-            int patientBeds = HospitalOverview.PatientBeds(map).Count();
-            string openL = open ? "RimWard.Start.IsOpen".Translate() : "RimWard.Start.OpenNow".Translate();
-            string bedsL = unused > 0 ? "RimWard.Start.UseBeds".Translate(unused) : (patientBeds > 0 ? "RimWard.Start.BedsDone".Translate(patientBeds) : "RimWard.Start.NoBeds".Translate());
-            string doneL = "RimWard.Start.Done".Translate();
-            float b1 = RwUI.ButtonW(openL, 150f, 360f), b2 = RwUI.ButtonW(bedsL, 150f, 420f), b3 = RwUI.ButtonW(doneL, 110f, 220f);
-            float innerW = w - 2f * pad;
-            bool oneRow = b1 + b2 + b3 + 20f <= innerW - (tx - pad);
-            float buttonsH = oneRow ? 34f : (b1 + b2 + 10f <= innerW ? 34f + 8f + 34f : 3f * 34f + 16f);
-            string hint = "RimWard.Start.Hint".Translate();
-            float hh = RwUI.TextH(hint, tw, GameFont.Small);
-            float h = pad + th + 6f + bh + 12f + buttonsH + 8f + hh + pad;
-            h = Mathf.Max(h, RwUI.Mark != null ? 104f : 80f);
-
-            Rect card = new Rect(0f, y, w, h);
-            Widgets.DrawBoxSolid(card, new Color(0.11f, 0.14f, 0.14f));
-            Widgets.DrawBoxSolid(new Rect(card.x, card.y, 3f, card.height), RwUI.Accent);
-            GUI.color = RwUI.Accent; Widgets.DrawBox(card); GUI.color = Color.white;
-            if (RwUI.Mark != null) GUI.DrawTexture(new Rect(card.x + pad, card.y + pad, 56f, 56f), RwUI.Mark);
-            float cy = card.y + pad;
-            KitStyle.LabelColored(new Rect(tx, cy, tw, th), title, new Color(1f, 0.97f, 0.92f), TextAnchor.UpperLeft, GameFont.Medium);
-            cy += th + 6f;
-            KitStyle.LabelColored(new Rect(tx, cy, tw, bh), text, Color.white);
-            cy += bh + 12f;
-
-            float bx = tx, by = cy;
-            Rect r1, r2, r3;
-            if (oneRow) { r1 = new Rect(bx, by, b1, 34f); r2 = new Rect(r1.xMax + 10f, by, b2, 34f); r3 = new Rect(r2.xMax + 10f, by, b3, 34f); }
-            else if (b1 + b2 + 10f <= w - tx - pad) { r1 = new Rect(bx, by, b1, 34f); r2 = new Rect(r1.xMax + 10f, by, b2, 34f); r3 = new Rect(bx, by + 42f, b3, 34f); }
-            else { float bwAll = w - tx - pad; r1 = new Rect(bx, by, bwAll, 34f); r2 = new Rect(bx, by + 42f, bwAll, 34f); r3 = new Rect(bx, by + 84f, Mathf.Min(bwAll, b3), 34f); }
-            PageProbe.Fit(r1, w, "start.open"); PageProbe.Fit(r2, w, "start.beds"); PageProbe.Fit(r3, w, "start.done");
-            if (open) { RwUI.Chip(r1, openL, RwUI.Good); }
-            else if (RwUI.AccentButton(r1, openL)) { HospitalOverview.SetOpen(map, true); Invalidate(); }
-            if (unused > 0)
-            {
-                if (RwUI.AccentButton(r2, bedsL)) { int n = HospitalOverview.UseAllMedicalBeds(map); Messages.Message("RimWard.Start.BedsMsg".Translate(n), MessageTypeDefOf.TaskCompletion, false); Invalidate(); }
-                TooltipHandler.TipRegion(r2, "RimWard.Start.UseBedsTip".Translate());
-            }
-            else RwUI.Chip(r2, bedsL, patientBeds > 0 ? RwUI.Good : RwUI.Warn, patientBeds > 0 ? null : (string)"RimWard.Ready.NoMedicalBedHow".Translate());
-            if (Widgets.ButtonText(r3, doneL)) { if (gc != null) gc.startCardDone = true; }
-            float hy = Mathf.Max(r1.yMax, Mathf.Max(r2.yMax, r3.yMax)) + 8f;
-            KitStyle.LabelColored(new Rect(tx, hy, tw, hh), hint, RwUI.Grey, TextAnchor.UpperLeft, GameFont.Small);
-            return y + h;
-        }
-
         // ------------------------------------------------------------------------------------------------ status band
-        internal static void StatusOf(Map map, HospitalMapComponent comp, out string head, out string sub, out Color color, out string button, out System.Action act)
+        internal static void StatusOf(Map map, HospitalMap comp, out string head, out string sub, out Color color, out string button, out System.Action act)
         {
             bool intake = HospitalMod.Settings.IntakeOn;
             HospitalPolicy pol = comp.Policy;
@@ -151,7 +86,7 @@ namespace RimWard.MainTab
             button = "RimWard.Band.CloseButton".Translate(); act = () => HospitalOverview.SetOpen(map, false);
         }
 
-        private static float StatusBand(float y, float w, Map map, HospitalMapComponent comp)
+        private static float StatusBand(float y, float w, Map map, HospitalMap comp)
         {
             StatusOf(map, comp, out string head, out string sub, out Color color, out string button, out System.Action act);
             float bw = RwUI.ButtonW(button, 170f, 300f);
@@ -171,11 +106,11 @@ namespace RimWard.MainTab
         }
 
         // ------------------------------------------------------------------------------------------------ tiles
-        private static float Tiles(float y, float w, Map map, HospitalMapComponent comp)
+        private static float Tiles(float y, float w, Map map, HospitalMap comp)
         {
             int total = comp.BedCount(), free = Mathf.Max(0, comp.FreeMedicalBeds()), surgery = comp.SurgeryBedCount();
             int patients = comp.ActivePatientsList().Count(), offers = comp.PendingOfferCount;
-            HospitalGameComponent gc = HospitalGameComponent.Get;
+            HospitalSave gc = HospitalSave.Get;
             int quadrum = gc?.IncomeThisQuadrum(Find.WorldGrid.LongLatOf(map.Tile).x) ?? 0;
             var tiles = new List<(string label, string value, Color c, string tip, string page)>
             {
@@ -262,7 +197,7 @@ namespace RimWard.MainTab
         }
 
         // ------------------------------------------------------------------------------------------------ patients
-        private static float Patients(float y, float w, Map map, HospitalMapComponent comp)
+        private static float Patients(float y, float w, Map map, HospitalMap comp)
         {
             y += RwUI.Section(0f, y, w, "RimWard.Tab.PatientsHead".Translate());
             List<Pawn> list = PatientsPage.Sorted(comp);
@@ -285,7 +220,7 @@ namespace RimWard.MainTab
         // ------------------------------------------------------------------------------------------------ renown
         private static float Renown(float y, float w)
         {
-            HospitalGameComponent gc = HospitalGameComponent.Get;
+            HospitalSave gc = HospitalSave.Get;
             y += RwUI.Section(0f, y, w, "RimWard.Tab.RenownHead".Translate());
             if (gc == null) return y;
             if (!HospitalMod.Settings.RenownEnabled)
@@ -309,7 +244,7 @@ namespace RimWard.MainTab
         // ------------------------------------------------------------------------------------------------ money
         private static float Money(float y, float w, Map map)
         {
-            HospitalGameComponent gc = HospitalGameComponent.Get;
+            HospitalSave gc = HospitalSave.Get;
             y += RwUI.Section(0f, y, w, "RimWard.Tab.MoneyHead".Translate());
             if (gc == null) return y;
             int quadrum = gc.IncomeThisQuadrum(Find.WorldGrid.LongLatOf(map.Tile).x);

@@ -11,8 +11,8 @@ namespace RimWard
 {
     /// <summary>
     /// The hospital's policies (open, hours, what it accepts, food and medicine for patients, refused operations).
-    /// One per save in <see cref="HospitalGameComponent"/>, so every map (and every gravship landing) uses the same rules;
-    /// a map may carry its own copy as an override (<see cref="HospitalMapComponent.HasOwnPolicy"/>).
+    /// One per save in <see cref="HospitalSave"/>, so every map (and every gravship landing) uses the same rules;
+    /// a map may carry its own copy as an override (<see cref="HospitalMap.HasOwnPolicy"/>).
     /// </summary>
     public class HospitalPolicy : IExposable
     {

@@ -19,7 +19,7 @@ namespace RimWard.Utilities
         /// The map is passed in: a freshly generated pawn has no MapHeld yet. Returns true if generation FAILED
         /// (the caller then downgrades the case to wounds).
         /// </summary>
-        public static bool AddRandomSurgeryBill(Pawn pawn, PatientData patientData, HospitalMapComponent hospital, Map map)
+        public static bool AddRandomSurgeryBill(Pawn pawn, PatientData patientData, HospitalMap hospital, Map map)
         {
             if (pawn?.health == null || map == null) return true;
             List<Pawn> doctors = map.mapPawns.PawnsInFaction(Faction.OfPlayer).Where(p => p.IsFreeColonist || p.IsColonyMechPlayerControlled).ToList();
@@ -133,7 +133,7 @@ namespace RimWard.Utilities
             return null;
         }
 
-        public static bool IsCandidate(RecipeDef recipe, HospitalMapComponent hospital)
+        public static bool IsCandidate(RecipeDef recipe, HospitalMap hospital)
         {
             if (recipe == null || !recipe.AvailableNow || recipe.isViolation) return false;
             if (hospital != null && !hospital.IsSurgeryRecipeAllowed(recipe)) return false;
